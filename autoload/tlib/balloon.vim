@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2010-08-30.
 " @Last Change: 2010-08-30.
-" @Revision:    15
+" @Revision:    16
 
 
 function! tlib#balloon#Register(expr) "{{{3
@@ -13,7 +13,7 @@ function! tlib#balloon#Register(expr) "{{{3
     endif
     if !exists('b:tlib_balloons')
         let b:tlib_balloons = []
-        if !empty(&balloonexpr)
+        if !empty(&balloonexpr) && &balloonexpr != 'tlib#balloon#Expr()'
             call add(b:tlib_balloons, &balloonexpr)
         endif
     endif
