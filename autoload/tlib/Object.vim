@@ -1,10 +1,10 @@
 " Object.vim -- Prototype objects?
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
-" @Website:     http://members.a1.net/t.link/
+" @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2010-04-09.
-" @Revision:    0.1.123
+" @Last Change: 2010-09-05.
+" @Revision:    0.1.124
 
 " :filedoc:
 " Provides a prototype plus some OO-like methods.
