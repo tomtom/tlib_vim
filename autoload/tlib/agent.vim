@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-24.
-" @Last Change: 2010-03-27.
-" @Revision:    0.1.178
+" @Last Change: 2010-09-05.
+" @Revision:    0.1.180
 
 
 " :filedoc:
@@ -162,7 +162,7 @@ function! tlib#agent#Suspend(world, selected) "{{{3
         let b:tlib_suspend = {
                     \ '<m-z>': 0, '<c-z>': 0, '<space>': 0, 
                     \ '<cr>': 1, 
-                    \ '<LeftMouse>': 1, '<c-LeftMouse>': 0, '<MiddleMouse>': 0,
+                    \ '<LeftMouse>': 1, '<MiddleMouse>': 0, '<RightMouse>': 0, '<c-LeftMouse>': 0,
                     \ '<': 2}
         for [m, pick] in items(b:tlib_suspend)
             exec 'noremap <buffer> '. m .' :call tlib#input#Resume("world", '. pick .')<cr>'
