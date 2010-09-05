@@ -5,7 +5,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2010-09-05.
-" @Revision:    0.0.770
+" @Revision:    0.0.779
 
 
 " :filedoc:
@@ -123,6 +123,14 @@ function! tlib#input#ListW(world, ...) "{{{3
     let key_agents = copy(g:tlib_keyagents_InputList_s)
     if stridx(world.type, 'm') != -1
         call extend(key_agents, g:tlib_keyagents_InputList_m, 'force')
+    endif
+    if has('menu')
+        amenu ]TLibInputListPopupMenu.Pick\ selected\ item <cr>
+        amenu ]TLibInputListPopupMenu.Select #
+        amenu ]TLibInputListPopupMenu.Select\ all <c-a>
+        amenu ]TLibInputListPopupMenu.Reset\ list <c-r>
+        amenu ]TLibInputListPopupMenu.Cancel <esc>
+        amenu ]TLibInputListPopupMenu.-StandardEntries- :
     endif
     for handler in world.key_handlers
         let k = get(handler, 'key', '')
