@@ -3,8 +3,8 @@
 " @GIT:         http://github.com/tomtom/tlib_vim/
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2010-08-30.
-" @Last Change: 2010-08-30.
-" @Revision:    21
+" @Last Change: 2010-09-05.
+" @Revision:    23
 
 
 function! tlib#balloon#Register(expr) "{{{3
@@ -37,6 +37,9 @@ endf
 
 
 function! tlib#balloon#Expr() "{{{3
+    if !exists('b:tlib_balloons')
+        return ''
+    endif
     let text = map(copy(b:tlib_balloons), 'eval(v:val)')
     call filter(text, '!empty(v:val)')
     if has('balloon_multiline')
