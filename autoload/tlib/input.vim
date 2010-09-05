@@ -5,7 +5,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2010-09-05.
-" @Revision:    0.0.779
+" @Revision:    0.0.786
 
 
 " :filedoc:
@@ -372,7 +372,11 @@ function! tlib#input#ListW(world, ...) "{{{3
                         let world.prefidx = world.GetLineIdx(v:mouse_lnum)
                         let world.state = 'redisplay'
                         call world.DisplayList('')
-                        popup! ]TLibInputListPopupMenu
+                        if line('w$') - v:mouse_lnum < 6
+                            popup ]TLibInputListPopupMenu
+                        else
+                            popup! ]TLibInputListPopupMenu
+                        endif
                     else
                         let world.state = 'redisplay'
                     endif
