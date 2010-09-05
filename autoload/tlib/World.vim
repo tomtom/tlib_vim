@@ -25,6 +25,7 @@ let s:prototype = tlib#Object#New({
             \ 'filter_format': '',
             \ 'filter_options': '',
             \ 'follow_cursor': '',
+            \ 'has_menu': 0,
             \ 'index_table': [],
             \ 'initial_filter': [['']],
             \ 'initial_index': 1,
@@ -316,6 +317,14 @@ endf
 " :nodoc:
 function! s:prototype.SetBaseItem(idx, item) dict "{{{3
     let self.base[a:idx - 1] = a:item
+endf
+
+
+" :nodoc:
+function! s:prototype.GetLineIdx(lnum) dict "{{{3
+    let line = getline(a:lnum)
+    let prefidx = substitute(matchstr(line, '^\d\+\ze[*:]'), '^0\+', '', '')
+    return prefidx
 endf
 
 

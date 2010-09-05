@@ -4,8 +4,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2010-06-30.
-" @Revision:    0.0.719
+" @Last Change: 2010-09-05.
+" @Revision:    0.0.770
 
 
 " :filedoc:
@@ -128,6 +128,11 @@ function! tlib#input#ListW(world, ...) "{{{3
         let k = get(handler, 'key', '')
         if !empty(k)
             let key_agents[k] = handler.agent
+            if has('menu') && has_key(handler, 'help') && !empty(handler.help)
+                exec 'amenu ]TLibInputListPopupMenu.'. escape(handler.help, ' .\')
+                            \ .' '. handler.key_name
+                let world.has_menu = 1
+            endif
         endif
     endfor
     " let statusline  = &l:statusline
@@ -342,10 +347,9 @@ function! tlib#input#ListW(world, ...) "{{{3
                 elseif c == 27
                     let world.state = 'exit empty'
                 elseif c == "\<LeftMouse>"
-                    let line = getline(v:mouse_lnum)
-                    let world.prefidx = substitute(matchstr(line, '^\d\+\ze[*:]'), '^0\+', '', '')
+                    let world.prefidx = world.GetLineIdx(v:mouse_lnum)
                     " let world.offset  = world.prefidx
-                    " TLogVAR v:mouse_lnum, line, world.prefidx
+                    " TLogVAR v:mouse_lnum, world.prefidx
                     if empty(world.prefidx)
                         " call feedkeys(c, 't')
                         let c = tlib#char#Get(world.timeout)
@@ -353,6 +357,18 @@ function! tlib#input#ListW(world, ...) "{{{3
                         continue
                     endif
                     throw 'pick'
+                elseif c == "\<RightMouse>"
+                    if has('menu')
+                        " if v:mouse_lnum != line('.')
+                        " endif
+                        let world.prefidx = world.GetLineIdx(v:mouse_lnum)
+                        let world.state = 'redisplay'
+                        call world.DisplayList('')
+                        popup! ]TLibInputListPopupMenu
+                    else
+                        let world.state = 'redisplay'
+                    endif
+                    " TLogVAR world.prefidx, world.state
                 elseif c >= 32
                     let world.state = 'display'
                     let numbase = get(world.numeric_chars, c, -99999)
@@ -491,6 +507,10 @@ function! tlib#input#ListW(world, ...) "{{{3
         " let &l:statusline = statusline
         " let &laststatus = laststatus
         silent! let @/  = lastsearch
+        if has('menu') && world.has_menu
+            silent! aunmenu ]TLibInputListPopupMenu
+        endif
+
         " TLogDBG 'finally 2'
         " TLogDBG string(world.Methods())
         " TLogVAR world.state
