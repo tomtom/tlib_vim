@@ -3,10 +3,9 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-04-10.
-" @Last Change: 2010-08-30.
-" @Revision:    632
+" @Last Change: 2010-09-05.
+" @Revision:    634
 " GetLatestVimScripts: 1863 1 tlib.vim
-" @TPluginBefore \<autoload[\/]tlib.\{-}\.vim plugin/02tlib.vim
 
 if &cp || exists("loaded_tlib")
     finish

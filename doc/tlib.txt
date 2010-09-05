@@ -110,6 +110,9 @@ Contents~
         tlib#Filter_seq#New ..................... |tlib#Filter_seq#New()|
         tlib#date#DiffInDays .................... |tlib#date#DiffInDays()|
         tlib#date#SecondsSince1970 .............. |tlib#date#SecondsSince1970()|
+        tlib#balloon#Register ................... |tlib#balloon#Register()|
+        tlib#balloon#Remove ..................... |tlib#balloon#Remove()|
+        tlib#balloon#Expr ....................... |tlib#balloon#Expr()|
         tlib#buffer#EnableMRU ................... |tlib#buffer#EnableMRU()|
         tlib#buffer#DisableMRU .................. |tlib#buffer#DisableMRU()|
         tlib#buffer#Set ......................... |tlib#buffer#Set()|
@@ -134,6 +137,13 @@ Contents~
         tlib#type#IsDictionary .................. |tlib#type#IsDictionary()|
         tlib#syntax#Collect ..................... |tlib#syntax#Collect()|
         tlib#syntax#Names ....................... |tlib#syntax#Names()|
+        g:tlib#vim#simalt_maximize .............. |g:tlib#vim#simalt_maximize|
+        g:tlib#vim#simalt_restore ............... |g:tlib#vim#simalt_restore|
+        g:tlib#vim#use_vimtweak ................. |g:tlib#vim#use_vimtweak|
+        tlib#vim#Maximize ....................... |tlib#vim#Maximize()|
+        tlib#vim#RestoreWindow .................. |tlib#vim#RestoreWindow()|
+        g:tlib#vim#use_wmctrl ................... |g:tlib#vim#use_wmctrl|
+        tlib#vim#RestoreWindow .................. |tlib#vim#RestoreWindow()|
         tlib#hook#Run ........................... |tlib#hook#Run()|
         tlib#eval#FormatValue ................... |tlib#eval#FormatValue()|
         tlib#arg#Get ............................ |tlib#arg#Get()|
@@ -767,6 +777,19 @@ tlib#date#SecondsSince1970(date, ...)
 
 
 ========================================================================
+autoload/tlib/balloon.vim~
+
+                                                    *tlib#balloon#Register()*
+tlib#balloon#Register(expr)
+
+                                                    *tlib#balloon#Remove()*
+tlib#balloon#Remove(expr)
+
+                                                    *tlib#balloon#Expr()*
+tlib#balloon#Expr()
+
+
+========================================================================
 autoload/tlib/buffer.vim~
 
                                                     *tlib#buffer#EnableMRU()*
@@ -878,6 +901,34 @@ tlib#syntax#Collect()
 
                                                     *tlib#syntax#Names()*
 tlib#syntax#Names(?rx='')
+
+
+========================================================================
+autoload/tlib/vim.vim~
+
+                                                    *g:tlib#vim#simalt_maximize*
+g:tlib#vim#simalt_maximize     (default: 'x')
+
+                                                    *g:tlib#vim#simalt_restore*
+g:tlib#vim#simalt_restore      (default: 'r')
+
+                                                    *g:tlib#vim#use_vimtweak*
+g:tlib#vim#use_vimtweak        (default: 0)
+
+                                                    *tlib#vim#Maximize()*
+tlib#vim#Maximize(fullscreen)
+    Maximize the window.
+    You might need to redefine |g:tlib#vim#simalt_maximize| if it doesn't 
+    work for you.
+
+                                                    *tlib#vim#RestoreWindow()*
+tlib#vim#RestoreWindow()
+
+                                                    *g:tlib#vim#use_wmctrl*
+g:tlib#vim#use_wmctrl          (default: executable('wmctrl'))
+
+                                                    *tlib#vim#RestoreWindow()*
+tlib#vim#RestoreWindow()
 
 
 ========================================================================
