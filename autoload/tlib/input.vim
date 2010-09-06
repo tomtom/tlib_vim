@@ -5,7 +5,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2010-09-05.
-" @Revision:    0.0.786
+" @Revision:    0.0.788
 
 
 " :filedoc:
@@ -117,6 +117,7 @@ function! tlib#input#ListW(world, ...) "{{{3
     TVarArg 'cmd'
     let world = a:world
     let world.filetype = &filetype
+    let world.fileencoding = &fileencoding
     call world.SetMatchMode(tlib#var#Get('tlib_inputlist_match', 'wb'))
     call s:Init(world, cmd)
     " TLogVAR world.state, world.sticky, world.initial_index

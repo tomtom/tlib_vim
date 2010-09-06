@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
 " @Last Change: 2010-09-05.
-" @Revision:    0.1.869
+" @Revision:    0.1.871
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -18,6 +18,7 @@ let s:prototype = tlib#Object#New({
             \ 'base': [], 
             \ 'bufnr': -1,
             \ 'display_format': '',
+            \ 'fileencoding': &fileencoding,
             \ 'fmt_display': {},
             \ 'fmt_filter': {},
             \ 'filetype': '',
