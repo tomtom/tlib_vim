@@ -3,8 +3,8 @@
 " @Website:     http://www.lithom.net
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2010-03-25.
-" @Last Change: 2010-04-03.
-" @Revision:    0.0.14
+" @Last Change: 2010-09-13.
+" @Revision:    0.0.16
 
 let s:save_cpo = &cpo
 set cpo&vim

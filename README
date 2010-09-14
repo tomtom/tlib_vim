@@ -1,6 +1,3 @@
-*tlib.txt*  tlib -- A library of vim functions
-
-
 This library provides some utility functions. There isn't much need to 
 install it unless another plugin requires you to do so.
 

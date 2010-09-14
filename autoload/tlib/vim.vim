@@ -3,8 +3,8 @@
 " @GIT:         http://github.com/tomtom/vimtlib/
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2010-07-19.
-" @Last Change: 2010-07-19.
-" @Revision:    21
+" @Last Change: 2010-09-14.
+" @Revision:    23
 
 
 let s:restoreframecmd = ''
@@ -39,6 +39,7 @@ if has('win16') || has('win32') || has('win64')
         exec 'simalt ~'. g:tlib#vim#simalt_maximize
     endf
 
+    " Restore the original vimsize after having called |tlib#vim#Maximize()|.
     function! tlib#vim#RestoreWindow() "{{{3
         if !has("gui_running")
             return
@@ -74,6 +75,7 @@ else
         endif
     endf
 
+    " :nodoc:
     function! tlib#vim#RestoreWindow() "{{{3
         if !has("gui_running")
             return
