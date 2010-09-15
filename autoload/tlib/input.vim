@@ -4,8 +4,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2010-09-05.
-" @Revision:    0.0.788
+" @Last Change: 2010-09-15.
+" @Revision:    0.0.790
 
 
 " :filedoc:
@@ -258,6 +258,7 @@ function! tlib#input#ListW(world, ...) "{{{3
                             " TLogDBG len(world.list)
                             " TLogVAR world.list
                             let dlist = copy(world.list)
+                            " TLogVAR world.display_format
                             if !empty(world.display_format)
                                 let display_format = world.display_format
                                 let cache = world.fmt_display

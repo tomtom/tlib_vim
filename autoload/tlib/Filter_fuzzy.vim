@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
 " @Last Change: 2010-09-15.
-" @Revision:    0.0.32
+" @Revision:    0.0.38
 
 let s:prototype = tlib#Filter_cnf#New({'_class': ['Filter_fuzzy'], 'name': 'fuzzy'}) "{{{2
 let s:prototype.highlight = ''
@@ -12,9 +12,24 @@ let s:prototype.highlight = ''
 
 " Support for "fuzzy" pattern matching in |tlib#input#List()|. 
 " Characters are interpreted as if connected with '.\{-}'.
+"
+" In "fuzzy" mode, the pretty printing of filenames is disabled.
 function! tlib#Filter_fuzzy#New(...) "{{{3
     let object = s:prototype.New(a:0 >= 1 ? a:1 : {})
     return object
+endf
+
+
+" :nodoc:
+function! s:prototype.Init(world) dict "{{{3
+    " TLogVAR a:world.display_format
+    function! a:world.Set_display_format(value) dict "{{{3
+        if a:value == 'filename'
+            let self.display_format = ''
+        else
+            let self.display_format = a:value
+        endif
+    endf
 endf
 
 

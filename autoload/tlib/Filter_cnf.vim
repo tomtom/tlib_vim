@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
 " @Last Change: 2010-09-15.
-" @Revision:    0.0.68
+" @Revision:    0.0.69
 
 let s:prototype = tlib#Object#New({'_class': ['Filter_cnf'], 'name': 'cnf'}) "{{{2
 let s:prototype.highlight = g:tlib_inputlist_higroup
@@ -17,6 +17,11 @@ let s:prototype.highlight = g:tlib_inputlist_higroup
 function! tlib#Filter_cnf#New(...) "{{{3
     let object = s:prototype.New(a:0 >= 1 ? a:1 : {})
     return object
+endf
+
+
+" :nodoc:
+function! s:prototype.Init(world) dict "{{{3
 endf
 
 

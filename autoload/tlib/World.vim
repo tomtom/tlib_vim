@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
 " @Last Change: 2010-09-15.
-" @Revision:    0.1.872
+" @Revision:    0.1.874
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -451,6 +451,7 @@ function! s:prototype.SetMatchMode(match_mode) dict "{{{3
         unlet self.matcher
         try
             let self.matcher = tlib#Filter_{a:match_mode}#New()
+            call self.matcher.Init(self)
         catch /^Vim\%((\a\+)\)\=:E117/
             throw 'tlib: Unknown mode for tlib_inputlist_match: '. a:match_mode
         endtry
