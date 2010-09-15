@@ -3,14 +3,11 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
-" @Last Change: 2009-02-15.
-" @Revision:    0.0.22
-
-let s:save_cpo = &cpo
-set cpo&vim
-
+" @Last Change: 2010-09-15.
+" @Revision:    0.0.23
 
 let s:prototype = tlib#Filter_cnf#New({'_class': ['Filter_seq'], 'name': 'seq'}) "{{{2
+let s:prototype.highlight = g:tlib_inputlist_higroup
 
 " The search pattern for |tlib#input#List()| is interpreted as a 
 " disjunction of 'magic' regular expressions with the exception of a dot 
@@ -88,7 +85,3 @@ function! s:prototype.CleanFilter(filter) dict "{{{3
     return substitute(a:filter, '.\\{-}', '.', 'g')
 endf
 
-
-
-let &cpo = s:save_cpo
-unlet s:save_cpo

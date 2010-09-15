@@ -3,14 +3,12 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
-" @Last Change: 2009-02-15.
-" @Revision:    0.0.31
-
-let s:save_cpo = &cpo
-set cpo&vim
-
+" @Last Change: 2010-09-15.
+" @Revision:    0.0.32
 
 let s:prototype = tlib#Filter_cnf#New({'_class': ['Filter_fuzzy'], 'name': 'fuzzy'}) "{{{2
+let s:prototype.highlight = ''
+
 
 " Support for "fuzzy" pattern matching in |tlib#input#List()|. 
 " Characters are interpreted as if connected with '.\{-}'.
@@ -58,7 +56,3 @@ function! s:prototype.CleanFilter(filter) dict "{{{3
     return substitute(a:filter, '\\\.\\{-}', '', 'g')
 endf
 
-
-
-let &cpo = s:save_cpo
-unlet s:save_cpo
