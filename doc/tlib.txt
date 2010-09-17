@@ -108,6 +108,7 @@ Contents~
         tlib#file#With .......................... |tlib#file#With()|
         tlib#Filter_seq#New ..................... |tlib#Filter_seq#New()|
         tlib#date#DiffInDays .................... |tlib#date#DiffInDays()|
+        tlib#date#Parse ......................... |tlib#date#Parse()|
         tlib#date#SecondsSince1970 .............. |tlib#date#SecondsSince1970()|
         tlib#balloon#Register ................... |tlib#balloon#Register()|
         tlib#balloon#Remove ..................... |tlib#balloon#Remove()|
@@ -142,7 +143,6 @@ Contents~
         tlib#vim#Maximize ....................... |tlib#vim#Maximize()|
         tlib#vim#RestoreWindow .................. |tlib#vim#RestoreWindow()|
         g:tlib#vim#use_wmctrl ................... |g:tlib#vim#use_wmctrl|
-        tlib#vim#RestoreWindow .................. |tlib#vim#RestoreWindow()|
         tlib#hook#Run ........................... |tlib#hook#Run()|
         tlib#eval#FormatValue ................... |tlib#eval#FormatValue()|
         tlib#arg#Get ............................ |tlib#arg#Get()|
@@ -566,24 +566,17 @@ tlib#Object#New(?fields={})
         => 0
 <
 
-
 prototype.New
-
 
 prototype.Inherit
 
-
 prototype.Extend
-
 
 prototype.IsA
 
-
 prototype.IsRelated
 
-
 prototype.RespondTo
-
 
 prototype.Super
 
@@ -670,7 +663,6 @@ Inherits from |tlib#Object#New|.
                                                     *tlib#World#New()*
 tlib#World#New(...)
 
-
 prototype.Reset
 
 
@@ -723,6 +715,11 @@ autoload/tlib/Filter_fuzzy.vim~
 tlib#Filter_fuzzy#New(...)
     Support for "fuzzy" pattern matching in |tlib#input#List()|. 
     Characters are interpreted as if connected with '.\{-}'.
+    
+    In "fuzzy" mode, the pretty printing of filenames is disabled.
+
+
+    TLogVAR a:world.display_format
 
 
 ========================================================================
@@ -769,6 +766,9 @@ autoload/tlib/date.vim~
 
                                                     *tlib#date#DiffInDays()*
 tlib#date#DiffInDays(date1, ?date2=localtime(), ?allow_zero=0)
+
+                                                    *tlib#date#Parse()*
+tlib#date#Parse(date, ?allow_zero=0) "{{{3
 
                                                     *tlib#date#SecondsSince1970()*
 tlib#date#SecondsSince1970(date, ...)
@@ -922,12 +922,10 @@ tlib#vim#Maximize(fullscreen)
 
                                                     *tlib#vim#RestoreWindow()*
 tlib#vim#RestoreWindow()
+    Restore the original vimsize after having called |tlib#vim#Maximize()|.
 
                                                     *g:tlib#vim#use_wmctrl*
 g:tlib#vim#use_wmctrl          (default: executable('wmctrl'))
-
-                                                    *tlib#vim#RestoreWindow()*
-tlib#vim#RestoreWindow()
 
 
 ========================================================================

@@ -1,13 +1,10 @@
 " date.vim
-" @Author:      Thomas Link (mailto:micathom AT gmail com?subject=[vim])
-" @Website:     http://www.lithom.net
+" @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
+" @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2010-03-25.
-" @Last Change: 2010-09-13.
-" @Revision:    0.0.16
-
-let s:save_cpo = &cpo
-set cpo&vim
+" @Last Change: 2010-09-17.
+" @Revision:    0.0.34
 
 
 if !exists('g:tlib#date#ShortDatePrefix') | let g:tlib#date#ShortDatePrefix = '20' | endif "{{{2
@@ -27,22 +24,51 @@ function! tlib#date#DiffInDays(date, ...)
 endf
 
 
-" tlib#date#SecondsSince1970(date, ?daysshift=0, ?allow_zero=0)
-function! tlib#date#SecondsSince1970(date, ...) "{{{3
-    let allow_zero = a:0 >= 2 ? a:2 : 0
-    let min = allow_zero ? 0 : 1
-    " TLogVAR a:date
-    let year  = matchstr(a:date, '^\(\d\+\)\ze-\(\d\+\)-\(\d\+\)$')
-    let month = matchstr(a:date, '^\(\d\+\)-\zs\(\d\+\)\ze-\(\d\+\)$')
-    let days  = matchstr(a:date, '^\(\d\+\)-\(\d\+\)-\zs\(\d\+\)$')
-    if year == '' || month == '' || days == '' || 
+" :display: tlib#date#Parse(date, ?allow_zero=0) "{{{3
+function! tlib#date#Parse(date, ...) "{{{3
+    let min = a:0 >= 1 && a:1 ? 0 : 1
+    " TLogVAR a:date, min
+    let m = matchlist(a:date, '^\(\d\{2}\|\d\{4}\)-\(\d\{1,2}\)-\(\d\{1,2}\)$')
+    if !empty(m)
+        let year = m[1]
+        let month = m[2]
+        let days = m[3]
+    else
+        let m = matchlist(a:date, '^\(\d\+\)/\(\d\{1,2}\)/\(\d\{1,2}\)$')
+        if !empty(m)
+            let year = m[1]
+            let month = m[3]
+            let days = m[2]
+        else
+            let m = matchlist(a:date, '^\(\d\{1,2}\)\.\s*\(\d\{1,2}\)\.\s*\(\d\d\{2}\|\d\{4}\)$')
+            if !empty(m)
+                let year = m[3]
+                let month = m[2]
+                let days = m[1]
+            endif
+        endif
+    endif
+    if empty(m) || year == '' || month == '' || days == '' || 
                 \ month < min || month > 12 || days < min || days > 31
-        echoerr 'PIM: Invalid date: '. a:date
-        return 0
+        echoerr 'TLib: Invalid date: '. a:date
+        return []
     endif
     if strlen(year) == 2
         let year = g:tlib#date#ShortDatePrefix . year
     endif
+    return [0 + year, 0 + month, 0 + days]
+endf
+
+
+" tlib#date#SecondsSince1970(date, ?daysshift=0, ?allow_zero=0)
+function! tlib#date#SecondsSince1970(date, ...) "{{{3
+    let allow_zero = a:0 >= 2 ? a:2 : 0
+    " TLogVAR a:date, allow_zero
+    let date = tlib#date#Parse(a:date, allow_zero)
+    if empty(date)
+        return 0
+    endif
+    let [year, month, days] = date
     if a:0 >= 1 && a:1 > 0
         let days = days + a:1
     end
@@ -92,6 +118,3 @@ function! tlib#date#SecondsSince1970(date, ...) "{{{3
     return seconds
 endf
 
-
-let &cpo = s:save_cpo
-unlet s:save_cpo
