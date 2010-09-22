@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2010-04-28.
-" @Revision:    0.0.318
+" @Last Change: 2010-09-22.
+" @Revision:    0.0.333
 
 
 let s:bmru = []
@@ -28,6 +28,17 @@ function! s:BMRU_Push(bnr) "{{{3
         call remove(s:bmru, i)
     endif
     call insert(s:bmru, a:bnr)
+endf
+
+
+function! s:CompareBuffernameByBasename(a, b) "{{{3
+    let rx = '"\zs.\{-}\ze" \+\S\+ \+\d\+$'
+    let an = matchstr(a:a, rx)
+    let an = fnamemodify(an, ':t')
+    let bn = matchstr(a:b, rx)
+    let bn = fnamemodify(bn, ':t')
+    let rv = an == bn ? 0 : an > bn ? 1 : -1
+    return rv
 endf
 
 
@@ -121,6 +132,7 @@ endf
 " :def: function! tlib#buffer#GetList(?show_hidden=0, ?show_number=0, " ?order='bufnr')
 function! tlib#buffer#GetList(...)
     TVarArg ['show_hidden', 0], ['show_number', 0], ['order', '']
+    " TLogVAR show_hidden, show_number, order
     let ls_bang = show_hidden ? '!' : ''
     redir => bfs
     exec 'silent ls'. ls_bang
@@ -133,6 +145,8 @@ function! tlib#buffer#GetList(...)
         else
             call sort(buffer_list, function('s:CompareBufferNrByMRU'))
         endif
+    elseif order == 'basename'
+        call sort(buffer_list, function('s:CompareBuffernameByBasename'))
     endif
     let buffer_nr = map(copy(buffer_list), 'matchstr(v:val, ''\s*\zs\d\+\ze'')')
     " TLogVAR buffer_list, buffer_nr
