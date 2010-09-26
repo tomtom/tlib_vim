@@ -347,7 +347,8 @@ g:tlib_sortprefs_threshold     (default: 200)
 
                                                     *g:tlib_scratch_pos*
 g:tlib_scratch_pos             (default: 'botright')
-    Scratch window position
+    Scratch window position. By default the list window is opened on the 
+    bottom. Set this variable to 'topleft' or '' to change this behaviour.
 
                                                     *g:tlib_inputlist_pct*
 g:tlib_inputlist_pct           (default: 50)
@@ -434,6 +435,13 @@ g:tlib_numeric_chars
 
                                                     *g:tlib_keyagents_InputList_s*
 g:tlib_keyagents_InputList_s
+    The default key bindings for single-item-select list views. If you 
+    want to use <c-j>, <c-k> to move the cursor up and down, add these two 
+    lines to after/plugin/02tlib.vim: >
+    
+      let g:tlib_keyagents_InputList_s[10] = 'tlib#agent#Down'  " <c-j>
+      let g:tlib_keyagents_InputList_s[11] = 'tlib#agent#Up'    " <c-k>
+<
 
                                                     *g:tlib_scroll_lines*
 g:tlib_scroll_lines            (default: 10)
@@ -812,6 +820,13 @@ tlib#buffer#Eval(buffer, code)
 
                                                     *tlib#buffer#GetList()*
 tlib#buffer#GetList(?show_hidden=0, ?show_number=0, " ?order='bufnr')
+    Possible values for the "order" argument:
+      bufnr    :: Default behaviour
+      mru      :: Sort buffers according to most recent use
+      basename :: Sort by the file's basename (last component)
+    
+    NOTE: MRU order works on second invocation only. If you want to always 
+    use MRU order, call tlib#buffer#EnableMRU() in your ~/.vimrc file.
 
                                                     *tlib#buffer#ViewLine()*
 tlib#buffer#ViewLine(line, ?position='z')
@@ -1434,7 +1449,8 @@ tlib#map#PumAccept(key)
 autoload/tlib/normal.vim~
 
                                                     *tlib#normal#WithRegister()*
-tlib#normal#WithRegister(cmd, ...)
+tlib#normal#WithRegister(cmd, ?register='t', ?norm_cmd='norm!')
+    Execute a normal command while maintaining all registers.
 
 
 ========================================================================

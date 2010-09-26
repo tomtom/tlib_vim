@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-04-10.
-" @Last Change: 2010-09-16.
-" @Revision:    637
+" @Last Change: 2010-09-22.
+" @Revision:    645
 " GetLatestVimScripts: 1863 1 tlib.vim
 
 if &cp || exists("loaded_tlib")
@@ -115,7 +115,8 @@ TLet g:tlib_pick_last_item = 1
 " selecting an item. Be slightly faster instead.
 TLet g:tlib_sortprefs_threshold = 200
 
-" Scratch window position
+" Scratch window position. By default the list window is opened on the 
+" bottom. Set this variable to 'topleft' or '' to change this behaviour.
 TLet g:tlib_scratch_pos = 'botright'
 
 " Size of the input list window (in percent) from the main size (of &lines).
@@ -222,6 +223,12 @@ TLet g:tlib_numeric_chars = {
             " \ 57: 48,
 
 " :nodefault:
+" The default key bindings for single-item-select list views. If you 
+" want to use <c-j>, <c-k> to move the cursor up and down, add these two 
+" lines to after/plugin/02tlib.vim: >
+"
+"   let g:tlib_keyagents_InputList_s[10] = 'tlib#agent#Down'  " <c-j>
+"   let g:tlib_keyagents_InputList_s[11] = 'tlib#agent#Up'    " <c-k>
 TLet g:tlib_keyagents_InputList_s = {
             \ "\<PageUp>":   'tlib#agent#PageUp',
             \ "\<PageDown>": 'tlib#agent#PageDown',
