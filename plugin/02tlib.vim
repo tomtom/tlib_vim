@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-04-10.
-" @Last Change: 2010-09-22.
-" @Revision:    645
+" @Last Change: 2010-10-02.
+" @Revision:    646
 " GetLatestVimScripts: 1863 1 tlib.vim
 
 if &cp || exists("loaded_tlib")
@@ -586,4 +586,5 @@ interpreted as string
 
 0.40
 - tlib#agent#ViewFile: Use split/sbuffer if nohidden && modified 
+- tlib#buffer#GetList(): order by "basename"
 
