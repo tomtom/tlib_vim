@@ -377,9 +377,14 @@ g:tlib_inputlist_filename_indicators (default: 0)
 
                                                     *g:tlib_inputlist_match*
 g:tlib_inputlist_match         (default: 'cnf')
-    Can be "cnf" or "fuzzy".
-      cnf   :: substrings
-      fuzzy :: match characters
+    Can be "cnf", "cnfd", "seq", or "fuzzy". See:
+      cnf :: Match substrings
+        - |tlib#Filter_cnf#New()| (this is the default method)
+        - |tlib#Filter_cnfd#New()|
+      seq :: Match sequences of characters
+        - |tlib#Filter_seq#New()|
+      fuzzy :: Match fuzzy character sequences
+        - |tlib#Filter_fuzzy#New()|
 
                                                     *g:tlib_inputlist_shortmessage*
 g:tlib_inputlist_shortmessage  (default: 0)
@@ -1044,6 +1049,11 @@ tlib#Filter_cnf#New(...)
     form: (P1 OR P2 ...) AND (P3 OR P4 ...) ...
     The pattern is a '/\V' very no-'/magic' regexp pattern.
     
+    Pressing <space> joins two patterns with AND.
+    Pressing | joins two patterns with OR.
+    I.e. In order to get "lala AND (foo OR bar)", you type 
+    "lala foo|bar".
+    
     This is also the base class for other filters.
 
 
@@ -1110,18 +1120,17 @@ tlib#input#List(type. ?query='', ?list=[], ?handlers=[], ?default="", ?timeout=0
         m  ... Return a list of selcted elements
         mi ... Return a list of indexes
     
-    Several pattern matching styles are supported. See:
-      - |tlib#Filter_cnf#New()|
-      - |tlib#Filter_cnfd#New()|
-      - |tlib#Filter_fuzzy#New()|
-      - |tlib#Filter_seq#New()|
+    Several pattern matching styles are supported. See 
+    |g:tlib_inputlist_match|.
     
     EXAMPLES: >
       echo tlib#input#List('s', 'Select one item', [100,200,300])
       echo tlib#input#List('si', 'Select one item', [100,200,300])
       echo tlib#input#List('m', 'Select one or more item(s)', [100,200,300])
       echo tlib#input#List('mi', 'Select one or more item(s)', [100,200,300])
-<
+    
+<   See ../samples/tlib/input/tlib_input_list.vim (move the cursor over 
+    the filename and press gf) for a more elaborated example.
 
                                                     *tlib#input#ListD()*
 tlib#input#ListD(dict)

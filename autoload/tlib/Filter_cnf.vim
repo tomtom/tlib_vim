@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
-" @Last Change: 2010-09-15.
-" @Revision:    0.0.69
+" @Last Change: 2010-10-10.
+" @Revision:    0.0.74
 
 let s:prototype = tlib#Object#New({'_class': ['Filter_cnf'], 'name': 'cnf'}) "{{{2
 let s:prototype.highlight = g:tlib_inputlist_higroup
@@ -12,6 +12,11 @@ let s:prototype.highlight = g:tlib_inputlist_higroup
 " The search pattern for |tlib#input#List()| is in conjunctive normal 
 " form: (P1 OR P2 ...) AND (P3 OR P4 ...) ...
 " The pattern is a '/\V' very no-'/magic' regexp pattern.
+"
+" Pressing <space> joins two patterns with AND.
+" Pressing | joins two patterns with OR.
+" I.e. In order to get "lala AND (foo OR bar)", you type 
+" "lala foo|bar".
 "
 " This is also the base class for other filters.
 function! tlib#Filter_cnf#New(...) "{{{3

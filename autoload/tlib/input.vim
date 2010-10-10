@@ -4,8 +4,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2010-09-26.
-" @Revision:    0.0.807
+" @Last Change: 2010-10-10.
+" @Revision:    0.0.811
 
 
 " :filedoc:
@@ -36,17 +36,17 @@
 "     m  ... Return a list of selcted elements
 "     mi ... Return a list of indexes
 "
-" Several pattern matching styles are supported. See:
-"   - |tlib#Filter_cnf#New()|
-"   - |tlib#Filter_cnfd#New()|
-"   - |tlib#Filter_fuzzy#New()|
-"   - |tlib#Filter_seq#New()|
+" Several pattern matching styles are supported. See 
+" |g:tlib_inputlist_match|.
 "
 " EXAMPLES: >
 "   echo tlib#input#List('s', 'Select one item', [100,200,300])
 "   echo tlib#input#List('si', 'Select one item', [100,200,300])
 "   echo tlib#input#List('m', 'Select one or more item(s)', [100,200,300])
 "   echo tlib#input#List('mi', 'Select one or more item(s)', [100,200,300])
+"
+" See ../samples/tlib/input/tlib_input_list.vim (move the cursor over 
+" the filename and press gf) for a more elaborated example.
 function! tlib#input#List(type, ...) "{{{3
     exec tlib#arg#Let([
         \ ['query', ''],

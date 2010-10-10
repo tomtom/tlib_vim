@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-04-10.
-" @Last Change: 2010-10-02.
-" @Revision:    646
+" @Last Change: 2010-10-10.
+" @Revision:    652
 " GetLatestVimScripts: 1863 1 tlib.vim
 
 if &cp || exists("loaded_tlib")
@@ -140,9 +140,14 @@ TLet g:tlib_inputlist_livesearch_threshold = 1000
 " disk when doing this.
 TLet g:tlib_inputlist_filename_indicators = 0
 
-" Can be "cnf" or "fuzzy".
-"   cnf   :: substrings
-"   fuzzy :: match characters
+" Can be "cnf", "cnfd", "seq", or "fuzzy". See:
+"   cnf :: Match substrings
+"     - |tlib#Filter_cnf#New()| (this is the default method)
+"     - |tlib#Filter_cnfd#New()|
+"   seq :: Match sequences of characters
+"     - |tlib#Filter_seq#New()|
+"   fuzzy :: Match fuzzy character sequences
+"     - |tlib#Filter_fuzzy#New()|
 TLet g:tlib_inputlist_match = 'cnf'
 
 " If non null, display only a short info about the filter.
