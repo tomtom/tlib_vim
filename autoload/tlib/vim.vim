@@ -1,10 +1,10 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
-" @GIT:         http://github.com/tomtom/vimtlib/
+" @GIT:         http://github.com/tomtom/tlib_vim/
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2010-07-19.
-" @Last Change: 2010-09-14.
-" @Revision:    23
+" @Last Change: 2010-10-24.
+" @Revision:    24
 
 
 let s:restoreframecmd = ''

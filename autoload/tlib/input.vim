@@ -1,11 +1,10 @@
-
 " input.vim
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2010-10-10.
-" @Revision:    0.0.811
+" @Last Change: 2010-10-31.
+" @Revision:    0.0.812
 
 
 " :filedoc:

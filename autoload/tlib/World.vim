@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2010-09-22.
-" @Revision:    0.1.886
+" @Last Change: 2010-10-31.
+" @Revision:    0.1.887
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -566,7 +566,7 @@ endf
 
 " :nodoc:
 function! s:prototype.UseScratch() dict "{{{3
-    return tlib#scratch#UseScratch(self)
+    keepalt return tlib#scratch#UseScratch(self)
 endf
 
 
