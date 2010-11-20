@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-04-10.
-" @Last Change: 2010-11-12.
-" @Revision:    653
+" @Last Change: 2010-11-20.
+" @Revision:    654
 " GetLatestVimScripts: 1863 1 tlib.vim
 
 if &cp || exists("loaded_tlib")
@@ -259,6 +259,7 @@ TLet g:tlib_keyagents_InputList_s = {
             \ "\<m-bs>":     'tlib#agent#PopFilter',
             \ "\<c-del>":    'tlib#agent#PopFilter',
             \ "\<m-del>":    'tlib#agent#PopFilter',
+            \ "\<s-space>":  'tlib#agent#Wildcard',
             \ 191:           'tlib#agent#Debug',
             \ char2nr(g:tlib_inputlist_or):  'tlib#agent#OR',
             \ char2nr(g:tlib_inputlist_and): 'tlib#agent#AND',

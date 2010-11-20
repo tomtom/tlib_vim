@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-24.
-" @Last Change: 2010-09-16.
-" @Revision:    0.1.181
+" @Last Change: 2010-11-20.
+" @Revision:    0.1.185
 
 
 " :filedoc:
@@ -493,6 +493,22 @@ function! tlib#agent#DoAtLine(world, selected) "{{{3
     endif
     call a:world.ResetSelected()
     let a:world.state = 'exit'
+    return a:world
+endf
+
+
+function! tlib#agent#Wildcard(world, selected) "{{{3
+    if !empty(a:world.filter[0])
+        let rx_type = a:world.matcher.FilterRxPrefix()
+        let flt0 = a:world.CleanFilter(a:world.filter[0][0])
+        if rx_type == '\V'
+            let flt0 .= '\.\{-}'
+        else
+            let flt0 .= '.\{-}'
+        endif
+        call a:world.SetFrontFilter(flt0)
+    endif
+    let a:world.state = 'redisplay'
     return a:world
 endf
 
