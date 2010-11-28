@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
 " @Last Change: 2010-11-20.
-" @Revision:    0.0.29
+" @Revision:    0.0.30
 
 let s:prototype = tlib#Filter_cnf#New({'_class': ['Filter_seq'], 'name': 'seq'}) "{{{2
 let s:prototype.highlight = g:tlib_inputlist_higroup

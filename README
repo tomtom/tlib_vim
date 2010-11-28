@@ -8,6 +8,9 @@ the library has no impact on startup time or anything else.
 The change-log is included at the bottom of ../plugin/02tlib.vim
 (move the cursor over the file name and type gfG)
 
+Demo of |tlib#input#List()|: 
+http://vimsomnia.blogspot.com/2010/11/selecting-items-from-list-with-tlibs.html
+
 
 -----------------------------------------------------------------------
 
