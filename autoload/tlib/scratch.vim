@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-07-18.
-" @Last Change: 2010-05-19.
-" @Revision:    0.0.157
+" @Last Change: 2010-12-04.
+" @Revision:    0.0.165
 
 if &cp || exists("loaded_tlib_scratch_autoload")
     finish
@@ -16,6 +16,8 @@ let loaded_tlib_scratch_autoload = 1
 " Display a scratch buffer (a buffer with no file). See :TScratch for an 
 " example.
 " Return the scratch's buffer number.
+" Values for keyargs:
+"   scratch_split ... 1: split, 0: window, -1: tab
 function! tlib#scratch#UseScratch(...) "{{{3
     exec tlib#arg#Let([['keyargs', {}]])
     " TLogDBG string(keys(keyargs))
@@ -39,6 +41,7 @@ function! tlib#scratch#UseScratch(...) "{{{3
             let wpos .= ' vertical'
         endif
         " TLogVAR wpos
+        let scratch_split = get(keyargs, 'scratch_split', 1)
         if bn != -1
             " TLogVAR bn
             let wn = bufwinnr(bn)
@@ -46,13 +49,25 @@ function! tlib#scratch#UseScratch(...) "{{{3
                 " TLogVAR wn
                 exec wn .'wincmd w'
             else
-                let cmd = get(keyargs, 'scratch_split', 1) ? wpos.' sbuffer! ' : 'buffer! '
+                if scratch_split == 1
+                    let cmd = wpos.' sbuffer! '
+                elseif scratch_split == -1
+                    let cmd = wpos.' tab sbuffer! '
+                else
+                    let cmd = 'buffer! '
+                endif
                 " TLogVAR cmd
                 silent exec cmd . bn
             endif
         else
             " TLogVAR id
-            let cmd = get(keyargs, 'scratch_split', 1) ? wpos.' split ' : 'edit '
+            if scratch_split == 1
+                let cmd = wpos.' split '
+            elseif scratch_split == -1
+                let cmd = wpos.' tab split '
+            else
+                let cmd = 'edit '
+            endif
             " TLogVAR cmd
             silent exec cmd . escape(id, '%#\ ')
             " silent exec 'split '. id

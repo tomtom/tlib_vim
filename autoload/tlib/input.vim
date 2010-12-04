@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2010-10-31.
-" @Revision:    0.0.812
+" @Last Change: 2010-12-04.
+" @Revision:    0.0.816
 
 
 " :filedoc:
@@ -530,16 +530,18 @@ function! tlib#input#ListW(world, ...) "{{{3
         " TLogDBG string(tlib#win#List())
         if world.state !~ '\<suspend\>'
             " redraw
-            " TLogVAR world.sticky
+            " TLogVAR world.sticky, bufnr("%")
             if world.sticky
                 " TLogDBG "sticky"
                 " TLogVAR world.bufnr
                 " TLogDBG bufwinnr(world.bufnr)
-                if bufwinnr(world.bufnr) == -1
-                    " TLogDBG "UseScratch"
-                    call world.UseScratch()
+                if world.scratch_split > 0
+                    if bufwinnr(world.bufnr) == -1
+                        " TLogDBG "UseScratch"
+                        call world.UseScratch()
+                    endif
+                    let world = tlib#agent#SuspendToParentWindow(world, world.GetSelectedItems(world.rv))
                 endif
-                let world = tlib#agent#SuspendToParentWindow(world, world.GetSelectedItems(world.rv))
             else
                 " TLogDBG "non sticky"
                 " TLogVAR world.state, world.win_wnr, world.bufnr

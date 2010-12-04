@@ -3,14 +3,16 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2010-10-31.
-" @Revision:    0.1.887
+" @Last Change: 2010-12-04.
+" @Revision:    0.1.897
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
 " Inherits from |tlib#Object#New|.
 
 
+" Known keys & values:
+"   scratch_split ... See |tlib#scratch#UseScratch()|
 let s:prototype = tlib#Object#New({
             \ '_class': 'World',
             \ 'name': 'world',
@@ -50,6 +52,7 @@ let s:prototype = tlib#Object#New({
             \ 'scratch': '__InputList__',
             \ 'scratch_filetype': 'tlibInputList',
             \ 'scratch_vertical': 0,
+            \ 'scratch_split': 1,
             \ 'sel_idx': [],
             \ 'show_empty': 0,
             \ 'state': 'display', 
@@ -709,17 +712,21 @@ endf
 function! s:prototype.Resize(hsize, vsize) dict "{{{3
     " TLogVAR self.scratch_vertical, a:hsize, a:vsize
     let world_resize = ''
-    if self.scratch_vertical
-        if a:vsize
-            let world_resize = 'vert resize '. a:vsize
-            " let w:winresize = {'v': a:vsize}
-            setlocal winfixwidth
-        endif
-    else
-        if a:hsize
-            let world_resize = 'resize '. a:hsize
-            " let w:winresize = {'h': a:hsize}
-            setlocal winfixheight
+    let scratch_split = get(self, 'scratch_split', 1)
+    " TLogVAR scratch_split
+    if scratch_split > 0
+        if self.scratch_vertical
+            if a:vsize
+                let world_resize = 'vert resize '. a:vsize
+                " let w:winresize = {'v': a:vsize}
+                setlocal winfixwidth
+            endif
+        else
+            if a:hsize
+                let world_resize = 'resize '. a:hsize
+                " let w:winresize = {'h': a:hsize}
+                setlocal winfixheight
+            endif
         endif
     endif
     if !empty(world_resize)
@@ -928,6 +935,7 @@ function! s:prototype.SetOrigin(...) dict "{{{3
     let self.win_width = winwidth(self.win_wnr)
     " TLogVAR self.win_wnr, self.win_height, self.win_width
     let self.bufnr   = bufnr('%')
+    let self.tabpagenr = tabpagenr()
     let self.cursor  = getpos('.')
     if winview
         let self.winview = tlib#win#GetLayout()

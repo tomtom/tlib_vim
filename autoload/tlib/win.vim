@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-08-24.
-" @Last Change: 2010-03-27.
-" @Revision:    0.0.52
+" @Last Change: 2010-12-04.
+" @Revision:    0.0.54
 
 if &cp || exists("loaded_tlib_win_autoload")
     finish
@@ -43,12 +43,12 @@ function! tlib#win#GetLayout(...) "{{{3
         " endfor
         call tlib#win#Set(winnr)
     endif
-    return {'winnr': winnr('$'), 'winrestcmd': winrestcmd(), 'views': views, 'cmdheight': &cmdheight, 'guioptions': &guioptions}
+    return {'winnr': winnr('$'), 'winrestcmd': winrestcmd(), 'views': views, 'cmdheight': &cmdheight, 'guioptions': &guioptions, 'tabpagenr': tabpagenr()}
 endf
 
 
 function! tlib#win#SetLayout(layout) "{{{3
-    if a:layout.winnr == winnr('$')
+    if a:layout.tabpagenr == tabpagenr() && a:layout.winnr == winnr('$')
         " TLogVAR a:layout.winrestcmd
         " TLogDBG string(tlib#win#List())
         exec a:layout.winrestcmd
