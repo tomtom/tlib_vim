@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2010-12-04.
-" @Revision:    0.0.816
+" @Last Change: 2011-03-10.
+" @Revision:    0.0.818
 
 
 " :filedoc:
@@ -32,7 +32,7 @@
 " type can be:
 "     s  ... Return one selected element
 "     si ... Return the index of the selected element
-"     m  ... Return a list of selcted elements
+"     m  ... Return a list of selected elements
 "     mi ... Return a list of indexes
 "
 " Several pattern matching styles are supported. See 
@@ -109,7 +109,7 @@ endf
 
 
 " :def: function! tlib#input#ListW(world, ?command='')
-" The second argument, command is meant for internal use only.
+" The second argument (command) is meant for internal use only.
 " The same as |tlib#input#List| but the arguments are packed into world 
 " (an instance of tlib#World as returned by |tlib#World#New|).
 function! tlib#input#ListW(world, ...) "{{{3

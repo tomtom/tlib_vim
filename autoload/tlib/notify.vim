@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-09-19.
-" @Last Change: 2009-02-15.
-" @Revision:    0.0.14
+" @Last Change: 2011-03-10.
+" @Revision:    0.0.15
 
 let s:save_cpo = &cpo
 set cpo&vim
@@ -36,7 +36,7 @@ endf
 " Contributed by Erik Falor:
 " If the line containing the message is too long, echoing it will cause 
 " a 'Hit ENTER' prompt to appear.  This function cleans up the line so 
-" that doesn't happen.
+" that does not happen.
 " The echoed line is too long if it is wider than the width of the 
 " window, minus cmdline space taken up by the ruler and showcmd 
 " features.

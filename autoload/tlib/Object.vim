@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2010-09-05.
-" @Revision:    0.1.124
+" @Last Change: 2011-03-10.
+" @Revision:    0.1.126
 
 " :filedoc:
 " Provides a prototype plus some OO-like methods.
@@ -20,9 +20,9 @@ let s:prototype  = {'_class': ['object'], '_super': [], '_id': 0} "{{{2
 
 " :def: function! tlib#Object#New(?fields={})
 " This function creates a prototype that provides some kind of 
-" inheritance mechanism and a way to call parent/super's methods.
+" inheritance mechanism and a way to call parent/super methods.
 "
-" The usage demonstrated in the following example works best, when every 
+" The usage demonstrated in the following example works best when every 
 " class/prototype is defined in a file of its own.
 "
 " The reason for why there is a dedicated constructor function is that 

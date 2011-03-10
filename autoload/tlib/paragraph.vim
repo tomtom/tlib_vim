@@ -3,14 +3,14 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2009-10-26.
-" @Last Change: 2010-01-09.
-" @Revision:    58
+" @Last Change: 2011-03-10.
+" @Revision:    59
 
 let s:save_cpo = &cpo
 set cpo&vim
 
 
-" Return an object describing an |paragraph|.
+" Return an object describing a |paragraph|.
 function! tlib#paragraph#GetMetric() "{{{3
     let sp = {'text_start': line("'{") + 1}
     if line("'}") == line("$")

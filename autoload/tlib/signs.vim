@@ -2,8 +2,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2009-03-12.
-" @Last Change: 2009-03-13.
-" @Revision:    0.0.44
+" @Last Change: 2011-03-10.
+" @Revision:    0.0.45
 
 let s:save_cpo = &cpo
 set cpo&vim
@@ -60,7 +60,7 @@ endf
 " endf
 
 
-" Add signs for all locations in LIST. LIST must confirm with the 
+" Add signs for all locations in LIST. LIST must adhere with the 
 " quickfix list format (see |getqflist()|; only the fields lnum and 
 " bufnr are required).
 "

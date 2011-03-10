@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-04-10.
-" @Last Change: 2010-12-04.
-" @Revision:    655
+" @Last Change: 2011-03-10.
+" @Revision:    658
 " GetLatestVimScripts: 1863 1 tlib.vim
 
 if &cp || exists("loaded_tlib")
@@ -55,7 +55,7 @@ command! -nargs=+ TLet if !exists(matchstr(<q-args>, '^[^=[:space:]]\+')) | exec
 " Open a scratch buffer (a buffer without a file).
 "   TScratch  ... use split window
 "   TScratch! ... use the whole frame
-" This command takes an (inner) dictionnary as optional argument.
+" This command takes an (inner) dictionary as optional argument.
 " EXAMPLES: >
 "   TScratch 'scratch': '__FOO__'
 "   => Open a scratch buffer named __FOO__
@@ -85,7 +85,7 @@ command! -nargs=+ TKeyArg exec tlib#arg#Key([<args>])
 
 
 " :display: TBrowseOutput COMMAND
-" Ever wondered how to effciently browse the output of a command 
+" Ever wondered how to efficiently browse the output of a command 
 " without redirecting it to a file? This command takes a command as 
 " argument and presents the output via |tlib#input#List()| so that you 
 " can easily search for a keyword (e.g. the name of a variable or 
@@ -107,7 +107,7 @@ command! -nargs=1 -complete=command TTimeCommand call tlib#cmd#Time(<q-args>)
 
 " Variables~ {{{1
 
-" When 1, automatically select a the last remaining item after applying 
+" When 1, automatically select a last remaining item after applying 
 " any filters.
 TLet g:tlib_pick_last_item = 1
 
@@ -122,7 +122,7 @@ TLet g:tlib_scratch_pos = 'botright'
 " Size of the input list window (in percent) from the main size (of &lines).
 TLet g:tlib_inputlist_pct = 50
 
-" Size of filename columns when listing filenames
+" Size of filename columns when listing filenames.
 TLet g:tlib_inputlist_width_filename = '&co / 3'
 " TLet g:tlib_inputlist_width_filename = 25
 
@@ -130,11 +130,11 @@ TLet g:tlib_inputlist_width_filename = '&co / 3'
 TLet g:tlib_inputlist_higroup = 'IncSearch'
 
 " If a list contains more items, don't do an incremental "live search", 
-" but use |input()| the quere the user for a filter. This is useful on 
+" but use |input()| to query the user for a filter. This is useful on 
 " slower machines or with very long lists.
 TLet g:tlib_inputlist_livesearch_threshold = 1000
 
-" If true, show some indicators about the status of a filename (eg 
+" If true, show some indicators about the status of a filename (e.g. 
 " buflisted(), bufloaded() etc.).
 " This is disabled by default because vim checks also for the file on 
 " disk when doing this.
@@ -150,7 +150,7 @@ TLet g:tlib_inputlist_filename_indicators = 0
 "     - |tlib#Filter_fuzzy#New()|
 TLet g:tlib_inputlist_match = 'cnf'
 
-" If non null, display only a short info about the filter.
+" If not null, display only a short info about the filter.
 TLet g:tlib_inputlist_shortmessage = 0
 
 " Extra tags for |tlib#tag#Retrieve()| (see there). Can also be buffer-local.

@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-08-23.
-" @Last Change: 2010-03-29.
-" @Revision:    0.0.27
+" @Last Change: 2011-03-10.
+" @Revision:    0.0.30
 
 if &cp || exists("loaded_tlib_cmd_autoload")
     finish
@@ -47,7 +47,8 @@ function! tlib#cmd#UseVertical(...) "{{{3
 endf
 
 
-" Print the time in seconds a command takes.
+" Print the time in seconds or milliseconds (if your version of VIM 
+" has |+reltime|) a command takes.
 function! tlib#cmd#Time(cmd) "{{{3
     if has('reltime')
         let start = tlib#time#Now()

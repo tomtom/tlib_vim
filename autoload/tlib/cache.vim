@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2010-11-22.
-" @Revision:    0.1.181
+" @Last Change: 2011-03-10.
+" @Revision:    0.1.182
 
 
 " |tlib#cache#Purge()|: Remove cache files older than N days.
@@ -31,7 +31,7 @@ TLet g:tlib#cache#dont_purge = ['[\/]\.last_purge$']
 
 
 " :display: tlib#cache#Dir(?mode = 'bg')
-" The default cache directory
+" The default cache directory.
 function! tlib#cache#Dir(...) "{{{3
     TVarArg ['mode', 'bg']
     let dir = tlib#var#Get('tlib_cache', mode)

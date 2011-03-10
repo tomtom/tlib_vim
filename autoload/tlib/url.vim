@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2010-01-04.
-" @Revision:    0.0.27
+" @Last Change: 2011-03-10.
+" @Revision:    0.0.28
 
 
 " TODO: These functions could use printf() now.
@@ -39,7 +39,7 @@ function! tlib#url#EncodeChar(char) "{{{3
 endf
 
 
-" Encode an url.
+" Encode an URL.
 function! tlib#url#Encode(url, ...) "{{{3
     TVarArg ['extrachars', '']
     let rx = '\([^a-zA-Z0-9_.'. extrachars .'-]\)'

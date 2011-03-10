@@ -292,7 +292,7 @@ TRequire NAME [VERSION [FILE]]
     Open a scratch buffer (a buffer without a file).
       TScratch  ... use split window
       TScratch! ... use the whole frame
-    This command takes an (inner) dictionnary as optional argument.
+    This command takes an (inner) dictionary as optional argument.
     EXAMPLES: >
       TScratch 'scratch': '__FOO__'
       => Open a scratch buffer named __FOO__
@@ -322,7 +322,7 @@ TRequire NAME [VERSION [FILE]]
 
                                                     *:TBrowseOutput*
 TBrowseOutput COMMAND
-    Ever wondered how to effciently browse the output of a command 
+    Ever wondered how to efficiently browse the output of a command 
     without redirecting it to a file? This command takes a command as 
     argument and presents the output via |tlib#input#List()| so that you 
     can easily search for a keyword (e.g. the name of a variable or 
@@ -341,7 +341,7 @@ TTimeCommand CMD
 
                                                     *g:tlib_pick_last_item*
 g:tlib_pick_last_item          (default: 1)
-    When 1, automatically select a the last remaining item after applying 
+    When 1, automatically select a last remaining item after applying 
     any filters.
 
                                                     *g:tlib_sortprefs_threshold*
@@ -360,7 +360,7 @@ g:tlib_inputlist_pct           (default: 50)
 
                                                     *g:tlib_inputlist_width_filename*
 g:tlib_inputlist_width_filename (default: '&co / 3')
-    Size of filename columns when listing filenames
+    Size of filename columns when listing filenames.
 
                                                     *g:tlib_inputlist_higroup*
 g:tlib_inputlist_higroup       (default: 'IncSearch')
@@ -369,12 +369,12 @@ g:tlib_inputlist_higroup       (default: 'IncSearch')
                                                     *g:tlib_inputlist_livesearch_threshold*
 g:tlib_inputlist_livesearch_threshold (default: 1000)
     If a list contains more items, don't do an incremental "live search", 
-    but use |input()| the quere the user for a filter. This is useful on 
+    but use |input()| to query the user for a filter. This is useful on 
     slower machines or with very long lists.
 
                                                     *g:tlib_inputlist_filename_indicators*
 g:tlib_inputlist_filename_indicators (default: 0)
-    If true, show some indicators about the status of a filename (eg 
+    If true, show some indicators about the status of a filename (e.g. 
     buflisted(), bufloaded() etc.).
     This is disabled by default because vim checks also for the file on 
     disk when doing this.
@@ -392,7 +392,7 @@ g:tlib_inputlist_match         (default: 'cnf')
 
                                                     *g:tlib_inputlist_shortmessage*
 g:tlib_inputlist_shortmessage  (default: 0)
-    If non null, display only a short info about the filter.
+    If not null, display only a short info about the filter.
 
                                                     *g:tlib_tags_extra*
 g:tlib_tags_extra              (default: '')
@@ -490,7 +490,7 @@ autoload/tlib/paragraph.vim~
 
                                                     *tlib#paragraph#GetMetric()*
 tlib#paragraph#GetMetric()
-    Return an object describing an |paragraph|.
+    Return an object describing a |paragraph|.
 
                                                     *tlib#paragraph#Move()*
 tlib#paragraph#Move(direction, count)
@@ -503,7 +503,9 @@ autoload/tlib/scratch.vim~
 tlib#scratch#UseScratch(?keyargs={})
     Display a scratch buffer (a buffer with no file). See :TScratch for an 
     example.
-    Return the scratch's buffer number.
+    Return the scratch buffer's number.
+    Values for keyargs:
+      scratch_split ... 1: split, 0: window, -1: tab
 
                                                     *tlib#scratch#CloseScratch()*
 tlib#scratch#CloseScratch(keyargs, ...)
@@ -543,9 +545,9 @@ Provides a prototype plus some OO-like methods.
                                                     *tlib#Object#New()*
 tlib#Object#New(?fields={})
     This function creates a prototype that provides some kind of 
-    inheritance mechanism and a way to call parent/super's methods.
+    inheritance mechanism and a way to call parent/super methods.
     
-    The usage demonstrated in the following example works best, when every 
+    The usage demonstrated in the following example works best when every 
     class/prototype is defined in a file of its own.
     
     The reason for why there is a dedicated constructor function is that 
@@ -642,7 +644,8 @@ tlib#cmd#UseVertical(?rx='')
 
                                                     *tlib#cmd#Time()*
 tlib#cmd#Time(cmd)
-    Print the time in seconds a command takes.
+    Print the time in seconds or milliseconds (if your version of VIM 
+    has |+reltime|) a command takes.
 
 
 ========================================================================
@@ -1094,7 +1097,7 @@ tlib#url#EncodeChar(char)
 
                                                     *tlib#url#Encode()*
 tlib#url#Encode(url, ...)
-    Encode an url.
+    Encode an URL.
 
 
 ========================================================================
@@ -1121,7 +1124,7 @@ tlib#input#List(type. ?query='', ?list=[], ?handlers=[], ?default="", ?timeout=0
     type can be:
         s  ... Return one selected element
         si ... Return the index of the selected element
-        m  ... Return a list of selcted elements
+        m  ... Return a list of selected elements
         mi ... Return a list of indexes
     
     Several pattern matching styles are supported. See 
@@ -1143,7 +1146,7 @@ tlib#input#ListD(dict)
 
                                                     *tlib#input#ListW()*
 tlib#input#ListW(world, ?command='')
-    The second argument, command is meant for internal use only.
+    The second argument (command) is meant for internal use only.
     The same as |tlib#input#List| but the arguments are packed into world 
     (an instance of tlib#World as returned by |tlib#World#New|).
 
@@ -1343,8 +1346,8 @@ tlib#tag#Retrieve(rx, ?extra_tags=0)
     (see 'tags') is temporarily expanded with |g:tlib_tags_extra|.
     
     Example use:
-    If want to include tags for, eg, JDK, normal tags use can become slow. 
-    You could proceed as follows:
+    If you want to include tags for, eg, JDK, normal tags use can become 
+    slow. You could proceed as follows:
         1. Create a tags file for the JDK sources. When creating the tags 
         file, make sure to include inheritance information and the like 
         (command-line options like --fields=+iaSm --extra=+q should be ok).
@@ -1353,19 +1356,19 @@ tlib#tag#Retrieve(rx, ?extra_tags=0)
              ctags -R --fields=+iaSm --extra=+q ${JAVA_HOME}/src
              head -n 6 tags > tags0
              grep access:public tags >> tags0
-<      2. Say 'tags' included project specific tags files. In 
+<      2. Make 'tags' include project specific tags files. In 
          ~/vimfiles/after/ftplugin/java.vim insert: >
              let b:tlib_tags_extra = $JAVA_HOME .'/tags0'
 <      3. When this function is invoked as >
              echo tlib#tag#Retrieve('print')
-<      It will return only project-local tags. If it is invoked as >
+<      it will return only project-local tags. If it is invoked as >
              echo tlib#tag#Retrieve('print', 1)
 <      tags from the JDK will be included.
 
                                                     *tlib#tag#Collect()*
 tlib#tag#Collect(constraints, ?use_extra=1, ?match_front=1)
-    Retrieve tags that meet the the constraints (a dictionnary of fields and 
-    regexp, with the exception of the kind field that is a list of chars). 
+    Retrieve tags that meet the constraints (a dictionnary of fields and 
+    regexp, with the exception of the kind field which is a list of chars). 
     For the use of the optional use_extra argument see 
     |tlib#tag#Retrieve()|.
 
@@ -1386,7 +1389,7 @@ tlib#signs#ClearBuffer(sign, bufnr)
 
                                                     *tlib#signs#Mark()*
 tlib#signs#Mark(sign, list)
-    Add signs for all locations in LIST. LIST must confirm with the 
+    Add signs for all locations in LIST. LIST must adhere with the 
     quickfix list format (see |getqflist()|; only the fields lnum and 
     bufnr are required).
     
@@ -1426,7 +1429,7 @@ g:tlib#cache#dont_purge        (default: ['[\/]\.last_purge$'])
 
                                                     *tlib#cache#Dir()*
 tlib#cache#Dir(?mode = 'bg')
-    The default cache directory
+    The default cache directory.
 
                                                     *tlib#cache#Filename()*
 tlib#cache#Filename(type, ?file=%, ?mkdir=0)
@@ -1517,7 +1520,7 @@ tlib#notify#TrimMessage(message)
     Contributed by Erik Falor:
     If the line containing the message is too long, echoing it will cause 
     a 'Hit ENTER' prompt to appear.  This function cleans up the line so 
-    that doesn't happen.
+    that does not happen.
     The echoed line is too long if it is wider than the width of the 
     window, minus cmdline space taken up by the ruler and showcmd 
     features.

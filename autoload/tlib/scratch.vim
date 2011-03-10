@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-07-18.
-" @Last Change: 2010-12-04.
-" @Revision:    0.0.165
+" @Last Change: 2011-03-10.
+" @Revision:    0.0.166
 
 if &cp || exists("loaded_tlib_scratch_autoload")
     finish
@@ -15,7 +15,7 @@ let loaded_tlib_scratch_autoload = 1
 " :def: function! tlib#scratch#UseScratch(?keyargs={})
 " Display a scratch buffer (a buffer with no file). See :TScratch for an 
 " example.
-" Return the scratch's buffer number.
+" Return the scratch buffer's number.
 " Values for keyargs:
 "   scratch_split ... 1: split, 0: window, -1: tab
 function! tlib#scratch#UseScratch(...) "{{{3

@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-11-01.
-" @Last Change: 2009-04-11.
-" @Revision:    0.0.48
+" @Last Change: 2011-03-10.
+" @Revision:    0.0.53
 
 if &cp || exists("loaded_tlib_tag_autoload")
     finish
@@ -18,8 +18,8 @@ let loaded_tlib_tag_autoload = 1
 " (see 'tags') is temporarily expanded with |g:tlib_tags_extra|.
 "
 " Example use:
-" If want to include tags for, eg, JDK, normal tags use can become slow. 
-" You could proceed as follows:
+" If you want to include tags for, eg, JDK, normal tags use can become 
+" slow. You could proceed as follows:
 "     1. Create a tags file for the JDK sources. When creating the tags 
 "     file, make sure to include inheritance information and the like 
 "     (command-line options like --fields=+iaSm --extra=+q should be ok).
@@ -28,12 +28,12 @@ let loaded_tlib_tag_autoload = 1
 "          ctags -R --fields=+iaSm --extra=+q ${JAVA_HOME}/src
 "          head -n 6 tags > tags0
 "          grep access:public tags >> tags0
-" <    2. Say 'tags' included project specific tags files. In 
+" <    2. Make 'tags' include project specific tags files. In 
 "      ~/vimfiles/after/ftplugin/java.vim insert: >
 "          let b:tlib_tags_extra = $JAVA_HOME .'/tags0'
 " <    3. When this function is invoked as >
 "          echo tlib#tag#Retrieve('print')
-" <    It will return only project-local tags. If it is invoked as >
+" <    it will return only project-local tags. If it is invoked as >
 "          echo tlib#tag#Retrieve('print', 1)
 " <    tags from the JDK will be included.
 function! tlib#tag#Retrieve(rx, ...) "{{{3
@@ -59,8 +59,8 @@ function! tlib#tag#Retrieve(rx, ...) "{{{3
 endf
 
 
-" Retrieve tags that meet the the constraints (a dictionnary of fields and 
-" regexp, with the exception of the kind field that is a list of chars). 
+" Retrieve tags that meet the constraints (a dictionnary of fields and 
+" regexp, with the exception of the kind field which is a list of chars). 
 " For the use of the optional use_extra argument see 
 " |tlib#tag#Retrieve()|.
 " :def: function! tlib#tag#Collect(constraints, ?use_extra=1, ?match_front=1)
