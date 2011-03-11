@@ -125,7 +125,7 @@ endf
                 let yn = 'y'
             else
                 let txt = "TLib: The cache directory '". dir ."' should be purged of old files.\nDelete files older than ". g:tlib#cache#purge_days ." days now?"
-                let yn = tlib#input#Dialog(txt, ['yes', 'no', 'edit'], 'no')
+                let yn = tlib#input#Dialog(txt, ['yes', 'no'], 'no')
             endif
             if yn =~ '^y\%[es]$'
                 call tlib#cache#Purge()
