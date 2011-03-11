@@ -118,7 +118,7 @@ endf
             let threshold = localtime() - g:tlib#cache#purge_every_days * g:tlib#date#dayshift
             let should_purge = getftime(last_purge) < threshold
         else
-            let should_purge = !empty(glob(tlib#file#Join([dir, '**'])))
+            let should_purge = 0 " should ignore empty dirs, like the tmru one: !empty(glob(tlib#file#Join([dir, '**'])))
         endif
         if should_purge
             if last_purge_exists
