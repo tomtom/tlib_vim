@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2011-03-10.
-" @Revision:    0.0.818
+" @Last Change: 2011-03-18.
+" @Revision:    0.0.828
 
 
 " :filedoc:
@@ -114,6 +114,9 @@ endf
 " (an instance of tlib#World as returned by |tlib#World#New|).
 function! tlib#input#ListW(world, ...) "{{{3
     TVarArg 'cmd'
+    if get(a:world, 'pick_single_item', g:tlib_pick_single_item) && stridx(a:world.type, 'e') == -1 && len(a:world.base) <= 1
+        return get(a:world.base, 0, a:world.rv)
+    endif
     let world = a:world
     let world.filetype = &filetype
     let world.fileencoding = &fileencoding
@@ -607,7 +610,7 @@ function! tlib#input#EditList(query, list, ...) "{{{3
     let default  = a:0 >= 2 ? a:2 : []
     let timeout  = a:0 >= 3 ? a:3 : 0
     " TLogVAR handlers
-    let rv = tlib#input#List('m', a:query, copy(a:list), handlers, default, timeout)
+    let rv = tlib#input#List('me', a:query, copy(a:list), handlers, default, timeout)
     " TLogVAR rv
     if empty(rv)
         return a:list

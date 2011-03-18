@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-04-10.
-" @Last Change: 2011-03-10.
-" @Revision:    658
+" @Last Change: 2011-03-18.
+" @Revision:    660
 " GetLatestVimScripts: 1863 1 tlib.vim
 
 if &cp || exists("loaded_tlib")
@@ -110,6 +110,11 @@ command! -nargs=1 -complete=command TTimeCommand call tlib#cmd#Time(<q-args>)
 " When 1, automatically select a last remaining item after applying 
 " any filters.
 TLet g:tlib_pick_last_item = 1
+
+" If a list with one item is passed to |tlib#input#List()|, 
+" automatically select that item.
+" This variable complements |g:tlib_pick_last_item|.
+TLet g:tlib_pick_single_item = 0
 
 " If a list is bigger than this value, don't try to be smart when 
 " selecting an item. Be slightly faster instead.
