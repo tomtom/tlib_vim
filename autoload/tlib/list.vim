@@ -3,13 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2010-04-03.
-" @Revision:    0.0.34
-
-if &cp || exists("loaded_tlib_list_autoload")
-    finish
-endif
-let loaded_tlib_list_autoload = 1
+" @Last Change: 2011-03-18.
+" @Revision:    36
 
 
 """ List related functions {{{1
