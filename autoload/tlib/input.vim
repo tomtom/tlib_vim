@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2011-03-18.
-" @Revision:    0.0.828
+" @Last Change: 2011-03-20.
+" @Revision:    0.0.833
 
 
 " :filedoc:
@@ -114,7 +114,7 @@ endf
 " (an instance of tlib#World as returned by |tlib#World#New|).
 function! tlib#input#ListW(world, ...) "{{{3
     TVarArg 'cmd'
-    if get(a:world, 'pick_single_item', g:tlib_pick_single_item) && stridx(a:world.type, 'e') == -1 && len(a:world.base) <= 1
+    if a:world.pick_last_item >= 1 && stridx(a:world.type, 'e') == -1 && len(a:world.base) <= 1
         return get(a:world.base, 0, a:world.rv)
     endif
     let world = a:world
@@ -230,7 +230,7 @@ function! tlib#input#ListW(world, ...) "{{{3
                             else
                                 if world.llen == 1
                                     let world.last_item = world.list[0]
-                                    if world.pick_last_item
+                                    if world.pick_last_item >= 2
                                         " echom 'Pick last item: '. world.list[0]
                                         let world.prefidx = '1'
                                         " TLogDBG 'pick last item'

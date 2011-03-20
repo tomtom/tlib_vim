@@ -341,7 +341,9 @@ TTimeCommand CMD
 
                                                     *g:tlib_pick_last_item*
 g:tlib_pick_last_item          (default: 1)
-    When 1, automatically select a last remaining item after applying 
+    When 1, automatically select the last remaining item only if the list 
+    had only one item to begin with.
+    When 2, automatically select a last remaining item after applying 
     any filters.
 
                                                     *g:tlib_sortprefs_threshold*

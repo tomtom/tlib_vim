@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2011-03-18.
-" @Revision:    0.1.898
+" @Last Change: 2011-03-20.
+" @Revision:    0.1.899
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -42,7 +42,6 @@ let s:prototype = tlib#Object#New({
             \ 'offset': 1,
             \ 'offset_horizontal': 0,
             \ 'pick_last_item': tlib#var#Get('tlib_pick_last_item', 'bg'),
-            \ 'pick_single_item': tlib#var#Get('tlib_pick_single_item', 'bg'),
             \ 'post_handlers': [],
             \ 'query': '',
             \ 'resize': 0,
