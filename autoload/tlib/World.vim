@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2011-03-20.
-" @Revision:    0.1.899
+" @Last Change: 2011-03-22.
+" @Revision:    0.1.905
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -29,6 +29,7 @@ let s:prototype = tlib#Object#New({
             \ 'filter_options': '',
             \ 'follow_cursor': '',
             \ 'has_menu': 0,
+            \ 'help_extra': [],
             \ 'index_table': [],
             \ 'initial_filter': [['']],
             \ 'initial_index': 1,
@@ -663,7 +664,7 @@ function! s:prototype.DisplayHelp() dict "{{{3
     " \ 'Help:',
     let help = [
                 \ 'Mouse        ... Pick an item            Letter          ... Filter the list',
-                \ printf('Number       ... Pick an item            "%s", "%s", %sWORD ... AND, OR, NOT',
+                \ printf('<m-Number>   ... Pick an item            "%s", "%s", %sWORD ... AND, OR, NOT',
                 \   g:tlib_inputlist_and, g:tlib_inputlist_or, g:tlib_inputlist_not),
                 \ 'Enter        ... Pick the current item   <bs>, <c-bs>    ... Reduce filter',
                 \ '<c|m-r>      ... Reset the display       Up/Down         ... Next/previous item',
@@ -691,6 +692,9 @@ function! s:prototype.DisplayHelp() dict "{{{3
             call add(help, printf('%-12s ... %s', key, desc))
         endif
     endfor
+    if !empty(self.help_extra)
+        let help += self.help_extra
+    endif
     let help += [
                 \ '',
                 \ 'Exact matches and matches at word boundaries is given more weight.',

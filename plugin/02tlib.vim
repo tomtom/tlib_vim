@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-04-10.
-" @Last Change: 2011-03-20.
-" @Revision:    664
+" @Last Change: 2011-03-22.
+" @Revision:    671
 " GetLatestVimScripts: 1863 1 tlib.vim
 
 if &cp || exists("loaded_tlib")
@@ -290,6 +290,10 @@ TLet g:tlib_handlers_EditList = [
             \ {'key': 22, 'agent': 'tlib#agent#Paste',       'key_name': '<c-v>', 'help': 'Paste item(s)'},
             \ {'pick_last_item': 0},
             \ {'return_agent': 'tlib#agent#EditReturnValue'},
+            \ {'help_extra': [
+            \      'Submit changes by pressing ENTER or <c-s> or <c-w><cr>',
+            \      'Cancel editing by pressing <c-w>c'
+            \ ]},
             \ ]
 
 
