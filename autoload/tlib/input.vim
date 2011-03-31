@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2011-03-22.
-" @Revision:    0.0.836
+" @Last Change: 2011-03-31.
+" @Revision:    0.0.840
 
 
 " :filedoc:
@@ -520,6 +520,8 @@ function! tlib#input#ListW(world, ...) "{{{3
         endif
 
     finally
+        call world.Leave()
+
         " TLogVAR statusline
         " let &l:statusline = statusline
         " let &laststatus = laststatus
@@ -580,9 +582,7 @@ function! s:Init(world, cmd) "{{{3
         endif
     elseif !a:world.initialized
         " TLogVAR a:world.initialized, a:world.win_wnr, a:world.bufnr
-        let a:world.initialized = 1
-        call a:world.SetOrigin(1)
-        call a:world.Reset(1)
+        call a:world.Initialize()
         if !empty(a:cmd)
             let a:world.state .= ' '. a:cmd
         endif

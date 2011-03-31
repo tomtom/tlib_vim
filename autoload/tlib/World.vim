@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2011-03-22.
-" @Revision:    0.1.905
+" @Last Change: 2011-03-31.
+" @Revision:    0.1.914
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -19,6 +19,7 @@ let s:prototype = tlib#Object#New({
             \ 'allow_suspend': 1,
             \ 'base': [], 
             \ 'bufnr': -1,
+            \ 'cache_var': '',
             \ 'display_format': '',
             \ 'fileencoding': &fileencoding,
             \ 'fmt_display': {},
@@ -42,11 +43,13 @@ let s:prototype = tlib#Object#New({
             \ 'numeric_chars': tlib#var#Get('tlib_numeric_chars', 'bg'),
             \ 'offset': 1,
             \ 'offset_horizontal': 0,
+            \ 'on_leave': [],
             \ 'pick_last_item': tlib#var#Get('tlib_pick_last_item', 'bg'),
             \ 'post_handlers': [],
             \ 'query': '',
             \ 'resize': 0,
             \ 'resize_vertical': 0,
+            \ 'restore_from_cache': [],
             \ 'retrieve_eval': '',
             \ 'return_agent': '',
             \ 'rv': '',
@@ -589,6 +592,30 @@ function! s:prototype.CloseScratch(...) dict "{{{3
         endif
         return rv
     endif
+endf
+
+
+" :nodoc:
+function! s:prototype.Initialize() dict "{{{3
+    let self.initialized = 1
+    call self.SetOrigin(1)
+    call self.Reset(1)
+    if !empty(self.cache_var) && exists(self.cache_var)
+        for prop in self.restore_from_cache
+            exec 'let self[prop] = get('. self.cache_var .', prop, self[prop])'
+        endfor
+    endif
+endf
+
+
+" :nodoc:
+function! s:prototype.Leave() dict "{{{3
+    if !empty(self.cache_var)
+        exec 'let '. self.cache_var .' = self'
+    endif
+    for handler in self.on_leave
+        call call(handler, [self])
+    endfor
 endf
 
 
