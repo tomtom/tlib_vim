@@ -26,7 +26,22 @@ function! tlib#cmd#BrowseOutput(command) "{{{3
     call tlib#cmd#BrowseOutputWithCallback("tlib#cmd#DefaultBrowseOutput", a:command)
 endf
 
-" See |:TBrowseOutputWithCallback|.
+" :def: function! tlib#cmd#BrowseOutputWithCallback(callback, command)
+" Execute COMMAND and present its output in a |tlib#input#List()|;
+" when a line is selected, execute the function named as the CALLBACK
+" and pass in that line as an argument.
+"
+" The CALLBACK function gives you an opportunity to massage the COMMAND output
+" and possibly act on it in a meaningful way. For example, if COMMAND listed
+" all URIs found in the current buffer, CALLBACK could validate and then open
+" the selected URI in the system's default browser.
+"
+" This function is meant to be a tool to help compose the implementations of
+" powerful commands that use |tlib#input#List()| as a common interface. See
+" |TBrowseScriptnames| as an example.
+"
+" EXAMPLES: >
+"   call tlib#cmd#BrowseOutputWithCallback('tlib#cmd#ParseScriptname', 'scriptnames')
 function! tlib#cmd#BrowseOutputWithCallback(callback, command) "{{{3
     let list = tlib#cmd#OutputAsList(a:command)
     let cmd = tlib#input#List('s', 'Output of: '. a:command, list)

@@ -98,8 +98,16 @@ command! -nargs=+ TKeyArg exec tlib#arg#Key([<args>])
 "   TBrowseOutput 20verb TeaseTheCulprit
 command! -nargs=1 -complete=command TBrowseOutput call tlib#cmd#BrowseOutput(<q-args>)
 
+" :display: TBrowseScriptnames
+" List all sourced script names (the output of ':scriptnames').
+"
+" When you press enter, the selected script will be opened in the current
+" window. Press ESC to cancel.
+"
+" EXAMPLES: >
 "   TBrowseScriptnames 
-command! -nargs=0 -complete=command TBrowseScriptnames call tlib#cmd#BrowseOutputWithCallback("tlib#cmd#ParseScriptname", "scriptnames")
+command! -nargs=0 -complete=command TBrowseScriptnames call
+            \ tlib#cmd#BrowseOutputWithCallback("tlib#cmd#ParseScriptname", "scriptnames")
 
 " :display: TTimeCommand CMD
 " Time the execution time of CMD.

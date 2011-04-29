@@ -1,6 +1,6 @@
 " The following variable configures the way |tlib#input#ListD()| works. 
-" In this example, we allow selection multiple items (we could also 
-" allow only single choice and make |tlib#input#ListD()| work on the 
+" In this example, we allow selection of multiple items (we could also 
+" allow only a single choice and make |tlib#input#ListD()| work on the 
 " indices, not the items).
 "
 " We also set a prompt that will be displayed in the command area.
