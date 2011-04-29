@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2009-10-26.
-" @Last Change: 2011-03-10.
-" @Revision:    59
+" @Last Change: 2011-04-03.
+" @Revision:    62
 
 let s:save_cpo = &cpo
 set cpo&vim
@@ -46,6 +46,16 @@ function! tlib#paragraph#GetMetric() "{{{3
 endf
 
 
+" This function can be used with the tinymode plugin to move around 
+" paragraphs.
+"
+" Example configuration: >
+" 
+"   call tinymode#EnterMap("para_move", "gp")
+"   call tinymode#ModeMsg("para_move", "Move paragraph: j/k")
+"   call tinymode#Map("para_move", "j", "silent call tlib#paragraph#Move('Down', '[N]')")
+"   call tinymode#Map("para_move", "k", "silent call tlib#paragraph#Move('Up', '[N]')")
+"   call tinymode#ModeArg("para_move", "owncount", 1)
 function! tlib#paragraph#Move(direction, count)
     " TLogVAR a:direction, a:count
     let mycount = empty(a:count) ? 1 : a:count
