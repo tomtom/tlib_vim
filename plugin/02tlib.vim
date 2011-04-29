@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-04-10.
-" @Last Change: 2011-03-22.
-" @Revision:    671
+" @Last Change: 2011-04-28.
+" @Revision:    672
 " GetLatestVimScripts: 1863 1 tlib.vim
 
 if &cp || exists("loaded_tlib")
@@ -98,6 +98,8 @@ command! -nargs=+ TKeyArg exec tlib#arg#Key([<args>])
 "   TBrowseOutput 20verb TeaseTheCulprit
 command! -nargs=1 -complete=command TBrowseOutput call tlib#cmd#BrowseOutput(<q-args>)
 
+"   TBrowseScriptnames 
+command! -nargs=0 -complete=command TBrowseScriptnames call tlib#cmd#BrowseOutputWithCallback("tlib#cmd#ParseScriptname", "scriptnames")
 
 " :display: TTimeCommand CMD
 " Time the execution time of CMD.

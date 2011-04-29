@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-08-23.
-" @Last Change: 2011-03-10.
-" @Revision:    0.0.30
+" @Last Change: 2011-04-28.
+" @Revision:    0.0.31
 
 if &cp || exists("loaded_tlib_cmd_autoload")
     finish
@@ -23,13 +23,27 @@ endf
 
 " See |:TBrowseOutput|.
 function! tlib#cmd#BrowseOutput(command) "{{{3
+    call tlib#cmd#BrowseOutputWithCallback("tlib#cmd#DefaultBrowseOutput", a:command)
+endf
+
+" See |:TBrowseOutputWithCallback|.
+function! tlib#cmd#BrowseOutputWithCallback(callback, command) "{{{3
     let list = tlib#cmd#OutputAsList(a:command)
     let cmd = tlib#input#List('s', 'Output of: '. a:command, list)
     if !empty(cmd)
-        call feedkeys(':'. cmd)
+        let Callback = function(a:callback)
+        call call(Callback, [cmd])
     endif
 endf
 
+function! tlib#cmd#DefaultBrowseOutput(cmd) "{{{3
+    call feedkeys(':'. a:cmd)
+endf
+
+function! tlib#cmd#ParseScriptname(line) "{{{3
+    let parsedValue = substitute(a:line, '^.\{-}\/', '/', '')
+    exe ':e '. parsedValue
+endf
 
 " :def: function! tlib#cmd#UseVertical(?rx='')
 " Look at the history whether the command was called with vertical. If 
