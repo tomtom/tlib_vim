@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2011-03-31.
-" @Revision:    0.1.914
+" @Last Change: 2011-04-01.
+" @Revision:    0.1.915
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -604,6 +604,7 @@ function! s:prototype.Initialize() dict "{{{3
         for prop in self.restore_from_cache
             exec 'let self[prop] = get('. self.cache_var .', prop, self[prop])'
         endfor
+        exec 'unlet '. self.cache_var
     endif
 endf
 
