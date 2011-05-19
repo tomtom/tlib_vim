@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
-" @Last Change: 2010-11-20.
-" @Revision:    0.0.79
+" @Last Change: 2011-05-18.
+" @Revision:    0.0.84
 
 let s:prototype = tlib#Object#New({'_class': ['Filter_cnf'], 'name': 'cnf'}) "{{{2
 let s:prototype.highlight = g:tlib_inputlist_higroup
@@ -27,6 +27,15 @@ endf
 
 " :nodoc:
 function! s:prototype.Init(world) dict "{{{3
+endf
+
+
+" :nodoc:
+function! s:prototype.Help(world) dict "{{{3
+    return [a:world.FormatHelp(
+                \ printf('"%s", "%s", %sWORD', g:tlib_inputlist_and, g:tlib_inputlist_or, g:tlib_inputlist_not),
+                \ 'AND, OR, NOT')
+                \ ]
 endf
 
 

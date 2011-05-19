@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
-" @Last Change: 2010-11-20.
-" @Revision:    0.0.30
+" @Last Change: 2011-05-18.
+" @Revision:    0.0.39
 
 let s:prototype = tlib#Filter_cnf#New({'_class': ['Filter_seq'], 'name': 'seq'}) "{{{2
 let s:prototype.highlight = g:tlib_inputlist_higroup
@@ -21,6 +21,12 @@ endf
 
 " :nodoc:
 function! s:prototype.Init(world) dict "{{{3
+endf
+
+
+" :nodoc:
+function! s:prototype.Help(world) dict "{{{3
+    return [a:world.FormatHelp('.', 'Match any characters'), '" "', 'OR']
 endf
 
 
@@ -68,6 +74,8 @@ function! s:prototype.PushFrontFilter(world, char) dict "{{{3
     let cc = nr2char(a:char)
     if cc == '.'
         let a:world.filter[0][0] .= '.\{-}'
+    elseif cc == '|'
+        let a:world.filter[0][0] .= '\|'
     else
         let a:world.filter[0][0] .= nr2char(a:char)
     endif
@@ -93,6 +101,8 @@ endf
 
 " :nodoc:
 function! s:prototype.CleanFilter(filter) dict "{{{3
-    return substitute(a:filter, '.\\{-}', '.', 'g')
+    let pat = substitute(a:filter, '.\\{-}', '.', 'g')
+    let pat = substitute(a:filter, '\\|', '|', 'g')
+    return pat
 endf
 
