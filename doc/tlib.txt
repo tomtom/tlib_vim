@@ -100,6 +100,7 @@ Contents~
         tlib#char#GetWithTimeout ................ |tlib#char#GetWithTimeout()|
         tlib#World#New .......................... |tlib#World#New()|
         prototype.Reset
+        prototype.SetStatusline
         tlib#time#MSecs ......................... |tlib#time#MSecs()|
         tlib#time#Now ........................... |tlib#time#Now()|
         tlib#time#Diff .......................... |tlib#time#Diff()|
@@ -113,7 +114,6 @@ Contents~
         tlib#file#Join .......................... |tlib#file#Join()|
         tlib#file#Relative ...................... |tlib#file#Relative()|
         tlib#file#With .......................... |tlib#file#With()|
-        tlib#Filter_seq#New ..................... |tlib#Filter_seq#New()|
         tlib#date#DiffInDays .................... |tlib#date#DiffInDays()|
         tlib#date#Parse ......................... |tlib#date#Parse()|
         tlib#date#SecondsSince1970 .............. |tlib#date#SecondsSince1970()|
@@ -738,6 +738,8 @@ tlib#World#New(...)
 
 prototype.Reset
 
+prototype.SetStatusline
+
 
 ========================================================================
 autoload/tlib/time.vim~
@@ -787,7 +789,7 @@ autoload/tlib/Filter_fuzzy.vim~
                                                     *tlib#Filter_fuzzy#New()*
 tlib#Filter_fuzzy#New(...)
     Support for "fuzzy" pattern matching in |tlib#input#List()|. 
-    Characters are interpreted as if connected with '.\{-}'.
+    Patterns are interpreted as if characters were connected with '.\{-}'.
     
     In "fuzzy" mode, the pretty printing of filenames is disabled.
 
@@ -821,17 +823,6 @@ tlib#file#Relative(filename, basedir)
 
                                                     *tlib#file#With()*
 tlib#file#With(fcmd, bcmd, files, ?world={})
-
-
-========================================================================
-autoload/tlib/Filter_seq.vim~
-
-                                                    *tlib#Filter_seq#New()*
-tlib#Filter_seq#New(...)
-    The search pattern for |tlib#input#List()| is interpreted as a 
-    disjunction of 'magic' regular expressions with the exception of a dot 
-    ".", which is interpreted as ".\{-}".
-    The pattern is a '/magic' regexp pattern.
 
 
 ========================================================================
@@ -948,7 +939,7 @@ autoload/tlib/Filter_cnfd.vim~
 
                                                     *tlib#Filter_cnfd#New()*
 tlib#Filter_cnfd#New(...)
-    The same as |tlib#FilterCNF#New()| but a dot is expanded to '\.\{-}'. 
+    The same as |tlib#Filter_cnf#New()| but a dot is expanded to '\.\{-}'. 
     As a consequence, patterns cannot match dots.
     The pattern is a '/\V' very no-'/magic' regexp pattern.
 
