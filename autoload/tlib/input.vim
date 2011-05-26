@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2011-03-31.
-" @Revision:    0.0.840
+" @Last Change: 2011-05-20.
+" @Revision:    0.0.842
 
 
 " :filedoc:
