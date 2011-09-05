@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2010-09-23.
-" @Revision:    0.0.334
+" @Last Change: 2011-07-04.
+" @Revision:    0.0.341
 
 
 let s:bmru = []
