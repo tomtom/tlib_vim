@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2011-09-05.
-" @Revision:    0.1.187
+" @Last Change: 2011-09-15.
+" @Revision:    0.1.189
 
 
 " |tlib#cache#Purge()|: Remove cache files older than N days.
@@ -218,7 +218,7 @@ function! tlib#cache#Purge() "{{{3
             echohl NONE
         else
             try
-                let yn = g:tlib#cache#run_script == 2 ? 'y' : tlib#input#Dialog("TLib: Could not delete some directories.\nDirectory removal script: ". scriptfile ."\nRun script to delete directories now?", ['yes', 'no', 'edit'], 'no')
+                let yn = g:tlib#cache#run_script == 2 ? 'y' : tlib#input#Dialog("TLib: About to delete directories by means of a shell script.\nDirectory removal script: ". scriptfile ."\nRun script to delete directories now?", ['yes', 'no', 'edit'], 'no')
                 if yn =~ '^y\%[es]$'
                     exec 'cd '. fnameescape(dir)
                     exec '! ' &shell shellescape(scriptfile, 1)
