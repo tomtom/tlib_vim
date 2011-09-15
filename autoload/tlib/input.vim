@@ -3,12 +3,19 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2011-05-20.
-" @Revision:    0.0.842
+" @Last Change: 2011-09-15.
+" @Revision:    0.0.847
 
 
 " :filedoc:
 " Input-related, select from a list etc.
+
+
+if !exists('g:tlib#input#use_popup')
+    " If true, define a popup menu for |tlib#input#List()| and related 
+    " functions.
+    let g:tlib#input#use_popup = has('menu') && (has('gui_gtk') || has('gui_gtk2') || has('gui_win32'))
+endif
 
 
 " Functions related to tlib#input#List(type, ...) "{{{2
@@ -128,7 +135,7 @@ function! tlib#input#ListW(world, ...) "{{{3
     if stridx(world.type, 'm') != -1
         call extend(key_agents, g:tlib_keyagents_InputList_m, 'force')
     endif
-    if has('menu')
+    if g:tlib#input#use_popup
         amenu ]TLibInputListPopupMenu.Pick\ selected\ item <cr>
         amenu ]TLibInputListPopupMenu.Select #
         amenu ]TLibInputListPopupMenu.Select\ all <c-a>
@@ -140,7 +147,7 @@ function! tlib#input#ListW(world, ...) "{{{3
         let k = get(handler, 'key', '')
         if !empty(k)
             let key_agents[k] = handler.agent
-            if has('menu') && has_key(handler, 'help') && !empty(handler.help)
+            if g:tlib#input#use_popup && has_key(handler, 'help') && !empty(handler.help)
                 exec 'amenu ]TLibInputListPopupMenu.'. escape(handler.help, ' .\')
                             \ .' '. handler.key_name
                 let world.has_menu = 1
@@ -371,7 +378,7 @@ function! tlib#input#ListW(world, ...) "{{{3
                     endif
                     throw 'pick'
                 elseif c == "\<RightMouse>"
-                    if has('menu')
+                    if g:tlib#input#use_popup
                         " if v:mouse_lnum != line('.')
                         " endif
                         let world.prefidx = world.GetLineIdx(v:mouse_lnum)
@@ -526,7 +533,7 @@ function! tlib#input#ListW(world, ...) "{{{3
         " let &l:statusline = statusline
         " let &laststatus = laststatus
         silent! let @/  = lastsearch
-        if has('menu') && world.has_menu
+        if g:tlib#input#use_popup && world.has_menu
             silent! aunmenu ]TLibInputListPopupMenu
         endif
 
