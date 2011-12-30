@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2011-09-15.
-" @Revision:    0.0.847
+" @Last Change: 2011-10-10.
+" @Revision:    0.0.852
 
 
 " :filedoc:
@@ -123,7 +123,12 @@ endf
 function! tlib#input#ListW(world, ...) "{{{3
     TVarArg 'cmd'
     if a:world.pick_last_item >= 1 && stridx(a:world.type, 'e') == -1 && len(a:world.base) <= 1
-        return get(a:world.base, 0, a:world.rv)
+        let rv = get(a:world.base, 0, a:world.rv)
+        if stridx(a:world.type, 'm') != -1
+            return [rv]
+        else
+            return rv
+        endif
     endif
     let world = a:world
     let world.filetype = &filetype
