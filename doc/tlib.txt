@@ -230,6 +230,7 @@ Contents~
         g:tlib#cache#purge_every_days ........... |g:tlib#cache#purge_every_days|
         g:tlib#cache#script_encoding ............ |g:tlib#cache#script_encoding|
         g:tlib#cache#run_script ................. |g:tlib#cache#run_script|
+        g:tlib#cache#silent ..................... |g:tlib#cache#silent|
         g:tlib#cache#dont_purge ................. |g:tlib#cache#dont_purge|
         tlib#cache#Dir .......................... |tlib#cache#Dir()|
         tlib#cache#Filename ..................... |tlib#cache#Filename()|
@@ -247,6 +248,7 @@ Contents~
         tlib#dir#CD ............................. |tlib#dir#CD()|
         tlib#dir#Push ........................... |tlib#dir#Push()|
         tlib#dir#Pop ............................ |tlib#dir#Pop()|
+        tlib#notify#Echo ........................ |tlib#notify#Echo()|
         tlib#notify#Echo ........................ |tlib#notify#Echo()|
         tlib#notify#TrimMessage ................. |tlib#notify#TrimMessage()|
         tlib#list#Inject ........................ |tlib#list#Inject()|
@@ -1465,6 +1467,11 @@ g:tlib#cache#run_script        (default: 1)
        1 ... Query user
        2 ... Yes
 
+                                                    *g:tlib#cache#silent*
+g:tlib#cache#silent            (default: 0)
+    If non-nil, don't display a message that files were deleted from the 
+    cache.
+
                                                     *g:tlib#cache#dont_purge*
 g:tlib#cache#dont_purge        (default: ['[\/]\.last_purge$'])
     A list of regexps that are matched against partial filenames of the 
@@ -1553,6 +1560,9 @@ tlib#dir#Pop()
 
 ========================================================================
 autoload/tlib/notify.vim~
+
+                                                    *tlib#notify#Echo()*
+tlib#notify#Echo(text, ?style='')
 
                                                     *tlib#notify#Echo()*
 tlib#notify#Echo(text, ...)
