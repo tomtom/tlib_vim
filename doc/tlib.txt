@@ -249,7 +249,6 @@ Contents~
         tlib#dir#Push ........................... |tlib#dir#Push()|
         tlib#dir#Pop ............................ |tlib#dir#Pop()|
         tlib#notify#Echo ........................ |tlib#notify#Echo()|
-        tlib#notify#Echo ........................ |tlib#notify#Echo()|
         tlib#notify#TrimMessage ................. |tlib#notify#TrimMessage()|
         tlib#list#Inject ........................ |tlib#list#Inject()|
         tlib#list#Compact ....................... |tlib#list#Compact()|
@@ -1563,9 +1562,6 @@ autoload/tlib/notify.vim~
 
                                                     *tlib#notify#Echo()*
 tlib#notify#Echo(text, ?style='')
-
-                                                    *tlib#notify#Echo()*
-tlib#notify#Echo(text, ...)
     Print text in the echo area. Temporarily disable 'ruler' and 'showcmd' 
     in order to prevent |press-enter| messages.
 
