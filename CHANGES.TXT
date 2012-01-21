@@ -313,3 +313,12 @@ version: "0.42"
   - tlib#input#List: temp_prompt (for help message)
   MD5 checksum: aa8b5a4602235cc1a5bc9ee45d801b81
 
+version: "0.42"
+  - g:tlib#cache#silent: don't display messages when purging the cache (fixes #9)
+  - Changed message when deleting directories in the cache.
+  - g:tlib#input#use_popup: Don't rely on has('menu') but also check for gtk & win gui (fixes #10)
+  - debug
+  - tlib#input#ListW(): Didn't return a list when type == "m"
+  - docs (solves #11)
+  MD5 checksum: aa8b5a4602235cc1a5bc9ee45d801b81
+
