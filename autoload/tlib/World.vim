@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2011-10-05.
-" @Revision:    0.1.957
+" @Last Change: 2012-02-07.
+" @Revision:    0.1.959
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
