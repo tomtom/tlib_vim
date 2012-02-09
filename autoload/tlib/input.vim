@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2012-02-07.
-" @Revision:    0.0.853
+" @Last Change: 2012-02-09.
+" @Revision:    0.0.855
 
 
 " :filedoc:
@@ -565,8 +565,7 @@ function! tlib#input#ListW(world, ...) "{{{3
                 " TLogVAR world.state, world.win_wnr, world.bufnr
                 if world.CloseScratch()
                     " TLogVAR world.winview
-                    " call tlib#win#SetLayout(world.winview)
-                    call world.RestoreOrigin()
+                    call tlib#win#SetLayout(world.winview)
                 endif
             endif
         endif
