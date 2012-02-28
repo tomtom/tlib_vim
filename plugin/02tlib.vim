@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-04-10.
-" @Last Change: 2012-01-21.
-" @Revision:    674
+" @Last Change: 2012-02-28.
+" @Revision:    677
 " GetLatestVimScripts: 1863 1 tlib.vim
 
 if &cp || exists("loaded_tlib")
@@ -14,7 +14,7 @@ if v:version < 700 "{{{2
     echoerr "tlib requires Vim >= 7"
     finish
 endif
-let loaded_tlib = 43
+let loaded_tlib = 44
 
 let s:save_cpo = &cpo
 set cpo&vim
@@ -306,13 +306,8 @@ TLet g:tlib_handlers_EditList = [
             \ ]},
             \ ]
 
-
-
-" " TEST:
-" TRequire tselectbuffer 6
-" echo loaded_tselectbuffer
-
-
+" :nodefault:
+TLet g:tlib_debug = 0
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
