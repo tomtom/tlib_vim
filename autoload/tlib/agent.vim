@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-24.
-" @Last Change: 2012-02-27.
-" @Revision:    0.1.186
+" @Last Change: 2012-02-28.
+" @Revision:    0.1.189
 
 
 " :filedoc:
@@ -156,18 +156,14 @@ function! tlib#agent#Suspend(world, selected) "{{{3
         " TLogDBG bufnr('%')
         let br = tlib#buffer#Set(a:world.scratch)
         " TLogVAR br, a:world.bufnr, a:world.scratch
-        " TLogDBG bufnr('%')
+        if bufnr('%') != a:world.scratch
+            echohl WarningMsg
+            echom "tlib#agent#Suspend: Internal error: Not a scratch buffer:" bufname('%')
+            echohl NONE
+        endif
+        " TLogVAR bufnr('%'), bufname('%'), a:world.scratch
         call tlib#autocmdgroup#Init()
-        autocmd TLib InsertEnter,InsertChange <buffer> call tlib#input#Resume("world", 0)
-        let b:tlib_suspend = {
-                    \ '<m-z>': 0, '<c-z>': 0, '<space>': 0, 
-                    \ '<cr>': 1, 
-                    \ '<LeftMouse>': 1, '<MiddleMouse>': 0, '<RightMouse>': 0, '<c-LeftMouse>': 0,
-                    \ '<': 2}
-        for [m, pick] in items(b:tlib_suspend)
-            exec 'noremap <buffer> '. m .' :call tlib#input#Resume("world", '. pick .')<cr>'
-        endfor
-        autocmd TLib BufEnter <buffer> call tlib#input#Resume("world", 0)
+        exec 'autocmd TLib BufEnter <buffer='. a:world.scratch .'> call tlib#input#Resume("world", 0, '. a:world.scratch .')'
         let b:tlib_world = a:world
         exec br
         let a:world.state = 'exit suspend'
