@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2012-02-09.
-" @Revision:    0.0.855
+" @Last Change: 2012-02-28.
+" @Revision:    0.0.876
 
 
 " :filedoc:
@@ -634,26 +634,43 @@ function! tlib#input#EditList(query, list, ...) "{{{3
 endf
 
 
-function! tlib#input#Resume(name, pick) "{{{3
+function! tlib#input#Resume(name, pick, bufnr) "{{{3
+    " TLogVAR a:name, a:pick
     echo
-    if exists('b:tlib_suspend')
-        for [m, pick] in items(b:tlib_suspend)
-            exec 'unmap <buffer> '. m
-        endfor
-        unlet b:tlib_suspend
+    if bufnr('%') != a:bufnr
+        if g:tlib_debug
+            echohl WarningMsg
+            echom "tlib#input#Resume: Internal error: Not in scratch buffer:" bufname('%')
+            echohl NONE
+        endif
+        let br = tlib#buffer#Set(a:bufnr)
     endif
-    call tlib#autocmdgroup#Init()
-    autocmd! TLib InsertEnter,InsertChange <buffer>
-    let b:tlib_{a:name}.state = 'display'
-    " call tlib#input#List('resume '. a:name)
-    let cmd = 'resume '. a:name
-    if a:pick >= 1
-        let cmd .= ' pick'
-        if a:pick >= 2
-            let cmd .= ' sticky'
-        end
+    if !exists('b:tlib_'. a:name)
+        if g:tlib_debug
+            echohl WarningMsg
+            echom "tlib#input#Resume: Internal error: b:tlib_". a:name ." does not exist:" bufname('%')
+            echohl NONE
+            redir => varss
+            silent let b:
+            redir END
+            let vars = split(varss, '\n')
+            call filter(vars, 'v:val =~ "^b:tlib_"')
+            echom "DEBUG tlib#input#Resume" string(vars)
+        endif
+    else
+        call tlib#autocmdgroup#Init()
+        autocmd! TLib BufEnter <buffer>
+        let b:tlib_{a:name}.state = 'redisplay'
+        " call tlib#input#List('resume '. a:name)
+        let cmd = 'resume '. a:name
+        if a:pick >= 1
+            let cmd .= ' pick'
+            if a:pick >= 2
+                let cmd .= ' sticky'
+            end
+        endif
+        call tlib#input#ListW(b:tlib_{a:name}, cmd)
     endif
-    call tlib#input#ListW(b:tlib_{a:name}, cmd)
 endf
 
 
