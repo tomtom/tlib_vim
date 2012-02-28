@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-24.
-" @Last Change: 2010-11-20.
-" @Revision:    0.1.185
+" @Last Change: 2012-02-27.
+" @Revision:    0.1.186
 
 
 " :filedoc:
@@ -167,6 +167,7 @@ function! tlib#agent#Suspend(world, selected) "{{{3
         for [m, pick] in items(b:tlib_suspend)
             exec 'noremap <buffer> '. m .' :call tlib#input#Resume("world", '. pick .')<cr>'
         endfor
+        autocmd TLib BufEnter <buffer> call tlib#input#Resume("world", 0)
         let b:tlib_world = a:world
         exec br
         let a:world.state = 'exit suspend'
