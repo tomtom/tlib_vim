@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2012-02-28.
-" @Revision:    0.0.876
+" @Revision:    0.0.881
 
 
 " :filedoc:
@@ -294,7 +294,12 @@ function! tlib#input#ListW(world, ...) "{{{3
                             let dlist = ['Malformed filter']
 
                         endif
+                    else
+                        if world.prefidx == 0
+                            let world.prefidx = 1
+                        endif
                     endif
+                    " TLogVAR world.idx, world.prefidx
 
                     " TLogDBG 7
                     " TLogVAR world.prefidx, world.offset
