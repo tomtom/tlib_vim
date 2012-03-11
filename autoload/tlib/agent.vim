@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-24.
-" @Last Change: 2012-02-28.
-" @Revision:    0.1.189
+" @Last Change: 2012-03-02.
+" @Revision:    0.1.192
 
 
 " :filedoc:
@@ -370,6 +370,7 @@ function! tlib#agent#ViewFile(world, selected) "{{{3
             let cmd1 = 'buffer'
         endif
         call tlib#file#With(cmd0, cmd1, a:selected, a:world)
+        " TLogVAR &filetype
         exec back
         let a:world.state = 'display'
     endif

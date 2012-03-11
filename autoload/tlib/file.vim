@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2010-04-03.
-" @Revision:    0.0.74
+" @Last Change: 2012-03-02.
+" @Revision:    0.0.82
 
 if &cp || exists("loaded_tlib_file_autoload")
     finish
@@ -109,7 +109,7 @@ function! tlib#file#With(fcmd, bcmd, files, ...) "{{{3
         else
             if filereadable(f)
                 if !empty(a:fcmd)
-                    " TLogDBG a:fcmd .' '. escape(f, '%#\ ')
+                    " TLogDBG a:fcmd .' '. tlib#arg#Ex(f)
                     " exec a:fcmd .' '. escape(f, '%#\ ')
                     " exec a:fcmd .' '. escape(f, '%# ')
                     exec a:fcmd .' '. tlib#arg#Ex(f)
@@ -122,6 +122,7 @@ function! tlib#file#With(fcmd, bcmd, files, ...) "{{{3
             endif
         endif
     endfor
+    " TLogDBG "done"
 endf
 
 
