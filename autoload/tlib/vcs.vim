@@ -2,32 +2,50 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2012-03-08.
-" @Last Change: 2012-03-11.
-" @Revision:    50
+" @Last Change: 2012-03-13.
+" @Revision:    111
 
 
-" A dictionare of supported VCS.
+" A dictionarie of supported VCS (currently: git, hg, svn, bzr).
+" :read: TLet g:tlib#vcs#def = {...}
 TLet g:tlib#vcs#def = {
             \ 'git': {
             \     'dir': '.git',
             \     'ls': 'git ls-files --full-name %s',
             \     'diff': 'git diff --no-ext-diff -U0 %s'
+            \ },
+            \ 'hg': {
+            \     'dir': '.hg',
+            \     'ls': 'hg diff -U0 %s',
+            \ },
+            \ 'svn': {
+            \     'dir': '.svn',
+            \     'ls': 'svn diff --diff-cmd diff --extensions -U0 %s',
+            \ },
+            \ 'bzr': {
+            \     'dir': '.bzr',
+            \     'ls': 'bzr diff --diff-options=-U0 %s',
             \ }
             \ }
-            " \ , 'hg': {'ls': 'hg diff -U0 %s', 'dir': '.hg'}
-            " \ , 'svn': {'ls': 'svn diff --diff-cmd diff --extensions -U0 %s', 'dir': '.svn'}
-            " \ , 'bzr': {'ls': 'bzr diff --diff-options=-U0 %s', 'dir': '.bzr'}
+
+
+" A dictionary of custom executables for VCS commands. If the value is 
+" empty, support for that VCS will be removed. If no key is present, it 
+" is assumed that the VCS "type" is the name of the executable.
+" :read: TLet g:tlib#vcs#executables = {...}
+TLet g:tlib#vcs#executables = {} 
 
 
 " If non-empty, use it as a format string to check whether a VCS is 
 " installed on your computer.
 TLet g:tlib#vcs#check = has('win16') || has('win32') || has('win64') ? '%s.exe' : '%s'
 
+
 if !empty(g:tlib#vcs#check)
     for [s:cmd, s:def] in items(g:tlib#vcs#def)
-        let s:cmd1 = printf(g:tlib#vcs#check, s:cmd)
-        if !executable(s:cmd1)
-            call remove(g:tlib#vcs#def, s:cmd)
+        if !has_key(g:tlib#vcs#executables, s:cmd)
+            let s:cmd1 = printf(g:tlib#vcs#check, s:cmd)
+            let g:tlib#vcs#executables[s:cmd] = executable(s:cmd1) ? s:cmd1 : ''
         endif
     endfor
 endif
@@ -36,12 +54,15 @@ endif
 function! tlib#vcs#FindVCS(filename) "{{{3
     let type = ''
     let dir  = ''
-    let path = escape(fnamemodify(a:filename, ':p'), ',:') .';'
+    " let path = escape(fnamemodify(a:filename, ':p'), ',:') .';'
+    let filename = fnamemodify(a:filename, isdirectory(a:filename) ? ':p:h' : ':p')
+    let path = escape(filename, ';') .';'
+    " TLogVAR a:filename, path
     let depth = -1
     for vcs in keys(g:tlib#vcs#def)
-        let dir = g:tlib#vcs#def[vcs].dir
-        " TLogVAR dir
-        let vcsdir = finddir(dir, path)
+        let subdir = g:tlib#vcs#def[vcs].dir
+        let vcsdir = finddir(subdir, path)
+        " TLogVAR vcs, subdir, vcsdir
         if !empty(vcsdir)
             let vcsdir_depth = len(split(fnamemodify(vcsdir, ':p'), '\/'))
             if vcsdir_depth > depth
@@ -52,7 +73,31 @@ function! tlib#vcs#FindVCS(filename) "{{{3
             endif
         endif
     endfor
-    return [type, vcsdir]
+    " TLogVAR type, dir
+    if empty(type)
+        return ['', '']
+    else
+        return [type, dir]
+    endif
+endf
+
+
+function! s:GetCmd(vcstype, cmd)
+    let vcsdef = get(g:tlib#vcs#def, a:vcstype, {})
+    if has_key(vcsdef, a:cmd)
+        let cmd = vcsdef[a:cmd]
+        let bin = get(g:tlib#vcs#executables, a:vcstype, '')
+        if empty(bin)
+            let cmd = ''
+        elseif bin != a:vcstype
+            " let bin = escape(shellescape(bin), '\')
+            let bin = escape(bin, '\')
+            let cmd = substitute(cmd, '^.\{-}\zs'. escape(a:vcstype, '\'), bin, '')
+        endif
+        return cmd
+    else
+        return ''
+    endif
 endf
 
 
@@ -68,12 +113,12 @@ function! tlib#vcs#Ls(...) "{{{3
     if !empty(vcs)
         let [vcstype, vcsdir] = vcs
         if has_key(g:tlib#vcs#def, vcstype)
-            let vcsdef = g:tlib#vcs#def[vcstype]
-            " TLogVAR vcsdef
-            if has_key(vcsdef, 'ls')
+            let ls = s:GetCmd(vcstype, 'ls')
+            " TLogVAR ls
+            if !empty(ls)
                 let rootdir = fnamemodify(vcsdir, ':p:h:h')
                 " TLogVAR vcsdir, rootdir
-                let cmd = printf(vcsdef.ls, shellescape(rootdir))
+                let cmd = printf(ls, shellescape(rootdir))
                 " TLogVAR cmd
                 let filess = system(cmd)
                 " TLogVAR filess
@@ -93,13 +138,11 @@ function! tlib#vcs#Diff(filename, ...) "{{{3
     let vcs = a:0 >= 1 ? a:1 : tlib#vcs#FindVCS(a:filename)
     if !empty(vcs)
         let [vcstype, vcsdir] = vcs
-        if has_key(g:tlib#vcs#def, vcstype)
-            let vcsdef = g:tlib#vcs#def[vcstype]
-            if has_key(vcsdef, 'diff')
-                let cmd = printf(vcsdef.diff, shellescape(fnamemodify(a:filename, ':p')))
-                let diff = system(cmd)
-                return diff
-            endif
+        let diff = s:GetCmd(vcstype, 'diff')
+        if !empty(diff)
+            let cmd = printf(diff, shellescape(fnamemodify(a:filename, ':p')))
+            let patch = system(cmd)
+            return patch
         endif
     endif
     return []
