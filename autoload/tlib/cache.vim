@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2011-09-15.
-" @Revision:    0.1.189
+" @Last Change: 2012-05-11.
+" @Revision:    0.1.192
 
 
 " |tlib#cache#Purge()|: Remove cache files older than N days.
@@ -46,10 +46,10 @@ function! tlib#cache#Dir(...) "{{{3
 endf
 
 
-" :def: function! tlib#cache#Filename(type, ?file=%, ?mkdir=0)
+" :def: function! tlib#cache#Filename(type, ?file=%, ?mkdir=0, ?dir='')
 function! tlib#cache#Filename(type, ...) "{{{3
     " TLogDBG 'bufname='. bufname('.')
-    let dir = tlib#cache#Dir()
+    let dir = a:0 >= 3 && !empty(a:3) ? a:3 : tlib#cache#Dir()
     if a:0 >= 1 && !empty(a:1)
         let file  = a:1
     else
@@ -91,21 +91,13 @@ endf
 
 
 function! tlib#cache#Save(cfile, dictionary) "{{{3
-    if !empty(a:cfile)
-        " TLogVAR a:dictionary
-        call writefile([string(a:dictionary)], a:cfile, 'b')
-    endif
+    call tlib#persistent#Save(a:cfile, a:dictionary)
 endf
 
 
 function! tlib#cache#Get(cfile) "{{{3
     call tlib#cache#MaybePurge()
-    if !empty(a:cfile) && filereadable(a:cfile)
-        let val = readfile(a:cfile, 'b')
-        return eval(join(val, "\n"))
-    else
-        return {}
-    endif
+    return tlib#persistent#Get(a:cfile)
 endf
 
 
