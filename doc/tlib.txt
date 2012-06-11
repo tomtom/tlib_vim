@@ -103,8 +103,6 @@ Contents~
         tlib#balloon#Remove ..................... |tlib#balloon#Remove()|
         tlib#balloon#Expr ....................... |tlib#balloon#Expr()|
         g:tlib#vcs#def .......................... |g:tlib#vcs#def|
-        g:tlib#vcs#def .......................... |g:tlib#vcs#def|
-        g:tlib#vcs#executables .................. |g:tlib#vcs#executables|
         g:tlib#vcs#executables .................. |g:tlib#vcs#executables|
         g:tlib#vcs#check ........................ |g:tlib#vcs#check|
         tlib#vcs#FindVCS ........................ |tlib#vcs#FindVCS()|
@@ -765,20 +763,14 @@ tlib#balloon#Expr()
 autoload/tlib/vcs.vim~
 
                                                     *g:tlib#vcs#def*
-g:tlib#vcs#def                 (default: {...})
+g:tlib#vcs#def                 {...}
     A dictionarie of supported VCS (currently: git, hg, svn, bzr).
 
-                                                    *g:tlib#vcs#def*
-g:tlib#vcs#def                 (default: {)
-
                                                     *g:tlib#vcs#executables*
-g:tlib#vcs#executables         (default: {...})
+g:tlib#vcs#executables         {...}
     A dictionary of custom executables for VCS commands. If the value is 
     empty, support for that VCS will be removed. If no key is present, it 
     is assumed that the VCS "type" is the name of the executable.
-
-                                                    *g:tlib#vcs#executables*
-g:tlib#vcs#executables         (default: {})
 
                                                     *g:tlib#vcs#check*
 g:tlib#vcs#check               (default: has('win16') || has('win32') || has('win64') ? '%s.exe' : '%s')

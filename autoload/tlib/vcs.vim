@@ -2,12 +2,12 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2012-03-08.
-" @Last Change: 2012-03-13.
-" @Revision:    111
+" @Last Change: 2012-06-11.
+" @Revision:    115
 
 
 " A dictionarie of supported VCS (currently: git, hg, svn, bzr).
-" :read: TLet g:tlib#vcs#def = {...}
+" :display: g:tlib#vcs#def                 {...}
 TLet g:tlib#vcs#def = {
             \ 'git': {
             \     'dir': '.git',
@@ -32,7 +32,7 @@ TLet g:tlib#vcs#def = {
 " A dictionary of custom executables for VCS commands. If the value is 
 " empty, support for that VCS will be removed. If no key is present, it 
 " is assumed that the VCS "type" is the name of the executable.
-" :read: TLet g:tlib#vcs#executables = {...}
+" :display: g:tlib#vcs#executables         {...}
 TLet g:tlib#vcs#executables = {} 
 
 
