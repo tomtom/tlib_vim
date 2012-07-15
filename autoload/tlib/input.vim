@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2012-02-28.
-" @Revision:    0.0.881
+" @Last Change: 2012-07-15.
+" @Revision:    0.0.883
 
 
 " :filedoc:
@@ -162,6 +162,8 @@ function! tlib#input#ListW(world, ...) "{{{3
     " let statusline  = &l:statusline
     " let laststatus  = &laststatus
     let lastsearch  = @/
+    let scrolloff = &l:scrolloff
+    let &l:scrolloff = 0
     let @/ = ''
     let dlist = []
     " let &laststatus = 2
@@ -543,6 +545,7 @@ function! tlib#input#ListW(world, ...) "{{{3
         " let &l:statusline = statusline
         " let &laststatus = laststatus
         silent! let @/  = lastsearch
+        let &l:scrolloff = scrolloff
         if g:tlib#input#use_popup && world.has_menu
             silent! aunmenu ]TLibInputListPopupMenu
         endif
