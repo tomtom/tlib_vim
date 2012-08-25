@@ -322,3 +322,21 @@ version: "0.42"
   - docs (solves #11)
   MD5 checksum: aa8b5a4602235cc1a5bc9ee45d801b81
 
+version: "0.45"
+  - fuzzy mode: prototype.highlight defaults to g:tlib_inputlist_higroup
+  - tlib#scratch: Use noautocmd
+  - tlib#input#ListW(): Use world.RestoreOrigin() instead of tlib#win#SetLayout(world.winview)
+  - tlib#input#ListW(): Revert to tlib#win#SetLayout(world.winview)
+  - tlib#cmd#OutputAsList(): Also save output in g:tlib#cmd#last_output
+  - tlib#agent#Suspend(): Resume on BufEnter
+  - tlib#input#Resume(): Make sure we are in the right buffer
+  - tlib#agent#Suspend(): Use only BufEnter event to trigger a Resume
+  - tlib#input#ListW(): When redisplaying a list, make sure prefix > 0
+  - tlib#vcs: Access vcs (initially only git is supported)
+  - tlib#vcs: improved
+  - tlib#persistent: Persistent data file names
+  - tlib#file#With(): Trigger BufRead autocommands
+  - Duplicate help tags (fixes #13)
+  - Make sure scrolloff is 0 while viewing the list (fixes https://github.com/tomtom/vikitasks_vim/issues/2)
+  MD5 checksum: 0af19ebc0e424727a598a988fdc90f4e
+
