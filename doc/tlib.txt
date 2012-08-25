@@ -289,7 +289,7 @@ plugin/02tlib.vim~
                                                     *:TRequire*
 TRequire NAME [VERSION [FILE]]
     Make a certain vim file is loaded.
-    
+
     Conventions: If FILE isn't defined, plugin/NAME.vim is loaded. The 
     file must provide a variable loaded_{NAME} that represents the version 
     number.
@@ -344,10 +344,10 @@ TBrowseOutput COMMAND
     argument and presents the output via |tlib#input#List()| so that you 
     can easily search for a keyword (e.g. the name of a variable or 
     function) and the like.
-    
+
     If you press enter, the selected line will be copied to the command 
     line. Press ESC to cancel browsing.
-    
+
     EXAMPLES: >
       TBrowseOutput 20verb TeaseTheCulprit
 <
@@ -355,10 +355,10 @@ TBrowseOutput COMMAND
                                                     *:TBrowseScriptnames*
 TBrowseScriptnames
     List all sourced script names (the output of ':scriptnames').
-    
+
     When you press enter, the selected script will be opened in the current
     window. Press ESC to cancel.
-    
+
     EXAMPLES: >
       TBrowseScriptnames 
 <
@@ -477,7 +477,7 @@ g:tlib_keyagents_InputList_s
     The default key bindings for single-item-select list views. If you 
     want to use <c-j>, <c-k> to move the cursor up and down, add these two 
     lines to after/plugin/02tlib.vim: >
-    
+
       let g:tlib_keyagents_InputList_s[10] = 'tlib#agent#Down'  " <c-j>
       let g:tlib_keyagents_InputList_s[11] = 'tlib#agent#Up'    " <c-k>
 <
@@ -571,7 +571,7 @@ tlib#vim#RestoreWindow()
 g:tlib#vim#use_wmctrl          (default: executable('wmctrl'))
     If true, use wmctrl for X windows to make a window 
     maximized/fullscreen.
-    
+
     This is the preferred method for maximizing windows under X 
     windows. Some window managers have problem coping with the 
     default method of setting 'lines' and 'columns' to a large 
@@ -636,7 +636,7 @@ tlib#list#Flatten(list)
                                                     *tlib#list#FindAll()*
 tlib#list#FindAll(list, filter, ?process_expr="")
     Basically the same as filter()
-    
+
     EXAMPLES: >
       tlib#list#FindAll([1,2,3], 'v:val >= 2')
       => [2, 3]
@@ -644,7 +644,7 @@ tlib#list#FindAll(list, filter, ?process_expr="")
 
                                                     *tlib#list#Find()*
 tlib#list#Find(list, filter, ?default="", ?process_expr="")
-    
+
     EXAMPLES: >
       tlib#list#Find([1,2,3], 'v:val >= 2')
       => 2
@@ -704,16 +704,16 @@ tlib#cmd#BrowseOutputWithCallback(callback, command)
     Execute COMMAND and present its output in a |tlib#input#List()|;
     when a line is selected, execute the function named as the CALLBACK
     and pass in that line as an argument.
-    
+
     The CALLBACK function gives you an opportunity to massage the COMMAND output
     and possibly act on it in a meaningful way. For example, if COMMAND listed
     all URIs found in the current buffer, CALLBACK could validate and then open
     the selected URI in the system's default browser.
-    
+
     This function is meant to be a tool to help compose the implementations of
     powerful commands that use |tlib#input#List()| as a common interface. See
     |TBrowseScriptnames| as an example.
-    
+
     EXAMPLES: >
       call tlib#cmd#BrowseOutputWithCallback('tlib#cmd#ParseScriptname', 'scriptnames')
 <
@@ -795,7 +795,7 @@ autoload/tlib/char.vim~
                                                     *tlib#char#Get()*
 tlib#char#Get(?timeout=0)
     Get a character.
-    
+
     EXAMPLES: >
       echo tlib#char#Get()
       echo tlib#char#Get(5)
@@ -925,7 +925,7 @@ autoload/tlib/var.vim~
 tlib#var#Let(name, val)
     Define a variable called NAME if yet undefined.
     You can also use the :TLLet command.
-    
+
     EXAMPLES: >
       exec tlib#var#Let('g:foo', 1)
       TLet g:foo = 1
@@ -934,7 +934,7 @@ tlib#var#Let(name, val)
                                                     *tlib#var#EGet()*
 tlib#var#EGet(var, namespace, ?default='')
     Retrieve a variable by searching several namespaces.
-    
+
     EXAMPLES: >
       let g:foo = 1
       let b:foo = 2
@@ -947,7 +947,7 @@ tlib#var#EGet(var, namespace, ?default='')
                                                     *tlib#var#Get()*
 tlib#var#Get(var, namespace, ?default='')
     Retrieve a variable by searching several namespaces.
-    
+
     EXAMPLES: >
       let g:foo = 1
       let b:foo = 2
@@ -1144,7 +1144,7 @@ tlib#signs#Mark(sign, list)
     Add signs for all locations in LIST. LIST must adhere with the 
     quickfix list format (see |getqflist()|; only the fields lnum and 
     bufnr are required).
-    
+
     list:: a quickfix or location list
     sign:: a sign defined with |:sign-define|
 
@@ -1173,7 +1173,7 @@ tlib#tag#Retrieve(rx, ?extra_tags=0)
     Get all tags matching rx. Basically, this function simply calls 
     |taglist()|, but when extra_tags is true, the list of the tag files 
     (see 'tags') is temporarily expanded with |g:tlib_tags_extra|.
-    
+
     Example use:
     If you want to include tags for, eg, JDK, normal tags use can become 
     slow. You could proceed as follows:
@@ -1234,10 +1234,10 @@ Input-related, select from a list etc.
 tlib#input#List(type. ?query='', ?list=[], ?handlers=[], ?default="", ?timeout=0)
     Select a single or multiple items from a list. Return either the list 
     of selected elements or its indexes.
-    
+
     By default, typing numbers will select an item by its index. See 
     |g:tlib_numeric_chars| to find out how to change this.
-    
+
     The item is automatically selected if the numbers typed equals the 
     number of digits of the list length. I.e. if a list contains 20 items, 
     typing 1 will first highlight item 1 but it won't select/use it 
@@ -1246,22 +1246,22 @@ tlib#input#List(type. ?query='', ?list=[], ?handlers=[], ?default="", ?timeout=0
     item 10 will be selected. Another way to select item 1 would be to 
     type 01. If the list contains only 9 items, typing 1 would select the 
     first item right away.
-    
+
     type can be:
         s  ... Return one selected element
         si ... Return the index of the selected element
         m  ... Return a list of selected elements
         mi ... Return a list of indexes
-    
+
     Several pattern matching styles are supported. See 
     |g:tlib_inputlist_match|.
-    
+
     EXAMPLES: >
       echo tlib#input#List('s', 'Select one item', [100,200,300])
       echo tlib#input#List('si', 'Select one item', [100,200,300])
       echo tlib#input#List('m', 'Select one or more item(s)', [100,200,300])
       echo tlib#input#List('mi', 'Select one or more item(s)', [100,200,300])
-    
+
 <   See ../samples/tlib/input/tlib_input_list.vim (move the cursor over 
     the filename and press gf) for a more elaborated example.
 
@@ -1279,7 +1279,7 @@ tlib#input#ListW(world, ?command='')
                                                     *tlib#input#EditList()*
 tlib#input#EditList(query, list, ?timeout=0)
     Edit a list.
-    
+
     EXAMPLES: >
       echo tlib#input#EditList('Edit:', [100,200,300])
 <
@@ -1291,7 +1291,7 @@ tlib#input#Resume(name, pick, bufnr)
 tlib#input#CommandSelect(command, ?keyargs={})
     Take a command, view the output, and let the user select an item from 
     its output.
-    
+
     EXAMPLE: >
         command! TMarks exec 'norm! `'. matchstr(tlib#input#CommandSelect('marks'), '^ \+\zs.')
         command! TAbbrevs exec 'norm i'. matchstr(tlib#input#CommandSelect('abbrev'), '^\S\+\s\+\zs\S\+')
@@ -1299,7 +1299,7 @@ tlib#input#CommandSelect(command, ?keyargs={})
 
                                                     *tlib#input#Edit()*
 tlib#input#Edit(name, value, callback, ?cb_args=[])
-    
+
     Edit a value (asynchronously) in a scratch buffer. Use name for 
     identification. Call callback when done (or on cancel).
     In the scratch buffer:
@@ -1357,9 +1357,9 @@ tlib#paragraph#GetMetric()
 tlib#paragraph#Move(direction, count)
     This function can be used with the tinymode plugin to move around 
     paragraphs.
-    
+
     Example configuration: >
-    
+
       call tinymode#EnterMap("para_move", "gp")
       call tinymode#ModeMsg("para_move", "Move paragraph: j/k")
       call tinymode#Map("para_move", "j", "silent call tlib#paragraph#Move('Down', '[N]')")
@@ -1436,7 +1436,7 @@ autoload/tlib/Filter_fuzzy.vim~
 tlib#Filter_fuzzy#New(...)
     Support for "fuzzy" pattern matching in |tlib#input#List()|. 
     Patterns are interpreted as if characters were connected with '.\{-}'.
-    
+
     In "fuzzy" mode, the pretty printing of filenames is disabled.
 
 
@@ -1451,11 +1451,11 @@ tlib#textobjects#StandardParagraph()
     Select a "Standard Paragraph", i.e. a text block followed by blank 
     lines. Other than |ap|, the last paragraph in a document is handled 
     just the same.
-    
+
     The |text-object| can be accessed as "sp". Example: >
-    
+
       vsp ... select the current standard paragraph
-    
+
 <   Return 1, if the paragraph is the last one in the document.
 
                                                     *tlib#textobjects#Init()*
@@ -1492,9 +1492,9 @@ tlib#arg#StringAsKeyArgs(string, ?keys=[], ?evaluate=0)
                                                     *tlib#arg#Ex()*
 tlib#arg#Ex(arg, ?chars='%#! ')
     Escape some characters in a string.
-    
+
     Use |fnamescape()| if available.
-    
+
     EXAMPLES: >
       exec 'edit '. tlib#arg#Ex('foo%#bar.txt')
 <
@@ -1574,12 +1574,12 @@ tlib#Filter_cnf#New(...)
     The search pattern for |tlib#input#List()| is in conjunctive normal 
     form: (P1 OR P2 ...) AND (P3 OR P4 ...) ...
     The pattern is a '/\V' very no-'/magic' regexp pattern.
-    
+
     Pressing <space> joins two patterns with AND.
     Pressing | joins two patterns with OR.
     I.e. In order to get "lala AND (foo OR bar)", you type 
     "lala foo|bar".
-    
+
     This is also the base class for other filters.
 
 
@@ -1591,14 +1591,14 @@ Provides a prototype plus some OO-like methods.
 tlib#Object#New(?fields={})
     This function creates a prototype that provides some kind of 
     inheritance mechanism and a way to call parent/super methods.
-    
+
     The usage demonstrated in the following example works best when every 
     class/prototype is defined in a file of its own.
-    
+
     The reason for why there is a dedicated constructor function is that 
     this layout facilitates the use of templates and that methods are 
     hidden from the user. Other solutions are possible.
-    
+
     EXAMPLES: >
         let s:prototype = tlib#Object#New({
                     \ '_class': ['FooBar'],
@@ -1613,7 +1613,7 @@ tlib#Object#New(?fields={})
         function! s:prototype.babble() {
           echo "I think, therefore I am ". (self.foo * self.bar) ." months old."
         }
-    
+
 <   This could now be used like this: >
         let myfoo = FooBar({'foo': 3})
         call myfoo.babble()
@@ -1665,7 +1665,7 @@ tlib#buffer#Set(buffer)
                                                     *tlib#buffer#Eval()*
 tlib#buffer#Eval(buffer, code)
     Evaluate CODE in BUFFER.
-    
+
     EXAMPLES: >
       call tlib#buffer#Eval('foo.txt', 'echo b:bar')
 <
@@ -1676,7 +1676,7 @@ tlib#buffer#GetList(?show_hidden=0, ?show_number=0, " ?order='bufnr')
       bufnr    :: Default behaviour
       mru      :: Sort buffers according to most recent use
       basename :: Sort by the file's basename (last component)
-    
+
     NOTE: MRU order works on second invocation only. If you want to always 
     use MRU order, call tlib#buffer#EnableMRU() in your ~/.vimrc file.
 
