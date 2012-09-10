@@ -2,8 +2,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2012-03-08.
-" @Last Change: 2012-06-11.
-" @Revision:    115
+" @Last Change: 2012-09-10.
+" @Revision:    122
 
 
 " A dictionarie of supported VCS (currently: git, hg, svn, bzr).
@@ -16,15 +16,16 @@ TLet g:tlib#vcs#def = {
             \ },
             \ 'hg': {
             \     'dir': '.hg',
-            \     'ls': 'hg diff -U0 %s',
+            \     'diff': 'hg diff -U0 %s',
+            \     'ls': 'hg manifest'
             \ },
             \ 'svn': {
             \     'dir': '.svn',
-            \     'ls': 'svn diff --diff-cmd diff --extensions -U0 %s',
+            \     'diff': 'svn diff --diff-cmd diff --extensions -U0 %s',
             \ },
             \ 'bzr': {
             \     'dir': '.bzr',
-            \     'ls': 'bzr diff --diff-options=-U0 %s',
+            \     'diff': 'bzr diff --diff-options=-U0 %s',
             \ }
             \ }
 
@@ -118,7 +119,11 @@ function! tlib#vcs#Ls(...) "{{{3
             if !empty(ls)
                 let rootdir = fnamemodify(vcsdir, ':p:h:h')
                 " TLogVAR vcsdir, rootdir
-                let cmd = printf(ls, shellescape(rootdir))
+                if ls =~ '%s'
+                    let cmd = printf(ls, shellescape(rootdir))
+                else
+                    let cmd = ls
+                endif
                 " TLogVAR cmd
                 let filess = system(cmd)
                 " TLogVAR filess
