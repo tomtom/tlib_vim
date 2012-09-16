@@ -340,3 +340,9 @@ version: "0.45"
   - Make sure scrolloff is 0 while viewing the list (fixes https://github.com/tomtom/vikitasks_vim/issues/2)
   MD5 checksum: 0af19ebc0e424727a598a988fdc90f4e
 
+  - Support for tinykeymap (move paragraph)
+  - Moved para_move to autoload/tinykeymap/map
+  - tlib#vcs: some "diff" commands were defined as "ls"; updated hg def; %s is optional
+  MD5 checksum: f2f2fe0893e75bb9423c1ddcd01f38f6
+version: "0.46"
+
