@@ -716,31 +716,36 @@ endf
 " :nodoc:
 function! s:prototype.DisplayHelp() dict "{{{3
     " \ 'Help:',
+    let esc_help = self.key_mode == 'default' ? 'Abort' : 'Reset keymap'
     let help = [
-                \ self.FormatHelp('Enter, <cr>', 'Pick the current item',  '<Esc>',        'Abort'),
+                \ self.FormatHelp('Enter, <cr>', 'Pick the current item',  '<Esc>',        esc_help),
                 \ self.FormatHelp('<m-Number>',  'Pick an item',           '<bs>, <c-bs>', 'Reduce filter'),
                 \ self.FormatHelp('Mouse',       'Pick an item',           'Letter',       'Filter the list'),
-                \ self.FormatHelp('<c|m-r>',     'Reset the display',      'Up/Down',      'Next/previous item'),
-                \ self.FormatHelp('<c|m-q>',     'Edit top filter string', 'Page Up/Down', 'Scroll'),
                 \ ]
 
-    if self.allow_suspend
-        call add(help, self.FormatHelp('<c|m-z>', 'Suspend/Resume', '<c-o>', 'Switch to origin'))
-    endif
-
-    if stridx(self.type, 'm') != -1
+    if self.key_mode == 'default'
         let help += [
-                \ self.FormatHelp('<s-up/down>', '(Un)Select items', '#, <c-space>', '(Un)Select the current item'),
-                \ self.FormatHelp('<c|m-a>', '(Un)Select all currently visible items')
-                \ ]
-                    " \ '<c-\>        ... Show only selected',
+                    \ self.FormatHelp('<c|m-r>',     'Reset the display',      'Up/Down',      'Next/previous item'),
+                    \ self.FormatHelp('<c|m-q>',     'Edit top filter string', 'Page Up/Down', 'Scroll'),
+                    \ ]
+        if self.allow_suspend
+            call add(help, self.FormatHelp('<c|m-z>', 'Suspend/Resume', '<c-o>', 'Switch to origin'))
+        endif
+        if stridx(self.type, 'm') != -1
+            let help += [
+                        \ self.FormatHelp('<s-up/down>', '(Un)Select items', '#, <c-space>', '(Un)Select the current item'),
+                        \ self.FormatHelp('<c|m-a>', '(Un)Select all currently visible items')
+                        \ ]
+            " \ '<c-\>        ... Show only selected',
+        endif
     endif
+
     let k0 = ''
     let h0 = ''
     let i0 = 0
     let i = 0
-    let nkey_handlers = len(self.key_handlers)
-    for handler in self.key_handlers
+    let nkey_handlers = len(self.key_mode[self.key_mode])
+    for handler in values(self.key_map[self.key_mode])
         let i += 1
         let key = get(handler, 'key_name', '')
         if !empty(key)
@@ -757,9 +762,11 @@ function! s:prototype.DisplayHelp() dict "{{{3
             endif
         endif
     endfor
-    if !empty(self.help_extra)
+
+    if self.key_mode == 'default' && !empty(self.help_extra)
         let help += self.help_extra
     endif
+
     let help += self.matcher.Help(self)
     let help += [
                 \ '',
