@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2012-02-28.
-" @Revision:    0.1.960
+" @Last Change: 2012-09-17.
+" @Revision:    0.1.980
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -421,22 +421,25 @@ function! s:prototype.SetFilter() dict "{{{3
     let mrx = self.FilterRxPrefix() . self.filter_options
     let self.filter_pos = []
     let self.filter_neg = []
-    " TLogVAR self.filter
+    " TLogVAR mrx, self.filter
     for filter in self.filter
         " TLogVAR filter
         let rx = join(reverse(filter(copy(filter), '!empty(v:val)')), '\|')
-        if rx =~ '\u'
-            let mrx1 = mrx .'\C'
-        else
-            let mrx1 = mrx
-        endif
         " TLogVAR rx
-        if rx[0] == g:tlib_inputlist_not
-            if len(rx) > 1
-                call add(self.filter_neg, mrx1 .'\('. rx[1:-1] .'\)')
+        if !empty(rx)
+            if rx =~ '\u'
+                let mrx1 = mrx .'\C'
+            else
+                let mrx1 = mrx
             endif
-        else
-            call add(self.filter_pos, mrx1 .'\('. rx .'\)')
+            " TLogVAR rx
+            if rx[0] == g:tlib_inputlist_not
+                if len(rx) > 1
+                    call add(self.filter_neg, mrx1 .'\('. rx[1:-1] .'\)')
+                endif
+            else
+                call add(self.filter_pos, mrx1 .'\('. rx .'\)')
+            endif
         endif
     endfor
     " TLogVAR self.filter_pos, self.filter_neg
@@ -490,14 +493,22 @@ endf
 
 " :nodoc:
 function! s:prototype.BuildTableList() dict "{{{3
+    " let time0 = str2float(reltimestr(reltime()))  " DBG
+    " TLogVAR time0
     call self.SetFilter()
     " TLogVAR self.filter_neg, self.filter_pos
     if empty(self.filter_pos) && empty(self.filter_neg)
         let self.table = range(1, len(self.base))
         let self.list = copy(self.base)
     else
+        " let time1 = str2float(reltimestr(reltime()))  " DBG
+        " TLogVAR time1, time1 - time0
         let self.table = filter(range(1, len(self.base)), 'self.MatchBaseIdx(v:val)')
+        " let time2 = str2float(reltimestr(reltime()))  " DBG
+        " TLogVAR time2, time2 - time0
         let self.list  = map(copy(self.table), 'self.GetBaseItem(v:val)')
+        " let time3 = str2float(reltimestr(reltime()))  " DBG
+        " TLogVAR time3, time3 - time0
     endif
 endf
 

@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
-" @Last Change: 2011-05-18.
-" @Revision:    0.0.84
+" @Last Change: 2012-09-17.
+" @Revision:    0.0.85
 
 let s:prototype = tlib#Object#New({'_class': ['Filter_cnf'], 'name': 'cnf'}) "{{{2
 let s:prototype.highlight = g:tlib_inputlist_higroup
@@ -95,18 +95,22 @@ function! s:prototype.Match(world, text) dict "{{{3
     "     set smartcase
     " endif
     " try
+    if !empty(a:world.filter_neg)
         for rx in a:world.filter_neg
             " TLogVAR rx
             if a:text =~ rx
                 return 0
             endif
         endfor
+    endif
+    if !empty(a:world.filter_pos)
         for rx in a:world.filter_pos
             " TLogVAR rx
             if a:text !~ rx
                 return 0
             endif
         endfor
+    endif
     " finally
     "     let &smartcase = sc
     "     let &ignorecase = ic
