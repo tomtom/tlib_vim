@@ -100,66 +100,94 @@ function! s:prototype.Set_highlight_filename() dict "{{{3
 endf
 
 
-" :nodoc:
-function! s:prototype.Highlight_filename() dict "{{{3
-    " exec 'syntax match TLibDir /\%>'. (3 + eval(g:tlib_inputlist_width_filename)) .'c \(\S:\)\?[\/].*$/ contained containedin=TLibMarker'
-    exec 'syntax match TLibDir /\(\a:\|\.\.\..\{-}\)\?[\/][^&<>*|]*$/ contained containedin=TLibMarker'
-    exec 'syntax match TLibMarker /\%>'. (1 + eval(g:tlib_inputlist_width_filename)) .'c |\( \|[[:alnum:]%*+-]*\)| \S.*$/ contains=TLibDir'
-    hi def link TLibMarker Special
-    hi def link TLibDir Directory
-endf
+if g:tlib#input#format_filename == 'r'
 
+    " :nodoc:
+    function! s:prototype.Highlight_filename() dict "{{{3
+        syntax match TLibDir /\s\+\zs.\{-}[\/]\ze[^\/]\+$/
+        hi def link TLibDir Directory
+        syntax match TLibFilename /[^\/]\+$/
+        hi def link TLibFilename Normal
+    endf
 
-" :nodoc:
-function! s:prototype.FormatFilename(file) dict "{{{3
-    let width = eval(g:tlib_inputlist_width_filename)
-    let split = match(a:file, '[/\\]\zs[^/\\]\+$')
-    if split == -1
-        let fname = ''
-        let dname = a:file
-    else
-        let fname = strpart(a:file, split)
-        let dname = strpart(a:file, 0, split - 1)
-    endif
-    " let fname = fnamemodify(a:file, ":p:t")
-    " " let fname = fnamemodify(a:file, ":t")
-    " " if isdirectory(a:file)
-    " "     let fname .='/'
-    " " endif
-    " let dname = fnamemodify(a:file, ":h")
-    " let dname = pathshorten(fnamemodify(a:file, ":h"))
-    let dnmax = &co - max([width, len(fname)]) - 11 - self.index_width - &fdc
-    if len(dname) > dnmax
-        let dname = '...'. strpart(dname, len(dname) - dnmax)
-    endif
-    let marker = []
-    if g:tlib_inputlist_filename_indicators
-        let bnr = bufnr(a:file)
-        " TLogVAR a:file, bnr, self.bufnr
-        if bnr != -1
-            if bnr == self.bufnr
-                call add(marker, '%')
+    " :nodoc:
+    function! s:prototype.FormatFilename(file) dict "{{{3
+        if !has_key(self.fmt_options, 'maxlen')
+            let maxco = &co - len(len(self.base)) - eval(g:tlib#input#filename_padding_r)
+            let maxfi = max(map(copy(self.base), 'len(v:val)'))
+            let self.fmt_options.maxlen = min([maxco, maxfi])
+            " TLogVAR maxco, maxfi, self.fmt_options.maxlen
+        endif
+        let max = self.fmt_options.maxlen
+        if len(a:file) > max
+            let filename = '...' . strpart(a:file, len(a:file) - max + 3)
+        else
+            let filename = printf('% '. max .'s', a:file)
+        endif
+        return filename
+    endf
+
+else
+
+    function! s:prototype.Highlight_filename() dict "{{{3
+        syntax match TLibDir /\(\a:\|\.\.\..\{-}\)\?[\/][^&<>*|]*$/ contained containedin=TLibMarker
+        exec 'syntax match TLibMarker /\%>'. (1 + eval(g:tlib_inputlist_width_filename)) .'c |\( \|[[:alnum:]%*+-]*\)| \S.*$/ contains=TLibDir'
+        hi def link TLibMarker Special
+        hi def link TLibDir Directory
+    endf
+
+    " :nodoc:
+    function! s:prototype.FormatFilename(file) dict "{{{3
+        let width = eval(g:tlib_inputlist_width_filename)
+        let split = match(a:file, '[/\\]\zs[^/\\]\+$')
+        if split == -1
+            let fname = ''
+            let dname = a:file
+        else
+            let fname = strpart(a:file, split)
+            let dname = strpart(a:file, 0, split - 1)
+        endif
+        " let fname = fnamemodify(a:file, ":p:t")
+        " " let fname = fnamemodify(a:file, ":t")
+        " " if isdirectory(a:file)
+        " "     let fname .='/'
+        " " endif
+        " let dname = fnamemodify(a:file, ":h")
+        " let dname = pathshorten(fnamemodify(a:file, ":h"))
+        let dnmax = &co - max([width, len(fname)]) - 11 - self.index_width - &fdc
+        if len(dname) > dnmax
+            let dname = '...'. strpart(dname, len(dname) - dnmax)
+        endif
+        let marker = []
+        if g:tlib_inputlist_filename_indicators
+            let bnr = bufnr(a:file)
+            " TLogVAR a:file, bnr, self.bufnr
+            if bnr != -1
+                if bnr == self.bufnr
+                    call add(marker, '%')
+                else
+                    call add(marker, ' ')
+                    " elseif buflisted(a:file)
+                    "     if getbufvar(a:file, "&mod")
+                    "         call add(marker, '+')
+                    "     else
+                    "         call add(marker, 'B')
+                    "     endif
+                    " elseif bufloaded(a:file)
+                    "     call add(marker, 'h')
+                    " else
+                    "     call add(marker, 'u')
+                endif
             else
                 call add(marker, ' ')
-                " elseif buflisted(a:file)
-                "     if getbufvar(a:file, "&mod")
-                "         call add(marker, '+')
-                "     else
-                "         call add(marker, 'B')
-                "     endif
-                " elseif bufloaded(a:file)
-                "     call add(marker, 'h')
-                " else
-                "     call add(marker, 'u')
             endif
-        else
-            call add(marker, ' ')
         endif
-    endif
-    call insert(marker, '|')
-    call add(marker, '|')
-    return printf("%-". eval(g:tlib_inputlist_width_filename) ."s %s %s", fname, join(marker, ''), dname)
-endf
+        call insert(marker, '|')
+        call add(marker, '|')
+        return printf("%-". eval(g:tlib_inputlist_width_filename) ."s %s %s", fname, join(marker, ''), dname)
+    endf
+
+endif
 
 
 " :nodoc:

@@ -18,6 +18,18 @@ if !exists('g:tlib#input#use_popup')
 endif
 
 
+" How to format filenames:
+"     l ... Show basenames on the left side, separated from the 
+"           directory names
+"     r ... Show basenames on the right side
+TLet g:tlib#input#format_filename = 'l'
+
+
+" If g:tlib#input#format_filename == 'r', how much space should be kept 
+" free on the right side.
+TLet g:tlib#input#filename_padding_r = '&co / 10'
+
+
 " Functions related to tlib#input#List(type, ...) "{{{2
 
 " :def: function! tlib#input#List(type. ?query='', ?list=[], ?handlers=[], ?default="", ?timeout=0)
