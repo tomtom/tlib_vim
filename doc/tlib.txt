@@ -179,6 +179,7 @@ Contents~
         tlib#agent#GotoLine ..................... |tlib#agent#GotoLine()|
         tlib#agent#DoAtLine ..................... |tlib#agent#DoAtLine()|
         tlib#agent#Wildcard ..................... |tlib#agent#Wildcard()|
+        tlib#agent#Null ......................... |tlib#agent#Null()|
         tlib#url#Decode ......................... |tlib#url#Decode()|
         tlib#url#DecodeChar ..................... |tlib#url#DecodeChar()|
         tlib#url#EncodeChar ..................... |tlib#url#EncodeChar()|
@@ -194,6 +195,9 @@ Contents~
         tlib#tag#Format ......................... |tlib#tag#Format()|
         tlib#map#PumAccept ...................... |tlib#map#PumAccept()|
         tlib#Filter_cnfd#New .................... |tlib#Filter_cnfd#New()|
+        g:tlib#input#use_popup .................. |g:tlib#input#use_popup|
+        g:tlib#input#format_filename ............ |g:tlib#input#format_filename|
+        g:tlib#input#filename_padding_r ......... |g:tlib#input#filename_padding_r|
         tlib#input#List ......................... |tlib#input#List()|
         tlib#input#ListD ........................ |tlib#input#ListD()|
         tlib#input#ListW ........................ |tlib#input#ListW()|
@@ -209,8 +213,10 @@ Contents~
         tlib#paragraph#GetMetric ................ |tlib#paragraph#GetMetric()|
         tlib#paragraph#Move ..................... |tlib#paragraph#Move()|
         tlib#World#New .......................... |tlib#World#New()|
+        prototype.Highlight_filename
         prototype.Reset
         prototype.SetStatusline
+        prototype.Query
         tlib#tab#BufMap ......................... |tlib#tab#BufMap()|
         tlib#tab#TabWinNr ....................... |tlib#tab#TabWinNr()|
         tlib#tab#Set ............................ |tlib#tab#Set()|
@@ -247,6 +253,7 @@ Contents~
         tlib#win#WinDo .......................... |tlib#win#WinDo()|
         tlib#comments#Comments .................. |tlib#comments#Comments()|
         tlib#Filter_cnf#New ..................... |tlib#Filter_cnf#New()|
+        prototype.Pretty
         tlib#Object#New ......................... |tlib#Object#New()|
         prototype.New
         prototype.Inherit
@@ -410,11 +417,15 @@ g:tlib_inputlist_filename_indicators (default: 0)
     disk when doing this.
 
                                                     *g:tlib_inputlist_match*
-g:tlib_inputlist_match         (default: 'cnf')
-    Can be "cnf", "cnfd", "seq", or "fuzzy". See:
+g:tlib_inputlist_match         (default: 'cnfx')
+    Can be "cnf", "cnfd", "cnfx", "seq", or "fuzzy". See:
       cnf :: Match substrings
         - |tlib#Filter_cnf#New()| (this is the default method)
         - |tlib#Filter_cnfd#New()|
+      cnfd :: Like cnf but "." is interpreted as a wildcard, i.e. it is 
+              expanded to "\.\{-}"
+      cnfx :: Like cnfd but |g:tlib#Filter_cnfx#expander| is interpreted 
+              as a wildcard
       seq :: Match sequences of characters
         - |tlib#Filter_seq#New()|
       fuzzy :: Match fuzzy character sequences
@@ -1107,6 +1118,9 @@ tlib#agent#DoAtLine(world, selected)
                                                     *tlib#agent#Wildcard()*
 tlib#agent#Wildcard(world, selected)
 
+                                                    *tlib#agent#Null()*
+tlib#agent#Null(world, selected)
+
 
 ========================================================================
 autoload/tlib/url.vim~
@@ -1229,6 +1243,23 @@ tlib#Filter_cnfd#New(...)
 ========================================================================
 autoload/tlib/input.vim~
 Input-related, select from a list etc.
+
+                                                    *g:tlib#input#use_popup*
+g:tlib#input#use_popup         (default: has('menu') && (has('gui_gtk') || has('gui_gtk2') || has('gui_win32')))
+    If true, define a popup menu for |tlib#input#List()| and related 
+    functions.
+
+                                                    *g:tlib#input#format_filename*
+g:tlib#input#format_filename   (default: 'l')
+    How to format filenames:
+        l ... Show basenames on the left side, separated from the 
+              directory names
+        r ... Show basenames on the right side
+
+                                                    *g:tlib#input#filename_padding_r*
+g:tlib#input#filename_padding_r (default: '&co / 10')
+    If g:tlib#input#format_filename == 'r', how much space should be kept 
+    free on the right side.
 
                                                     *tlib#input#List()*
 tlib#input#List(type. ?query='', ?list=[], ?handlers=[], ?default="", ?timeout=0)
@@ -1376,9 +1407,13 @@ Inherits from |tlib#Object#New|.
                                                     *tlib#World#New()*
 tlib#World#New(...)
 
+prototype.Highlight_filename
+
 prototype.Reset
 
 prototype.SetStatusline
+
+prototype.Query
 
 
 ========================================================================
@@ -1581,6 +1616,8 @@ tlib#Filter_cnf#New(...)
     "lala foo|bar".
 
     This is also the base class for other filters.
+
+prototype.Pretty
 
 
 ========================================================================
