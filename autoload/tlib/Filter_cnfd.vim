@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
-" @Last Change: 2011-05-19.
-" @Revision:    0.0.43
+" @Last Change: 2012-09-19.
+" @Revision:    0.0.44
 
 let s:prototype = tlib#Filter_cnf#New({'_class': ['Filter_cnfd'], 'name': 'cnfd'}) "{{{2
 let s:prototype.highlight = g:tlib_inputlist_higroup

@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
-" @Last Change: 2012-09-17.
-" @Revision:    0.0.85
+" @Last Change: 2012-09-19.
+" @Revision:    0.0.86
 
 let s:prototype = tlib#Object#New({'_class': ['Filter_cnf'], 'name': 'cnf'}) "{{{2
 let s:prototype.highlight = g:tlib_inputlist_higroup
@@ -122,13 +122,14 @@ endf
 " :nodoc:
 function! s:prototype.DisplayFilter(filter) dict "{{{3
     let filter1 = deepcopy(a:filter)
-    call map(filter1, '"(". join(reverse(s:Pretty(v:val)), " OR ") .")"')
+    call map(filter1, '"(". join(reverse(self.Pretty(v:val)), " OR ") .")"')
     return join(reverse(filter1), ' AND ')
 endf
 
 
-function! s:Pretty(filter) "{{{3
-    call map(a:filter, 'substitute(v:val, ''\\\.\\{-}'', ''__'', ''g'')')
+function! s:prototype.Pretty(filter) dict "{{{3
+    " call map(a:filter, 'substitute(v:val, ''\\\.\\{-}'', ''=>'', ''g'')')
+    call map(a:filter, 'self.CleanFilter(v:val)')
     return a:filter
 endf
 
