@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-24.
-" @Last Change: 2012-03-02.
-" @Revision:    0.1.192
+" @Last Change: 2012-09-19.
+" @Revision:    0.1.194
 
 
 " :filedoc:
@@ -14,11 +14,16 @@
 " General {{{1
 
 function! tlib#agent#Exit(world, selected) "{{{3
-    call a:world.CloseScratch()
-    let a:world.state = 'exit empty escape'
-    let a:world.list = []
-    " let a:world.base = []
-    call a:world.ResetSelected()
+    if a:world.key_mode == 'default'
+        call a:world.CloseScratch()
+        let a:world.state = 'exit empty escape'
+        let a:world.list = []
+        " let a:world.base = []
+        call a:world.ResetSelected()
+    else
+        let a:world.key_mode = 'default'
+        let a:world.state = 'redisplay'
+    endif
     return a:world
 endf
 
@@ -506,6 +511,12 @@ function! tlib#agent#Wildcard(world, selected) "{{{3
         endif
         call a:world.SetFrontFilter(flt0)
     endif
+    let a:world.state = 'redisplay'
+    return a:world
+endf
+
+
+function! tlib#agent#Null(world, selected) "{{{3
     let a:world.state = 'redisplay'
     return a:world
 endf

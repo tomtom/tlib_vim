@@ -3,19 +3,17 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2012-09-17.
-" @Revision:    0.0.942
+" @Last Change: 2012-09-19.
+" @Revision:    0.0.946
 
 
 " :filedoc:
 " Input-related, select from a list etc.
 
 
-if !exists('g:tlib#input#use_popup')
-    " If true, define a popup menu for |tlib#input#List()| and related 
-    " functions.
-    let g:tlib#input#use_popup = has('menu') && (has('gui_gtk') || has('gui_gtk2') || has('gui_win32'))
-endif
+" If true, define a popup menu for |tlib#input#List()| and related 
+" functions.
+TLet g:tlib#input#use_popup = has('menu') && (has('gui_gtk') || has('gui_gtk2') || has('gui_win32'))
 
 
 " How to format filenames:
@@ -315,12 +313,7 @@ function! tlib#input#ListW(world, ...) "{{{3
                     " TLogDBG 8
                     if world.initial_display || !tlib#char#IsAvailable()
                         " TLogDBG len(dlist)
-                        if g:tlib_inputlist_shortmessage
-                            let query = 'Filter: '. world.DisplayFilter()
-                        else
-                            let query = world.query .' (filter: '. world.DisplayFilter() .'; press "?" for help)'
-                        endif
-                        call world.DisplayList(query, dlist)
+                        call world.DisplayList(world.Query(), dlist)
                         call world.FollowCursor()
                         let world.initial_display = 0
                         " TLogDBG 9
@@ -334,7 +327,7 @@ function! tlib#input#ListW(world, ...) "{{{3
                     " if world.state == 'scroll'
                     "     let world.prefidx = world.offset
                     " endif
-                    call world.DisplayList('')
+                    call world.DisplayList()
                     if world.state == 'help'
                         let world.state = 'display'
                     else
@@ -358,6 +351,8 @@ function! tlib#input#ListW(world, ...) "{{{3
 
                 " TLogVAR world.timeout
                 let c = tlib#char#Get(world.timeout, world.timeout_resolution)
+                " TLogVAR c, has_key(world.key_map[world.key_mode],c)
+                " TLogDBG string(sort(keys(world.key_map[world.key_mode])))
                 if world.state != ''
                     " continue
                 elseif has_key(world.key_map[world.key_mode], c)
@@ -374,6 +369,7 @@ function! tlib#input#ListW(world, ...) "{{{3
                 elseif c == 13
                     throw 'pick'
                 elseif c == 27
+                    " TLogVAR c, world.key_mode
                     if world.key_mode != 'default'
                         let world.key_mode = 'default'
                         let world.state = 'redisplay'
@@ -392,12 +388,12 @@ function! tlib#input#ListW(world, ...) "{{{3
                     endif
                     throw 'pick'
                 elseif c == "\<RightMouse>"
-                    if g:tlib#input#use_popup
+                    if g:tlib#input#use_popup && world.has_menu
                         " if v:mouse_lnum != line('.')
                         " endif
                         let world.prefidx = world.GetLineIdx(v:mouse_lnum)
                         let world.state = 'redisplay'
-                        call world.DisplayList('')
+                        call world.DisplayList()
                         if line('w$') - v:mouse_lnum < 6
                             popup ]TLibInputListPopupMenu
                         else
@@ -407,6 +403,9 @@ function! tlib#input#ListW(world, ...) "{{{3
                         let world.state = 'redisplay'
                     endif
                     " TLogVAR world.prefidx, world.state
+                elseif has_key(world.key_map[world.key_mode], 'unknown_key')
+                    let agent = world.key_map[world.key_mode].unknown_key.agent
+                    let world = call(agent, [world, c])
                 elseif c >= 32
                     let world.state = 'display'
                     let numbase = get(world.numeric_chars, c, -99999)
@@ -550,6 +549,7 @@ function! tlib#input#ListW(world, ...) "{{{3
         let &l:scrolloff = scrolloff
         if g:tlib#input#use_popup && world.has_menu
             silent! aunmenu ]TLibInputListPopupMenu
+            let world.has_menu = 0
         endif
 
         " TLogDBG 'finally 2'
@@ -609,14 +609,31 @@ function! s:Init(world, cmd) "{{{3
         let a:world.fileencoding = &fileencoding
         call a:world.SetMatchMode(tlib#var#Get('tlib_inputlist_match', 'wb'))
         call a:world.Initialize()
-        let a:world.key_mode = 'default'
-        let a:world.key_map = {
-                    \ a:world.key_mode : copy(g:tlib_keyagents_InputList_s)
-                    \ }
+        if !has_key(a:world, 'key_mode')
+            let a:world.key_mode = 'default'
+        endif
+        " TLogVAR has_key(a:world,'key_map')
+        if has_key(a:world, 'key_map')
+            " TLogVAR has_key(a:world.key_map,a:world.key_mode)
+            if has_key(a:world.key_map, a:world.key_mode)
+                let a:world.key_map[a:world.key_mode] = extend(
+                            \ a:world.key_map[a:world.key_mode],
+                            \ copy(g:tlib_keyagents_InputList_s),
+                            \ 'keep')
+            else
+                let a:world.key_map[a:world.key_mode] = copy(g:tlib_keyagents_InputList_s)
+            endif
+        else
+            let a:world.key_map = {
+                        \ a:world.key_mode : copy(g:tlib_keyagents_InputList_s)
+                        \ }
+        endif
         if stridx(a:world.type, 'm') != -1
             call extend(a:world.key_map[a:world.key_mode], g:tlib_keyagents_InputList_m, 'force')
         endif
-        let a:world.key_map[a:world.key_mode] = map(a:world.key_map[a:world.key_mode], 'type(v:val) == 4 ? v:val : {"agent": v:val}')
+        for key_mode in keys(a:world.key_map)
+            let a:world.key_map[key_mode] = map(a:world.key_map[key_mode], 'type(v:val) == 4 ? v:val : {"agent": v:val}')
+        endfor
         if type(a:world.key_handlers) == 3
             call s:ExtendKeyMap(a:world, a:world.key_mode, a:world.key_handlers)
         elseif type(a:world.key_handlers) == 4
@@ -656,6 +673,7 @@ function! s:BuildMenu(world) "{{{3
         amenu ]TLibInputListPopupMenu.Reset\ list <c-r>
         amenu ]TLibInputListPopupMenu.Cancel <esc>
         amenu ]TLibInputListPopupMenu.-StandardEntries- :
+        let a:world.has_menu = 1
         for [key_mode, key_handlers] in items(a:world.key_map)
             let keys = sort(keys(key_handlers))
             for key in keys
@@ -671,7 +689,6 @@ function! s:BuildMenu(world) "{{{3
                                     \ '.'. escape(handler.help, ' .\')
                                     \ .' '. handler.key_name
                     endif
-                    let a:world.has_menu = 1
                 endif
             endfor
         endfor

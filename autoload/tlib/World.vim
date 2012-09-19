@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2012-09-17.
-" @Revision:    0.1.980
+" @Last Change: 2012-09-19.
+" @Revision:    0.1.1048
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -24,6 +24,7 @@ let s:prototype = tlib#Object#New({
             \ 'fileencoding': &fileencoding,
             \ 'fmt_display': {},
             \ 'fmt_filter': {},
+            \ 'fmt_options': {},
             \ 'filetype': '',
             \ 'filter': [['']],
             \ 'filter_format': '',
@@ -95,8 +96,6 @@ endf
 " :nodoc:
 function! s:prototype.Set_highlight_filename() dict "{{{3
     let self.tlib_UseInputListScratch = 'call world.Highlight_filename()'
-    "             \ 'syntax match TLibMarker /\%>'. (1 + eval(g:tlib_inputlist_width_filename)) .'c |.\{-}| / | hi def link TLibMarker Special'
-    " let self.tlib_UseInputListScratch .= '| syntax match TLibDir /\%>'. (4 + eval(g:tlib_inputlist_width_filename)) .'c\S\{-}[\/].*$/ | hi def link TLibDir Directory'
 endf
 
 
@@ -748,8 +747,12 @@ function! s:prototype.DisplayHelp() dict "{{{3
     let help = [
                 \ self.FormatHelp('Enter, <cr>', 'Pick the current item',  '<Esc>',        esc_help),
                 \ self.FormatHelp('<m-Number>',  'Pick an item',           '<bs>, <c-bs>', 'Reduce filter'),
-                \ self.FormatHelp('Mouse',       'Pick an item',           'Letter',       'Filter the list'),
                 \ ]
+    if has_key(self.key_map[self.key_mode], 'unknown_key')
+        call add(help, self.FormatHelp('Mouse', 'L: Pick item / R: show menu'))
+    else
+        call add(help, self.FormatHelp('Mouse', 'L: Pick item / R: show menu', 'Letter', 'Filter the list'))
+    endif
 
     if self.key_mode == 'default'
         let help += [
@@ -772,12 +775,16 @@ function! s:prototype.DisplayHelp() dict "{{{3
     let h0 = ''
     let i0 = 0
     let i = 0
-    let nkey_handlers = len(self.key_mode[self.key_mode])
+    let nkey_handlers = len(keys(self.key_map[self.key_mode]))
+    " TLogVAR self.key_mode, nkey_handlers
     for handler in values(self.key_map[self.key_mode])
+        " TLogVAR handler
         let i += 1
         let key = get(handler, 'key_name', '')
+        " TLogVAR key
         if !empty(key)
             let desc = get(handler, 'help', '')
+            " TLogVAR i0, i, nkey_handlers
             if i0
                 call add(help, self.FormatHelp(k0, h0, key, desc))
                 let i0 = 0
@@ -790,6 +797,9 @@ function! s:prototype.DisplayHelp() dict "{{{3
             endif
         endif
     endfor
+    if i0
+        call add(help, self.FormatHelp(k0, h0))
+    endif
 
     if self.key_mode == 'default' && !empty(self.help_extra)
         let help += self.help_extra
@@ -857,12 +867,13 @@ function! s:prototype.GetResize(size) dict "{{{3
 endf
 
 
-" function! s:prototype.DisplayList(query, ?list)
+" function! s:prototype.DisplayList(?query=self.Query(), ?list=[])
 " :nodoc:
-function! s:prototype.DisplayList(query, ...) dict "{{{3
-    " TLogVAR a:query
+function! s:prototype.DisplayList(...) dict "{{{3
     " TLogVAR self.state
-    let list = a:0 >= 1 ? a:1 : []
+    let query = a:0 >= 1 ? a:1 : self.Query()
+    let list = a:0 >= 2 ? a:2 : []
+    " TLogVAR query, len(list)
     " TLogDBG 'len(list) = '. len(list)
     call self.UseScratch()
     " TLogVAR self.scratch
@@ -871,7 +882,7 @@ function! s:prototype.DisplayList(query, ...) dict "{{{3
         call self.ScrollToOffset()
     elseif self.state == 'help'
         call self.DisplayHelp()
-        call self.SetStatusline(a:query)
+        call self.SetStatusline(query)
     else
         " TLogVAR query
         " let ll = len(list)
@@ -905,7 +916,7 @@ function! s:prototype.DisplayList(query, ...) dict "{{{3
         call add(b:tlibDisplayListMarks, base_pref)
         call self.DisplayListMark(x, base_pref, '*')
         call self.SetOffset()
-        call self.SetStatusline(a:query)
+        call self.SetStatusline(query)
         " TLogVAR self.offset
         call self.ScrollToOffset()
         let rx0 = self.GetRx0()
@@ -923,6 +934,7 @@ endf
 
 
 function! s:prototype.SetStatusline(query) dict "{{{3
+    " TLogVAR a:query
     if !empty(self.temp_prompt)
         let echo = get(self.temp_prompt, 0, '')
         let hl = get(self.temp_prompt, 1, 'Normal')
@@ -933,6 +945,9 @@ function! s:prototype.SetStatusline(query) dict "{{{3
         let options = [self.matcher.name]
         if self.sticky
             call add(options, '#')
+        endif
+        if self.key_mode != 'default'
+            call add(options, 'map:'. self.key_mode)
         endif
         if !empty(options)
             let sopts = printf('[%s]', join(options, ', '))
@@ -951,6 +966,16 @@ function! s:prototype.SetStatusline(query) dict "{{{3
     else
         echo echo
     endif
+endf
+
+
+function! s:prototype.Query() dict "{{{3
+    if g:tlib_inputlist_shortmessage
+        let query = 'Filter: '. self.DisplayFilter()
+    else
+        let query = self.query .' (filter: '. self.DisplayFilter() .'; press "?" for help)'
+    endif
+    return query
 endf
 
 
