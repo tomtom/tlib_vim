@@ -152,15 +152,19 @@ TLet g:tlib_inputlist_livesearch_threshold = 1000
 " disk when doing this.
 TLet g:tlib_inputlist_filename_indicators = 0
 
-" Can be "cnf", "cnfd", "seq", or "fuzzy". See:
+" Can be "cnf", "cnfd", "cnfx", "seq", or "fuzzy". See:
 "   cnf :: Match substrings
 "     - |tlib#Filter_cnf#New()| (this is the default method)
 "     - |tlib#Filter_cnfd#New()|
+"   cnfd :: Like cnf but "." is interpreted as a wildcard, i.e. it is 
+"           expanded to "\.\{-}"
+"   cnfx :: Like cnfd but |g:tlib#Filter_cnfx#expander| is interpreted 
+"           as a wildcard
 "   seq :: Match sequences of characters
 "     - |tlib#Filter_seq#New()|
 "   fuzzy :: Match fuzzy character sequences
 "     - |tlib#Filter_fuzzy#New()|
-TLet g:tlib_inputlist_match = 'cnf'
+TLet g:tlib_inputlist_match = 'cnfx'
 
 " If not null, display only a short info about the filter.
 TLet g:tlib_inputlist_shortmessage = 0
