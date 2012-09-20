@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2012-09-19.
-" @Revision:    0.0.946
+" @Last Change: 2012-09-20.
+" @Revision:    0.0.957
 
 
 " :filedoc:
@@ -153,6 +153,7 @@ function! tlib#input#ListW(world, ...) "{{{3
     let @/ = ''
     let dlist = []
     " let &laststatus = 2
+    autocmd TLib VimResized * call feedkeys("\<c-j>", 't')
 
     try
         while !empty(world.state) && world.state !~ '^exit' && (world.show_empty || !empty(world.base))
@@ -541,6 +542,7 @@ function! tlib#input#ListW(world, ...) "{{{3
 
     finally
         call world.Leave()
+        autocmd! TLib VimResized
 
         " TLogVAR statusline
         " let &l:statusline = statusline
