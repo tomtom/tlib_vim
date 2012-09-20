@@ -666,19 +666,25 @@ endf
 " :nodoc:
 function! s:prototype.UseInputListScratch() dict "{{{3
     let scratch = self.UseScratch()
-    " TLogVAR scratch
-    syntax match InputlListIndex /^\d\+:/
-    syntax match InputlListCursor /^\d\+\* .*$/ contains=InputlListIndex
-    syntax match InputlListSelected /^\d\+# .*$/ contains=InputlListIndex
-    hi def link InputlListIndex Constant
-    hi def link InputlListCursor Search
-    hi def link InputlListSelected IncSearch
-    setlocal nowrap
-    " hi def link InputlListIndex Special
-    " let b:tlibDisplayListMarks = {}
-    let b:tlibDisplayListMarks = []
-    let b:tlibDisplayListWorld = self
-    call tlib#hook#Run('tlib_UseInputListScratch', self)
+    if !exists('b:tlib_list_init')
+        let b:tlib_list_init = 1
+    endif
+    if !exists('w:tlib_list_init')
+        " TLogVAR scratch
+        syntax match InputlListIndex /^\d\+:/
+        syntax match InputlListCursor /^\d\+\* .*$/ contains=InputlListIndex
+        syntax match InputlListSelected /^\d\+# .*$/ contains=InputlListIndex
+        hi def link InputlListIndex Constant
+        hi def link InputlListCursor Search
+        hi def link InputlListSelected IncSearch
+        setlocal nowrap
+        " hi def link InputlListIndex Special
+        " let b:tlibDisplayListMarks = {}
+        let b:tlibDisplayListMarks = []
+        let b:tlibDisplayListWorld = self
+        call tlib#hook#Run('tlib_UseInputListScratch', self)
+        let w:tlib_list_init = 1
+    endif
     return scratch
 endf
 
