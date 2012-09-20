@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
-" @Last Change: 2012-09-19.
-" @Revision:    0.0.44
+" @Last Change: 2012-09-20.
+" @Revision:    0.0.50
 
 let s:prototype = tlib#Filter_cnf#New({'_class': ['Filter_cnfd'], 'name': 'cnfd'}) "{{{2
 let s:prototype.highlight = g:tlib_inputlist_higroup
@@ -28,9 +28,12 @@ let s:Help = s:prototype.Help
 
 " :nodoc:
 function! s:prototype.Help(world) dict "{{{3
-    let help = call(s:Help, [a:world], self)
-    let help += [a:world.FormatHelp('.', 'Any characters')]
-    return help
+    call call(s:Help, [a:world], self)
+    if self.name == 'cnfx'
+        call a:world.PushHelp(g:tlib#Filter_cnfx#expander, 'Any characters')
+    else
+        call a:world.PushHelp('.', 'Any characters')
+    endif
 endf
 
 

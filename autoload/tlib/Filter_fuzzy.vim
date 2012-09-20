@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
-" @Last Change: 2012-01-30.
-" @Revision:    0.0.44
+" @Last Change: 2012-09-20.
+" @Revision:    0.0.45
 
 let s:prototype = tlib#Filter_cnf#New({'_class': ['Filter_fuzzy'], 'name': 'fuzzy'}) "{{{2
 let s:prototype.highlight = g:tlib_inputlist_higroup
@@ -37,9 +37,8 @@ let s:Help = s:prototype.Help
 
 " :nodoc:
 function! s:prototype.Help(world) dict "{{{3
-    let help = call(s:Help, [a:world], self)
-    let help += ['Patterns are interpreted as if characters were connected with .\{-}']
-    return help
+    call call(s:Help, [a:world], self)
+    call a:world.PushHelp('Patterns are interpreted as if characters were connected with .\{-}')
 endf
 
 

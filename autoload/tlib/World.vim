@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2012-09-19.
-" @Revision:    0.1.1048
+" @Last Change: 2012-09-20.
+" @Revision:    0.1.1112
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -735,14 +735,63 @@ function! s:prototype.Retrieve(anyway) dict "{{{3
 endf
 
 
-function! s:prototype.FormatHelp(...) dict "{{{3
-    if a:0 == 2
+function! s:FormatHelp(...) "{{{3
+    if a:0 == 1
+        return a:1
+    elseif a:0 == 2
         return printf('%15s ... %s', a:1, a:2)
     elseif a:0 == 4
         return printf('%15s ... %-23s %15s ... %s', a:1, a:2, a:3, a:4)
     else
-        throw 'TLIB: #FormatHelp(): Only 2 or 4 arguments allowed: ' + string(a:000)
+        throw 'TLIB: FormatHelp(): Only 2 or 4 arguments allowed: ' + string(a:000)
     endif
+endf
+
+
+function! s:prototype.InitHelp() dict "{{{3
+    let s:help_key = ''
+    let s:help_desc = ''
+    return []
+endf
+
+
+function! s:prototype.PushRestHelp() dict "{{{3
+    if !empty(s:help_key)
+        call add(self._help, s:FormatHelp(s:help_key, s:help_desc))
+        let s:help_key = ''
+    endif
+endf
+
+
+function! s:prototype.PushHelp(...) dict "{{{3
+    " TLogVAR a:000
+    if a:0 == 0
+        call self.PushRestHelp()
+    elseif a:0 == 1
+        call self.PushRestHelp()
+        if type(a:1) == 3
+            let self._help += a:1
+        else
+            call add(self._help, a:1)
+        endif
+    elseif a:0 % 2 == 0
+        let i = 1
+        while i < a:0
+            let key  = a:{i}
+            let desc = a:{i + 1}
+            if empty(s:help_key)
+                let s:help_key = key
+                let s:help_desc = desc
+            else
+                call add(self._help, s:FormatHelp(s:help_key, s:help_desc, key, desc))
+                let s:help_key = ''
+            endif
+            let i += 2
+        endw
+    else
+        throw "TLIB: PushHelp: Wrong number of arguments: ". string(a:000)
+    endif
+    " TLogVAR helpstring
 endf
 
 
@@ -750,32 +799,30 @@ endf
 function! s:prototype.DisplayHelp() dict "{{{3
     " \ 'Help:',
     let esc_help = self.key_mode == 'default' ? 'Abort' : 'Reset keymap'
-    let help = [
-                \ self.FormatHelp('Enter, <cr>', 'Pick the current item',  '<Esc>',        esc_help),
-                \ self.FormatHelp('<m-Number>',  'Pick an item',           '<bs>, <c-bs>', 'Reduce filter'),
-                \ ]
-    if has_key(self.key_map[self.key_mode], 'unknown_key')
-        call add(help, self.FormatHelp('Mouse', 'L: Pick item / R: show menu'))
-    else
-        call add(help, self.FormatHelp('Mouse', 'L: Pick item / R: show menu', 'Letter', 'Filter the list'))
+    let self._help = self.InitHelp()
+    call self.PushHelp('Enter, <cr>', 'Pick the current item',  '<Esc>',        esc_help)
+    call self.PushHelp('<m-Number>',  'Pick an item')
+    call self.PushHelp('Mouse', 'L: Pick item, R: Show menu')
+    call self.PushHelp('<bs>, <c-bs>', 'Reduce filter')
+    if !has_key(self.key_map[self.key_mode], 'unknown_key')
+        call self.PushHelp('Letter', 'Filter the list')
     endif
 
     if self.key_mode == 'default'
-        let help += [
-                    \ self.FormatHelp('<c|m-r>',     'Reset the display',      'Up/Down',      'Next/previous item'),
-                    \ self.FormatHelp('<c|m-q>',     'Edit top filter string', 'Page Up/Down', 'Scroll'),
-                    \ ]
+        call self.PushHelp('<c|m-r>',     'Reset the display',      'Up/Down',      'Next/previous item')
+        call self.PushHelp('<c|m-q>',     'Edit top filter string', 'Page Up/Down', 'Scroll')
         if self.allow_suspend
-            call add(help, self.FormatHelp('<c|m-z>', 'Suspend/Resume', '<c-o>', 'Switch to origin'))
+            call self.PushHelp('<c|m-z>', 'Suspend/Resume', '<c-o>', 'Switch to origin')
         endif
         if stridx(self.type, 'm') != -1
-            let help += [
-                        \ self.FormatHelp('<s-up/down>', '(Un)Select items', '#, <c-space>', '(Un)Select the current item'),
-                        \ self.FormatHelp('<c|m-a>', '(Un)Select all currently visible items')
-                        \ ]
+            call self.PushHelp('<s-up/down>', '(Un)Select items', '#, <c-space>', '(Un)Select the current item')
+            call self.PushHelp('<c|m-a>', '(Un)Select all items')
             " \ '<c-\>        ... Show only selected',
         endif
     endif
+
+    " TLogVAR len(self._help)
+    call self.matcher.Help(self)
 
     let k0 = ''
     let h0 = ''
@@ -792,10 +839,10 @@ function! s:prototype.DisplayHelp() dict "{{{3
             let desc = get(handler, 'help', '')
             " TLogVAR i0, i, nkey_handlers
             if i0
-                call add(help, self.FormatHelp(k0, h0, key, desc))
+                call self.PushHelp(k0, h0, key, desc)
                 let i0 = 0
             elseif i == nkey_handlers
-                call add(help, self.FormatHelp(key, desc))
+                call self.PushHelp(key, desc)
             else
                 let k0 = key
                 let h0 = desc
@@ -804,27 +851,27 @@ function! s:prototype.DisplayHelp() dict "{{{3
         endif
     endfor
     if i0
-        call add(help, self.FormatHelp(k0, h0))
+        call self.PushHelp(k0, h0)
     endif
 
     if self.key_mode == 'default' && !empty(self.help_extra)
-        let help += self.help_extra
+        call self.PushHelp(self.help_extra)
     endif
 
-    let help += self.matcher.Help(self)
-    let help += [
+    " TLogVAR len(self._help)
+    call self.PushHelp([
                 \ '',
                 \ 'Exact matches and matches at word boundaries is given more weight.',
-                \ 'Warning: Please don''t resize the window with the mouse.',
-                \ ]
+                \ ])
+    call self.PushRestHelp()
     let self.temp_prompt = ['Press any key to continue.', 'Question']
     " call tlib#normal#WithRegister('gg"tdG', 't')
     call tlib#buffer#DeleteRange('1', '$')
-    call append(0, help)
+    call append(0, self._help)
     " call tlib#normal#WithRegister('G"tddgg', 't')
     call tlib#buffer#DeleteRange('$', '$')
     1
-    call self.Resize(len(help), 0)
+    call self.Resize(len(self._help), 0)
 endf
 
 
