@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
 " @Last Change: 2012-09-25.
-" @Revision:    0.1.1177
+" @Revision:    0.1.1178
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -140,13 +140,12 @@ else
         hi def link TLibMarker Special
         hi def link TLibDir Directory
         hi def link TLibFilename NonText
+        function! self.Highlighter(rx) dict "{{{3
+            let rx = '/\c\%>'. (1 + self.width_filename) .'c \(|\|\[[^]]*\]\) .\{-}\zs'. escape(a:rx, '/') .'/'
+            exec 'match' self.matcher.highlight rx
+        endf
     endf
 
-    " :nodoc:
-    function! s:prototype.Highlighter(rx) dict "{{{3
-        let rx = '/\c\%>'. (1 + self.width_filename) .'c \(|\|\[[^]]*\]\) .\{-}\zs'. escape(a:rx, '/') .'/'
-        exec 'match' self.matcher.highlight rx
-    endf
 
     " :nodoc:
     function! s:prototype.FormatFilename(file) dict "{{{3
