@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2012-09-20.
-" @Revision:    0.1.1113
+" @Last Change: 2012-09-25.
+" @Revision:    0.1.1177
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -128,62 +128,73 @@ if g:tlib#input#format_filename == 'r'
 
 else
 
+    " :nodoc:
     function! s:prototype.Highlight_filename() dict "{{{3
-        syntax match TLibDir /\(\a:\|\.\.\..\{-}\)\?[\/][^&<>*|]*$/ contained containedin=TLibMarker
-        exec 'syntax match TLibMarker /\%>'. (1 + eval(g:tlib_inputlist_width_filename)) .'c |\( \|[[:alnum:]%*+-]*\)| \S.*$/ contains=TLibDir'
+        " let self.width_filename = 1 + eval(g:tlib_inputlist_width_filename)
+        " TLogVAR self.base
+        let self.width_filename = max(map(copy(self.base), 'len(fnamemodify(v:val, ":t"))'))
+        " TLogVAR self.width_filename
+        syntax match TLibDir /\(\a:\|\.\.\..\{-}\)\?[\/][^&<>*|]\{-}\ze[^\/]\+$/ contained containedin=TLibMarker
+        syntax match TLibFilename /[^\/]\+$/ contained containedin=TLibMarker
+        exec 'syntax match TLibMarker /\%>'. (1 + self.width_filename) .'c \(|\|\[[^]]*\]\) \S.*$/ contains=TLibDir,TLibFilename'
         hi def link TLibMarker Special
         hi def link TLibDir Directory
+        hi def link TLibFilename NonText
+    endf
+
+    " :nodoc:
+    function! s:prototype.Highlighter(rx) dict "{{{3
+        let rx = '/\c\%>'. (1 + self.width_filename) .'c \(|\|\[[^]]*\]\) .\{-}\zs'. escape(a:rx, '/') .'/'
+        exec 'match' self.matcher.highlight rx
     endf
 
     " :nodoc:
     function! s:prototype.FormatFilename(file) dict "{{{3
-        let width = eval(g:tlib_inputlist_width_filename)
+        let width = self.width_filename
         let split = match(a:file, '[/\\]\zs[^/\\]\+$')
         if split == -1
             let fname = ''
             let dname = a:file
         else
             let fname = strpart(a:file, split)
-            let dname = strpart(a:file, 0, split - 1)
+            " let dname = strpart(a:file, 0, split - 1)
+            let dname = a:file
         endif
-        " let fname = fnamemodify(a:file, ":p:t")
-        " " let fname = fnamemodify(a:file, ":t")
-        " " if isdirectory(a:file)
-        " "     let fname .='/'
-        " " endif
-        " let dname = fnamemodify(a:file, ":h")
-        " let dname = pathshorten(fnamemodify(a:file, ":h"))
-        let dnmax = &co - max([width, len(fname)]) - 11 - self.index_width - &fdc
+        let dnmax = &co - max([width, len(fname)]) - 10 - self.index_width - &fdc
+        if g:tlib_inputlist_filename_indicators
+            let dnmax -= 2
+        endif
         if len(dname) > dnmax
             let dname = '...'. strpart(dname, len(dname) - dnmax)
         endif
         let marker = []
         if g:tlib_inputlist_filename_indicators
+            call insert(marker, '[')
             let bnr = bufnr(a:file)
             " TLogVAR a:file, bnr, self.bufnr
             if bnr != -1
                 if bnr == self.bufnr
                     call add(marker, '%')
                 else
-                    call add(marker, ' ')
-                    " elseif buflisted(a:file)
-                    "     if getbufvar(a:file, "&mod")
-                    "         call add(marker, '+')
-                    "     else
-                    "         call add(marker, 'B')
-                    "     endif
-                    " elseif bufloaded(a:file)
-                    "     call add(marker, 'h')
-                    " else
-                    "     call add(marker, 'u')
+                    call add(marker, bnr)
                 endif
+                if getbufvar(bnr, '&modified')
+                    call add(marker, '+')
+                endif
+                if getbufvar(bnr, '&bufhidden') == 'hide'
+                    call add(marker, 'h')
+                endif
+                " if !buflisted(bnr)
+                "     call add(marker, 'u')
+                " endif
             else
                 call add(marker, ' ')
             endif
+            call add(marker, ']')
+        else
+            call add(marker, '|')
         endif
-        call insert(marker, '|')
-        call add(marker, '|')
-        return printf("%-". eval(g:tlib_inputlist_width_filename) ."s %s %s", fname, join(marker, ''), dname)
+        return printf("%-". self.width_filename ."s %s %s", fname, join(marker, ''), dname)
     endf
 
 endif
@@ -979,7 +990,11 @@ function! s:prototype.DisplayList(...) dict "{{{3
             if empty(rx0)
                 match none
             elseif self.IsValidFilter()
-                exec 'match '. self.matcher.highlight .' /\c'. escape(rx0, '/') .'/'
+                if has_key(self, 'Highlighter')
+                    call self.Highlighter(rx0)
+                else
+                    exec 'match '. self.matcher.highlight .' /\c'. escape(rx0, '/') .'/'
+                endif
             endif
         endif
     endif
