@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2012-09-20.
-" @Revision:    0.0.958
+" @Last Change: 2012-09-23.
+" @Revision:    0.0.960
 
 
 " :filedoc:
@@ -697,6 +697,9 @@ endf
 
 
 function! s:RunStateHandlers(world) "{{{3
+    " Provide the variable "world" in the environment of an "exec" 
+    " handler (ea).
+    let world = a:world
     for handler in a:world.state_handlers
         let eh = get(handler, 'state', '')
         if !empty(eh) && a:world.state =~ eh
