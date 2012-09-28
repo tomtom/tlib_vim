@@ -346,3 +346,20 @@ version: "0.45"
   MD5 checksum: f2f2fe0893e75bb9423c1ddcd01f38f6
 version: "0.46"
 
+  - tlib#input#List: optimizations
+  - Prepare for multi-mode maps
+  - tlib#input#List: cnfx is new default filter
+  - Filters: minor changes to how the pattern is displayed
+  - g:tlib#input#format_filename: alternative method for formatting filenames
+  - tlib#input#List: allow multiple keymaps / modes
+  - Handle rezise events
+  - Don't initialize the same window twice
+  - Minor optimizations to how help is displayed
+  - Handle VimResize event per buffer
+  - Improve display of filenames & highlighting
+  - Filename highlighter: set Highlight_filename()
+  - RunStateHandlers(): set world variable
+  - Optimize help display
+  MD5 checksum: e3652927722bdc51935eb1a04238546b
+version: "1.00"
+
