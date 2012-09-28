@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
 " @Last Change: 2012-09-25.
-" @Revision:    0.1.1178
+" @Revision:    0.1.1181
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -746,59 +746,83 @@ function! s:prototype.Retrieve(anyway) dict "{{{3
 endf
 
 
-function! s:FormatHelp(...) "{{{3
-    if a:0 == 1
-        return a:1
-    elseif a:0 == 2
-        return printf('%15s ... %s', a:1, a:2)
-    elseif a:0 == 4
-        return printf('%15s ... %-23s %15s ... %s', a:1, a:2, a:3, a:4)
-    else
-        throw 'TLIB: FormatHelp(): Only 2 or 4 arguments allowed: ' + string(a:000)
+function! s:FormatHelp(help) "{{{3
+    " TLogVAR a:help
+    let max = [0, 0]
+    for item in a:help
+        " TLogVAR item
+        if type(item) == 3
+            let itemlen = map(copy(item), 'strwidth(v:val)')
+            " TLogVAR itemlen
+            let max = map(range(2), 'max[v:val] >= itemlen[v:val] ? max[v:val] : itemlen[v:val]')
+        endif
+        unlet item
+    endfor
+    " TLogVAR max
+    let cols = float2nr((winwidth(0) - &foldcolumn - 1) / (max[0] + max[1] + 2))
+    if cols < 1
+        let cols = 1
     endif
+    let fmt = printf('%%%ds: %%-%ds', max[0], max[1])
+    " TLogVAR cols, fmt
+    let help = []
+    let idx = -1
+    let maxidx = len(a:help)
+    while idx < maxidx
+        let push_item = 0
+        let accum = []
+        for i in range(cols)
+            let idx += 1
+            if idx >= maxidx
+                break
+            endif
+            let item = a:help[idx]
+            if type(item) == 3
+                call add(accum, item)
+            else
+                let push_item = 1
+                break
+            endif
+            unlet item
+        endfor
+        if !empty(accum)
+            call add(help, s:FormatHelpItem(accum, fmt))
+        endif
+        if push_item
+            call add(help, a:help[idx])
+        endif
+    endwh
+    " TLogVAR help
+    return help
+endf
+
+
+function! s:FormatHelpItem(item, fmt) "{{{3
+    let args = [join(repeat([a:fmt], len(a:item)), '  ')]
+    for item in a:item
+        " TLogVAR item
+        let args += item
+    endfor
+    " TLogVAR args
+    return call('printf', args)
 endf
 
 
 function! s:prototype.InitHelp() dict "{{{3
-    let s:help_key = ''
-    let s:help_desc = ''
     return []
-endf
-
-
-function! s:prototype.PushRestHelp() dict "{{{3
-    if !empty(s:help_key)
-        call add(self._help, s:FormatHelp(s:help_key, s:help_desc))
-        let s:help_key = ''
-    endif
 endf
 
 
 function! s:prototype.PushHelp(...) dict "{{{3
     " TLogVAR a:000
-    if a:0 == 0
-        call self.PushRestHelp()
-    elseif a:0 == 1
-        call self.PushRestHelp()
+    if a:0 == 1
         if type(a:1) == 3
             let self._help += a:1
         else
             call add(self._help, a:1)
         endif
-    elseif a:0 % 2 == 0
-        let i = 1
-        while i < a:0
-            let key  = a:{i}
-            let desc = a:{i + 1}
-            if empty(s:help_key)
-                let s:help_key = key
-                let s:help_desc = desc
-            else
-                call add(self._help, s:FormatHelp(s:help_key, s:help_desc, key, desc))
-                let s:help_key = ''
-            endif
-            let i += 2
-        endw
+    elseif a:0 == 2
+        call add(self._help, a:000)
     else
         throw "TLIB: PushHelp: Wrong number of arguments: ". string(a:000)
     endif
@@ -808,26 +832,26 @@ endf
 
 " :nodoc:
 function! s:prototype.DisplayHelp() dict "{{{3
-    " \ 'Help:',
-    let esc_help = self.key_mode == 'default' ? 'Abort' : 'Reset keymap'
     let self._help = self.InitHelp()
-    call self.PushHelp('Enter, <cr>', 'Pick the current item',  '<Esc>',        esc_help)
-    call self.PushHelp('<m-Number>',  'Pick an item')
+    call self.PushHelp('<Esc>', self.key_mode == 'default' ? 'Abort' : 'Reset keymap')
+    call self.PushHelp('Enter, <cr>', 'Pick the current item')
+    call self.PushHelp('<M-Number>',  'Pick an item')
     call self.PushHelp('Mouse', 'L: Pick item, R: Show menu')
-    call self.PushHelp('<bs>, <c-bs>', 'Reduce filter')
-    if !has_key(self.key_map[self.key_mode], 'unknown_key')
-        call self.PushHelp('Letter', 'Filter the list')
-    endif
+    call self.PushHelp('<BS>, <C-BS>', 'Reduce filter')
 
     if self.key_mode == 'default'
-        call self.PushHelp('<c|m-r>',     'Reset the display',      'Up/Down',      'Next/previous item')
-        call self.PushHelp('<c|m-q>',     'Edit top filter string', 'Page Up/Down', 'Scroll')
+        call self.PushHelp('<C|M-r>',     'Reset the display')
+        call self.PushHelp('Up/Down',      'Next/previous item')
+        call self.PushHelp('<C|M-q>',     'Edit top filter string')
+        call self.PushHelp('Page Up/Down', 'Scroll')
         if self.allow_suspend
-            call self.PushHelp('<c|m-z>', 'Suspend/Resume', '<c-o>', 'Switch to origin')
+            call self.PushHelp('<C|M-z>', 'Suspend/Resume')
+            call self.PushHelp('<C-o>', 'Switch to origin')
         endif
         if stridx(self.type, 'm') != -1
-            call self.PushHelp('<s-up/down>', '(Un)Select items', '#, <c-space>', '(Un)Select the current item')
-            call self.PushHelp('<c|m-a>', '(Un)Select all items')
+            call self.PushHelp('<S-up/down>', '(Un)Select items')
+            call self.PushHelp('#, <C-Space>', '(Un)Select the current item')
+            call self.PushHelp('<C|M-a>', '(Un)Select all items')
             " \ '<c-\>        ... Show only selected',
         endif
     endif
@@ -835,34 +859,22 @@ function! s:prototype.DisplayHelp() dict "{{{3
     " TLogVAR len(self._help)
     call self.matcher.Help(self)
 
-    let k0 = ''
-    let h0 = ''
-    let i0 = 0
-    let i = 0
-    let nkey_handlers = len(keys(self.key_map[self.key_mode]))
-    " TLogVAR self.key_mode, nkey_handlers
+    " TLogVAR self.key_mode
     for handler in values(self.key_map[self.key_mode])
         " TLogVAR handler
-        let i += 1
         let key = get(handler, 'key_name', '')
         " TLogVAR key
         if !empty(key)
             let desc = get(handler, 'help', '')
-            " TLogVAR i0, i, nkey_handlers
-            if i0
-                call self.PushHelp(k0, h0, key, desc)
-                let i0 = 0
-            elseif i == nkey_handlers
-                call self.PushHelp(key, desc)
-            else
-                let k0 = key
-                let h0 = desc
-                let i0 = 1
+            if empty(desc)
+                let desc = get(handler, 'agent', '')
             endif
+            call self.PushHelp(key, desc)
         endif
     endfor
-    if i0
-        call self.PushHelp(k0, h0)
+
+    if !has_key(self.key_map[self.key_mode], 'unknown_key')
+        call self.PushHelp('Letter', 'Filter the list')
     endif
 
     if self.key_mode == 'default' && !empty(self.help_extra)
@@ -872,9 +884,9 @@ function! s:prototype.DisplayHelp() dict "{{{3
     " TLogVAR len(self._help)
     call self.PushHelp([
                 \ '',
-                \ 'Exact matches and matches at word boundaries is given more weight.',
+                \ 'Matches at word boundaries are prioritized.',
                 \ ])
-    call self.PushRestHelp()
+    let self._help = s:FormatHelp(self._help)
     let self.temp_prompt = ['Press any key to continue.', 'Question']
     " call tlib#normal#WithRegister('gg"tdG', 't')
     call tlib#buffer#DeleteRange('1', '$')

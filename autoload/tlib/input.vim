@@ -784,7 +784,11 @@ function! tlib#input#Resume(name, pick, bufnr) "{{{3
     else
         call tlib#autocmdgroup#Init()
         autocmd! TLib BufEnter <buffer>
-        let b:tlib_{a:name}.state = 'redisplay'
+        if b:tlib_{a:name}.state =~ '\<suspend\>'
+            let b:tlib_{a:name}.state = 'redisplay'
+        else
+            let b:tlib_{a:name}.state .= ' redisplay'
+        endif
         " call tlib#input#List('resume '. a:name)
         let cmd = 'resume '. a:name
         if a:pick >= 1
