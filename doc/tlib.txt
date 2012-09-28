@@ -180,6 +180,8 @@ Contents~
         tlib#agent#DoAtLine ..................... |tlib#agent#DoAtLine()|
         tlib#agent#Wildcard ..................... |tlib#agent#Wildcard()|
         tlib#agent#Null ......................... |tlib#agent#Null()|
+        g:tlib#Filter_cnfx#expander ............. |g:tlib#Filter_cnfx#expander|
+        tlib#Filter_cnfx#New .................... |tlib#Filter_cnfx#New()|
         tlib#url#Decode ......................... |tlib#url#Decode()|
         tlib#url#DecodeChar ..................... |tlib#url#DecodeChar()|
         tlib#url#EncodeChar ..................... |tlib#url#EncodeChar()|
@@ -213,10 +215,6 @@ Contents~
         tlib#paragraph#GetMetric ................ |tlib#paragraph#GetMetric()|
         tlib#paragraph#Move ..................... |tlib#paragraph#Move()|
         tlib#World#New .......................... |tlib#World#New()|
-        prototype.Highlight_filename
-        prototype.Reset
-        prototype.SetStatusline
-        prototype.Query
         tlib#tab#BufMap ......................... |tlib#tab#BufMap()|
         tlib#tab#TabWinNr ....................... |tlib#tab#TabWinNr()|
         tlib#tab#Set ............................ |tlib#tab#Set()|
@@ -464,7 +462,7 @@ g:tlib_viewline_position       (default: 'zz')
 Keys for |tlib#input#List|~
 
                                                     *g:tlib_inputlist_and*
-g:tlib_inputlist_and           (default: ' ')
+g:tlib_inputlist_and           (default: '" "')
 
                                                     *g:tlib_inputlist_or*
 g:tlib_inputlist_or            (default: '|')
@@ -1123,6 +1121,20 @@ tlib#agent#Null(world, selected)
 
 
 ========================================================================
+autoload/tlib/Filter_cnfx.vim~
+
+                                                    *g:tlib#Filter_cnfx#expander*
+g:tlib#Filter_cnfx#expander    (default: '+')
+    A character that should be expanded to '\.\{-}'.
+
+                                                    *tlib#Filter_cnfx#New()*
+tlib#Filter_cnfx#New(...)
+    The same as |tlib#Filter_cnfd#New()| but a a customizable character 
+    |see tlib#Filter_cnfx#expander| is expanded to '\.\{-}'. 
+    The pattern is a '/\V' very no-'/magic' regexp pattern.
+
+
+========================================================================
 autoload/tlib/url.vim~
 
                                                     *tlib#url#Decode()*
@@ -1407,14 +1419,6 @@ Inherits from |tlib#Object#New|.
                                                     *tlib#World#New()*
 tlib#World#New(...)
 
-prototype.Highlight_filename
-
-prototype.Reset
-
-prototype.SetStatusline
-
-prototype.Query
-
 
 ========================================================================
 autoload/tlib/tab.vim~
@@ -1473,9 +1477,6 @@ tlib#Filter_fuzzy#New(...)
     Patterns are interpreted as if characters were connected with '.\{-}'.
 
     In "fuzzy" mode, the pretty printing of filenames is disabled.
-
-
-    TLogVAR a:world.display_format
 
 
 ========================================================================

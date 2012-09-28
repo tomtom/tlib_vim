@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
 " @Last Change: 2012-09-25.
-" @Revision:    0.1.1181
+" @Revision:    0.1.1192
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -140,7 +140,8 @@ else
         hi def link TLibMarker Special
         hi def link TLibDir Directory
         hi def link TLibFilename NonText
-        function! self.Highlighter(rx) dict "{{{3
+        " :nodoc:
+        function! self.Highlighter(rx) dict
             let rx = '/\c\%>'. (1 + self.width_filename) .'c \(|\|\[[^]]*\]\) .\{-}\zs'. escape(a:rx, '/') .'/'
             exec 'match' self.matcher.highlight rx
         endf
@@ -700,7 +701,7 @@ function! s:prototype.UseInputListScratch() dict "{{{3
 endf
 
 
-" :def: function! s:prototype.Reset(?initial=0)
+" s:prototype.Reset(?initial=0)
 " :nodoc:
 function! s:prototype.Reset(...) dict "{{{3
     TVarArg ['initial', 0]
@@ -808,11 +809,13 @@ function! s:FormatHelpItem(item, fmt) "{{{3
 endf
 
 
+" :nodoc:
 function! s:prototype.InitHelp() dict "{{{3
     return []
 endf
 
 
+" :nodoc:
 function! s:prototype.PushHelp(...) dict "{{{3
     " TLogVAR a:000
     if a:0 == 1
@@ -1013,6 +1016,7 @@ function! s:prototype.DisplayList(...) dict "{{{3
 endf
 
 
+" :nodoc:
 function! s:prototype.SetStatusline(query) dict "{{{3
     " TLogVAR a:query
     if !empty(self.temp_prompt)
@@ -1049,6 +1053,7 @@ function! s:prototype.SetStatusline(query) dict "{{{3
 endf
 
 
+" :nodoc:
 function! s:prototype.Query() dict "{{{3
     if g:tlib_inputlist_shortmessage
         let query = 'Filter: '. self.DisplayFilter()

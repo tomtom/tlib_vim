@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
 " @Last Change: 2012-09-20.
-" @Revision:    0.0.45
+" @Revision:    0.0.46
 
 let s:prototype = tlib#Filter_cnf#New({'_class': ['Filter_fuzzy'], 'name': 'fuzzy'}) "{{{2
 let s:prototype.highlight = g:tlib_inputlist_higroup
@@ -23,7 +23,8 @@ endf
 " :nodoc:
 function! s:prototype.Init(world) dict "{{{3
     " TLogVAR a:world.display_format
-    function! a:world.Set_display_format(value) dict "{{{3
+    " :nodoc:
+    function! a:world.Set_display_format(value) dict
         if a:value == 'filename'
             let self.display_format = ''
         else
