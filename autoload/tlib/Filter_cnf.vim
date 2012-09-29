@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
 " @Last Change: 2012-09-26.
-" @Revision:    0.0.88
+" @Revision:    0.0.90
 
 let s:prototype = tlib#Object#New({'_class': ['Filter_cnf'], 'name': 'cnf'}) "{{{2
 let s:prototype.highlight = g:tlib_inputlist_higroup
@@ -33,7 +33,7 @@ endf
 " :nodoc:
 function! s:prototype.Help(world) dict "{{{3
     call a:world.PushHelp(
-                \ printf('%s, %s, %sWORD', g:tlib_inputlist_and, g:tlib_inputlist_or, g:tlib_inputlist_not),
+                \ printf('"%s", "%s", "%sWORD"', g:tlib_inputlist_and, g:tlib_inputlist_or, g:tlib_inputlist_not),
                 \ 'AND, OR, NOT')
 endf
 

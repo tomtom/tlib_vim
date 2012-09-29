@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-04-10.
 " @Last Change: 2012-09-26.
-" @Revision:    686
+" @Revision:    689
 " GetLatestVimScripts: 1863 1 tlib.vim
 
 if &cp || exists("loaded_tlib")
@@ -207,7 +207,7 @@ TLet g:tlib_viewline_position = 'zz'
 " :doc:
 " Keys for |tlib#input#List|~
 
-TLet g:tlib_inputlist_and = '" "'
+TLet g:tlib_inputlist_and = ' '
 TLet g:tlib_inputlist_or  = '|'
 TLet g:tlib_inputlist_not = '-'
 
