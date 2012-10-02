@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2012-09-25.
-" @Revision:    0.1.1192
+" @Last Change: 2012-10-01.
+" @Revision:    0.1.1201
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -132,11 +132,15 @@ else
     function! s:prototype.Highlight_filename() dict "{{{3
         " let self.width_filename = 1 + eval(g:tlib_inputlist_width_filename)
         " TLogVAR self.base
-        let self.width_filename = max(map(copy(self.base), 'len(fnamemodify(v:val, ":t"))'))
+        let self.width_filename = min([
+                    \ get(self, 'width_filename', &co),
+                    \ empty(g:tlib#input#filename_max_width) ? &co : eval(g:tlib#input#filename_max_width),
+                    \ max(map(copy(self.base), 'len(fnamemodify(v:val, ":t"))'))
+                    \ ])
         " TLogVAR self.width_filename
-        syntax match TLibDir /\(\a:\|\.\.\..\{-}\)\?[\/][^&<>*|]\{-}\ze[^\/]\+$/ contained containedin=TLibMarker
-        syntax match TLibFilename /[^\/]\+$/ contained containedin=TLibMarker
-        exec 'syntax match TLibMarker /\%>'. (1 + self.width_filename) .'c \(|\|\[[^]]*\]\) \S.*$/ contains=TLibDir,TLibFilename'
+        exec 'syntax match TLibFilename /[^\/]\+$/ contained containedin=TLibDir'
+        exec 'syntax match TLibDir /\%>'. (1 + self.width_filename) .'c \(|\|\[[^]]*\]\) \zs\(\(\a:\|\.\.\..\{-}\)\?[\/][^&<>*|]\{-}\)\?[^\/]\+$/ contained containedin=TLibMarker contains=TLibFilename'
+        exec 'syntax match TLibMarker /\%>'. (1 + self.width_filename) .'c \(|\|\[[^]]*\]\) \S.*$/ contains=TLibDir'
         hi def link TLibMarker Special
         hi def link TLibDir Directory
         hi def link TLibFilename NonText
@@ -159,6 +163,9 @@ else
             let fname = strpart(a:file, split)
             " let dname = strpart(a:file, 0, split - 1)
             let dname = a:file
+        endif
+        if strwidth(fname) > width
+            let fname = strpart(fname, 0, width - 3) .'...'
         endif
         let dnmax = &co - max([width, len(fname)]) - 10 - self.index_width - &fdc
         if g:tlib_inputlist_filename_indicators

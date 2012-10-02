@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2012-09-23.
-" @Revision:    0.0.960
+" @Last Change: 2012-10-01.
+" @Revision:    0.0.966
 
 
 " :filedoc:
@@ -26,6 +26,11 @@ TLet g:tlib#input#format_filename = 'l'
 " If g:tlib#input#format_filename == 'r', how much space should be kept 
 " free on the right side.
 TLet g:tlib#input#filename_padding_r = '&co / 10'
+
+
+" If g:tlib#input#format_filename == 'l', an expression that 
+" |eval()|uates to the maximum display width of filenames.
+TLet g:tlib#input#filename_max_width = '&co / 2'
 
 
 " Functions related to tlib#input#List(type, ...) "{{{2

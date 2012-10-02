@@ -200,6 +200,7 @@ Contents~
         g:tlib#input#use_popup .................. |g:tlib#input#use_popup|
         g:tlib#input#format_filename ............ |g:tlib#input#format_filename|
         g:tlib#input#filename_padding_r ......... |g:tlib#input#filename_padding_r|
+        g:tlib#input#filename_max_width ......... |g:tlib#input#filename_max_width|
         tlib#input#List ......................... |tlib#input#List()|
         tlib#input#ListD ........................ |tlib#input#ListD()|
         tlib#input#ListW ........................ |tlib#input#ListW()|
@@ -462,7 +463,7 @@ g:tlib_viewline_position       (default: 'zz')
 Keys for |tlib#input#List|~
 
                                                     *g:tlib_inputlist_and*
-g:tlib_inputlist_and           (default: '" "')
+g:tlib_inputlist_and           (default: ' ')
 
                                                     *g:tlib_inputlist_or*
 g:tlib_inputlist_or            (default: '|')
@@ -1272,6 +1273,11 @@ g:tlib#input#format_filename   (default: 'l')
 g:tlib#input#filename_padding_r (default: '&co / 10')
     If g:tlib#input#format_filename == 'r', how much space should be kept 
     free on the right side.
+
+                                                    *g:tlib#input#filename_max_width*
+g:tlib#input#filename_max_width (default: '&co / 2')
+    If g:tlib#input#format_filename == 'l', an expression that 
+    |eval()|uates to the maximum display width of filenames.
 
                                                     *tlib#input#List()*
 tlib#input#List(type. ?query='', ?list=[], ?handlers=[], ?default="", ?timeout=0)
