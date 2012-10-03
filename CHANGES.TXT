@@ -363,3 +363,9 @@ version: "0.46"
   MD5 checksum: e3652927722bdc51935eb1a04238546b
 version: "1.00"
 
+  - Set g:tlib_inputlist_and to  ' ' again
+  - g:tlib#input#filename_max_width: maximum display width of filenames
+  - tlib#input#List: <s-esc>, <f10>: run command by name
+  MD5 checksum: a42f90275cdbe9f7d92cac61b884a2d1
+version: "1.01"
+
