@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-04-10.
-" @Last Change: 2012-09-26.
-" @Revision:    689
+" @Last Change: 2012-10-03.
+" @Revision:    690
 " GetLatestVimScripts: 1863 1 tlib.vim
 
 if &cp || exists("loaded_tlib")
@@ -269,6 +269,8 @@ TLet g:tlib_keyagents_InputList_s = {
             \ 15:            'tlib#agent#SuspendToParentWindow',  
             \ 63:            'tlib#agent#Help',
             \ "\<F1>":       'tlib#agent#Help',
+            \ "\<F10>":      'tlib#agent#ExecAgentByName',
+            \ "\<S-Esc>":    'tlib#agent#ExecAgentByName',
             \ "\<bs>":       'tlib#agent#ReduceFilter',
             \ "\<del>":      'tlib#agent#ReduceFilter',
             \ "\<c-bs>":     'tlib#agent#PopFilter',

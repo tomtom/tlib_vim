@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2012-10-01.
-" @Revision:    0.1.1201
+" @Last Change: 2012-10-03.
+" @Revision:    0.1.1202
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -848,6 +848,7 @@ function! s:prototype.DisplayHelp() dict "{{{3
     call self.PushHelp('<M-Number>',  'Pick an item')
     call self.PushHelp('Mouse', 'L: Pick item, R: Show menu')
     call self.PushHelp('<BS>, <C-BS>', 'Reduce filter')
+    call self.PushHelp('<S-Esc>, <F10>', 'Enter command')
 
     if self.key_mode == 'default'
         call self.PushHelp('<C|M-r>',     'Reset the display')
