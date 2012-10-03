@@ -295,7 +295,7 @@ Contents~
 plugin/02tlib.vim~
 
                                                     *:TRequire*
-TRequire NAME [VERSION [FILE]]
+:TRequire NAME [VERSION [FILE]]
     Make a certain vim file is loaded.
 
     Conventions: If FILE isn't defined, plugin/NAME.vim is loaded. The 
@@ -346,7 +346,7 @@ TRequire NAME [VERSION [FILE]]
 <
 
                                                     *:TBrowseOutput*
-TBrowseOutput COMMAND
+:TBrowseOutput COMMAND
     Ever wondered how to efficiently browse the output of a command 
     without redirecting it to a file? This command takes a command as 
     argument and presents the output via |tlib#input#List()| so that you 
@@ -361,7 +361,7 @@ TBrowseOutput COMMAND
 <
 
                                                     *:TBrowseScriptnames*
-TBrowseScriptnames
+:TBrowseScriptnames
     List all sourced script names (the output of ':scriptnames').
 
     When you press enter, the selected script will be opened in the current
@@ -372,8 +372,11 @@ TBrowseScriptnames
 <
 
                                                     *:TTimeCommand*
-TTimeCommand CMD
+:TTimeCommand CMD
     Time the execution time of CMD.
+
+
+Variables~
 
                                                     *g:tlib_pick_last_item*
 g:tlib_pick_last_item          (default: 1)
@@ -381,55 +384,88 @@ g:tlib_pick_last_item          (default: 1)
     had only one item to begin with.
     When 2, automatically select a last remaining item after applying 
     any filters.
+    See |tlib#input#List()|.
 
                                                     *g:tlib_sortprefs_threshold*
 g:tlib_sortprefs_threshold     (default: 200)
     If a list is bigger than this value, don't try to be smart when 
     selecting an item. Be slightly faster instead.
+    See |tlib#input#List()|.
 
                                                     *g:tlib_scratch_pos*
 g:tlib_scratch_pos             (default: 'botright')
     Scratch window position. By default the list window is opened on the 
     bottom. Set this variable to 'topleft' or '' to change this behaviour.
+    See |tlib#input#List()|.
 
                                                     *g:tlib_inputlist_pct*
 g:tlib_inputlist_pct           (default: 50)
     Size of the input list window (in percent) from the main size (of &lines).
+    See |tlib#input#List()|.
 
                                                     *g:tlib_inputlist_width_filename*
 g:tlib_inputlist_width_filename (default: '&co / 3')
     Size of filename columns when listing filenames.
+    See |tlib#input#List()|.
 
                                                     *g:tlib_inputlist_higroup*
 g:tlib_inputlist_higroup       (default: 'IncSearch')
-    The highlight group to use for showing matches in the input list window.
+    The highlight group to use for showing matches in the input list 
+    window.
+    See |tlib#input#List()|.
 
                                                     *g:tlib_inputlist_livesearch_threshold*
 g:tlib_inputlist_livesearch_threshold (default: 1000)
-    If a list contains more items, don't do an incremental "live search", 
-    but use |input()| to query the user for a filter. This is useful on 
-    slower machines or with very long lists.
+    If a list contains more items, |tlib#input#List()| does not perform an 
+    incremental "live search" but uses |input()| to query the user for a 
+    filter. This is useful on slower machines or with very long lists.
 
                                                     *g:tlib_inputlist_filename_indicators*
 g:tlib_inputlist_filename_indicators (default: 0)
-    If true, show some indicators about the status of a filename (e.g. 
-    buflisted(), bufloaded() etc.).
+    If true, |tlib#input#List()| will show some indicators about the 
+    status of a filename (e.g. buflisted(), bufloaded() etc.).
     This is disabled by default because vim checks also for the file on 
     disk when doing this.
 
                                                     *g:tlib_inputlist_match*
 g:tlib_inputlist_match         (default: 'cnfx')
+    Determine how |tlib#input#List()| and related functions work.
     Can be "cnf", "cnfd", "cnfx", "seq", or "fuzzy". See:
-      cnf :: Match substrings
-        - |tlib#Filter_cnf#New()| (this is the default method)
-        - |tlib#Filter_cnfd#New()|
-      cnfd :: Like cnf but "." is interpreted as a wildcard, i.e. it is 
-              expanded to "\.\{-}"
-      cnfx :: Like cnfd but |g:tlib#Filter_cnfx#expander| is interpreted 
-              as a wildcard
-      seq :: Match sequences of characters
+      cnfx ... Like cnfd but |g:tlib#Filter_cnfx#expander| is interpreted 
+               as a wildcard (this is the default method)
+        - A plus character ("+") acts as a wildcard as if ".\{-}" (see 
+          |/\{-|) were entered.
+        - Examples:
+            - "f+o" matches "fo", "fxo", and "fxxxoo", but doesn't match 
+              "far".
+        - Otherwise it is a derivate of the cnf method (see below).
+        - See also |tlib#Filter_cnfx#New()|.
+      cnfd ... Like cnf but "." is interpreted as a wildcard, i.e. it is 
+               expanded to "\.\{-}"
+        - A period character (".") acts as a wildcard as if ".\{-}" (see 
+          |/\{-|) were entered.
+        - Examples:
+            - "f.o" matches "fo", "fxo", and "fxxxoo", but doesn't match 
+              "far".
+        - Otherwise it is a derivate of the cnf method (see below).
+        - See also |tlib#Filter_cnfd#New()|.
+      cnf .... Match substrings
+        - A blank creates an AND conjunction, i.e. the next pattern has to 
+          match too.
+        - A pipe character ("|") creates an OR conjunction, either this or 
+          the next next pattern has to match.
+        - Patterns are very 'nomagic' |regexp| with a |\V| prefix.
+        - A pattern starting with "-" makes the filter exclude items 
+          matching that pattern.
+        - Examples:
+            - "foo bar" matches items that contain the strings "foo" AND 
+              "bar".
+            - "foo|bar boo|far" matches items that contain either ("foo" OR 
+              "bar") AND ("boo" OR "far").
+        - See also |tlib#Filter_cnf#New()|.
+      seq .... Match sequences of characters
         - |tlib#Filter_seq#New()|
-      fuzzy :: Match fuzzy character sequences
+      fuzzy .. Match fuzzy character sequences
         - |tlib#Filter_fuzzy#New()|
 
                                                     *g:tlib_inputlist_shortmessage*
