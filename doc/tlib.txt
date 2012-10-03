@@ -180,6 +180,8 @@ Contents~
         tlib#agent#DoAtLine ..................... |tlib#agent#DoAtLine()|
         tlib#agent#Wildcard ..................... |tlib#agent#Wildcard()|
         tlib#agent#Null ......................... |tlib#agent#Null()|
+        tlib#agent#ExecAgentByName .............. |tlib#agent#ExecAgentByName()|
+        tlib#agent#CompleteAgentNames ........... |tlib#agent#CompleteAgentNames()|
         g:tlib#Filter_cnfx#expander ............. |g:tlib#Filter_cnfx#expander|
         tlib#Filter_cnfx#New .................... |tlib#Filter_cnfx#New()|
         tlib#url#Decode ......................... |tlib#url#Decode()|
@@ -1119,6 +1121,12 @@ tlib#agent#Wildcard(world, selected)
 
                                                     *tlib#agent#Null()*
 tlib#agent#Null(world, selected)
+
+                                                    *tlib#agent#ExecAgentByName()*
+tlib#agent#ExecAgentByName(world, selected)
+
+                                                    *tlib#agent#CompleteAgentNames()*
+tlib#agent#CompleteAgentNames(ArgLead, CmdLine, CursorPos)
 
 
 ========================================================================
