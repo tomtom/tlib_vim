@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
 " @Last Change: 2012-10-03.
-" @Revision:    0.1.1202
+" @Revision:    0.1.1203
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -685,6 +685,7 @@ endf
 function! s:prototype.UseInputListScratch() dict "{{{3
     let scratch = self.UseScratch()
     if !exists('b:tlib_list_init')
+        call tlib#autocmdgroup#Init()
         autocmd TLib VimResized <buffer> call feedkeys("\<c-j>", 't')
         let b:tlib_list_init = 1
     endif
