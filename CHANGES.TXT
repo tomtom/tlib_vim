@@ -369,3 +369,7 @@ version: "1.00"
   MD5 checksum: a42f90275cdbe9f7d92cac61b884a2d1
 version: "1.01"
 
+  - #UseInputListScratch(): Make sure the TLib autogroup was created (fixes #14)
+  MD5 checksum: 5a6da7fc99c7fc7584e8fc2f7bf86fe4
+version: "1.02"
+
