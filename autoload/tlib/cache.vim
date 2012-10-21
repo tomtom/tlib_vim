@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2012-05-11.
-" @Revision:    0.1.192
+" @Revision:    0.1.207
 
 
 " |tlib#cache#Purge()|: Remove cache files older than N days.
@@ -98,6 +98,20 @@ endf
 function! tlib#cache#Get(cfile) "{{{3
     call tlib#cache#MaybePurge()
     return tlib#persistent#Get(a:cfile)
+endf
+
+
+function! tlib#cache#Value(cfile, generator, ftime, ...)
+    if !filereadable(a:cfile) || (a:ftime != 0 && getftime(a:cfile) < a:ftime)
+        let args = a:0 >= 1 ? a:1 : []
+        let val = call(a:generator, args)
+        " TLogVAR a:generator, args, val
+        call tlib#cache#Save(a:cfile, {'val': val})
+        return val
+    else
+        let val = tlib#cache#Get(a:cfile)
+        return val.val
+    endif
 endf
 
 
