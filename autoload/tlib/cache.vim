@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2012-05-11.
-" @Revision:    0.1.207
+" @Revision:    0.1.209
 
 
 " |tlib#cache#Purge()|: Remove cache files older than N days.
@@ -24,9 +24,11 @@ TLet g:tlib#cache#script_encoding = &enc
 "    2 ... Yes
 TLet g:tlib#cache#run_script = 1
 
-" If non-nil, don't display a message that files were deleted from the 
-" cache.
-TLet g:tlib#cache#silent = 0
+" Verbosity level:
+"     0 ... Be quiet
+"     1 ... Display informative message
+"     2 ... Display detailed messages
+TLet g:tlib#cache#verbosity = 1
 
 " A list of regexps that are matched against partial filenames of the 
 " cached files. If a regexp matches, the file won't be removed by 
@@ -158,7 +160,7 @@ endf
 function! tlib#cache#Purge() "{{{3
     let threshold = localtime() - g:tlib#cache#purge_days * g:tlib#date#dayshift
     let dir = tlib#cache#Dir('g')
-    if !g:tlib#cache#silent
+    if g:tlib#cache#verbosity >= 1
         echohl WarningMsg
         echom "TLib: Delete files older than ". g:tlib#cache#purge_days ." days from ". dir
         echohl NONE
@@ -179,7 +181,7 @@ function! tlib#cache#Purge() "{{{3
                 if getftime(file) < threshold
                     if delete(file)
                         call add(msg, "TLib: Could not delete cache file: ". file)
-                    else
+                    elseif g:tlib#cache#verbosity >= 2
                         call add(msg, "TLib: Delete cache file: ". file)
                     endif
                 else
@@ -190,7 +192,7 @@ function! tlib#cache#Purge() "{{{3
     finally
         let &more = more
     endtry
-    if !empty(msg) && !g:tlib#cache#silent
+    if !empty(msg) && g:tlib#cache#verbosity >= 1
         echo join(msg, "\n")
     endif
     if !empty(deldir)
@@ -216,12 +218,14 @@ function! tlib#cache#Purge() "{{{3
         call writefile(script, scriptfile)
         call inputsave()
         if g:tlib#cache#run_script == 0
-            echohl WarningMsg
-            if g:tlib#cache#silent
-                echom "TLib: Purged cache. Need to run script to delete directories"
+            if g:tlib#cache#verbosity >= 1
+                echohl WarningMsg
+                if g:tlib#cache#verbosity >= 2
+                    echom "TLib: Purged cache. Need to run script to delete directories"
+                endif
+                echom "TLib: Please review and execute: ". scriptfile
+                echohl NONE
             endif
-            echom "TLib: Please review and execute: ". scriptfile
-            echohl NONE
         else
             try
                 let yn = g:tlib#cache#run_script == 2 ? 'y' : tlib#input#Dialog("TLib: About to delete directories by means of a shell script.\nDirectory removal script: ". scriptfile ."\nRun script to delete directories now?", ['yes', 'no', 'edit'], 'no')
