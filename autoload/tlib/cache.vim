@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2012-05-11.
-" @Revision:    0.1.209
+" @Revision:    0.1.210
 
 
 " |tlib#cache#Purge()|: Remove cache files older than N days.
@@ -103,7 +103,9 @@ function! tlib#cache#Get(cfile) "{{{3
 endf
 
 
-function! tlib#cache#Value(cfile, generator, ftime, ...)
+" Get a cached value from cfile. If it is outdated (compared to ftime) 
+" or does not exist, create it calling a generator function.
+function! tlib#cache#Value(cfile, generator, ftime, ...) "{{{3
     if !filereadable(a:cfile) || (a:ftime != 0 && getftime(a:cfile) < a:ftime)
         let args = a:0 >= 1 ? a:1 : []
         let val = call(a:generator, args)
