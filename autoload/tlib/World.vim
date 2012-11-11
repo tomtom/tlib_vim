@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
 " @Last Change: 2012-10-03.
-" @Revision:    0.1.1203
+" @Revision:    0.1.1208
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -113,7 +113,7 @@ if g:tlib#input#format_filename == 'r'
     function! s:prototype.FormatFilename(file) dict "{{{3
         if !has_key(self.fmt_options, 'maxlen')
             let maxco = &co - len(len(self.base)) - eval(g:tlib#input#filename_padding_r)
-            let maxfi = max(map(copy(self.base), 'len(v:val)'))
+            let maxfi = max(map(copy(self.base), 'strwidth(v:val)'))
             let self.fmt_options.maxlen = min([maxco, maxfi])
             " TLogVAR maxco, maxfi, self.fmt_options.maxlen
         endif
@@ -135,7 +135,7 @@ else
         let self.width_filename = min([
                     \ get(self, 'width_filename', &co),
                     \ empty(g:tlib#input#filename_max_width) ? &co : eval(g:tlib#input#filename_max_width),
-                    \ max(map(copy(self.base), 'len(fnamemodify(v:val, ":t"))'))
+                    \ max(map(copy(self.base), 'strwidth(fnamemodify(v:val, ":t"))'))
                     \ ])
         " TLogVAR self.width_filename
         exec 'syntax match TLibFilename /[^\/]\+$/ contained containedin=TLibDir'
@@ -167,11 +167,11 @@ else
         if strwidth(fname) > width
             let fname = strpart(fname, 0, width - 3) .'...'
         endif
-        let dnmax = &co - max([width, len(fname)]) - 10 - self.index_width - &fdc
+        let dnmax = &co - max([width, strwidth(fname)]) - 10 - self.index_width - &fdc
         if g:tlib_inputlist_filename_indicators
             let dnmax -= 2
         endif
-        if len(dname) > dnmax
+        if strwidth(dname) > dnmax
             let dname = '...'. strpart(dname, len(dname) - dnmax)
         endif
         let marker = []
@@ -201,7 +201,9 @@ else
         else
             call add(marker, '|')
         endif
-        return printf("%-". self.width_filename ."s %s %s", fname, join(marker, ''), dname)
+        return printf("%-*s %s %s",
+                    \ self.width_filename + len(fname) - strwidth(fname),
+                    \ fname, join(marker, ''), dname)
     endf
 
 endif
