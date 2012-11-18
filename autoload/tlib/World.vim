@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
 " @Last Change: 2012-10-03.
-" @Revision:    0.1.1208
+" @Revision:    0.1.1225
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -154,6 +154,7 @@ else
 
     " :nodoc:
     function! s:prototype.FormatFilename(file) dict "{{{3
+        " TLogVAR a:file
         let width = self.width_filename
         let split = match(a:file, '[/\\]\zs[^/\\]\+$')
         if split == -1
@@ -175,10 +176,15 @@ else
             let dname = '...'. strpart(dname, len(dname) - dnmax)
         endif
         let marker = []
-        if g:tlib_inputlist_filename_indicators
+        let use_indicators = g:tlib_inputlist_filename_indicators || has_key(self, 'filename_indicators')
+        " TLogVAR use_indicators
+        if use_indicators
             call insert(marker, '[')
             let bnr = bufnr(a:file)
             " TLogVAR a:file, bnr, self.bufnr
+            if has_key(self, 'filename_indicators') && has_key(self.filename_indicators, a:file)
+                call add(marker, self.filename_indicators[a:file])
+            endif
             if bnr != -1
                 if bnr == self.bufnr
                     call add(marker, '%')
@@ -194,7 +200,9 @@ else
                 " if !buflisted(bnr)
                 "     call add(marker, 'u')
                 " endif
-            else
+                " echom "DBG" a:file string(get(self,'filename_indicators'))
+            endif
+            if len(marker) <= 1
                 call add(marker, ' ')
             endif
             call add(marker, ']')
