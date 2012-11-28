@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2012-10-01.
-" @Revision:    0.0.966
+" @Revision:    0.0.967
 
 
 " :filedoc:
@@ -411,6 +411,7 @@ function! tlib#input#ListW(world, ...) "{{{3
                 elseif has_key(world.key_map[world.key_mode], 'unknown_key')
                     let agent = world.key_map[world.key_mode].unknown_key.agent
                     let world = call(agent, [world, c])
+                    call s:CheckAgentReturnValue(agent, world)
                 elseif c >= 32
                     let world.state = 'display'
                     let numbase = get(world.numeric_chars, c, -99999)
