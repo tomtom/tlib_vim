@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-04-10.
-" @Last Change: 2012-10-03.
-" @Revision:    727
+" @Last Change: 2012-11-30.
+" @Revision:    729
 " GetLatestVimScripts: 1863 1 tlib.vim
 
 if &cp || exists("loaded_tlib")
@@ -225,8 +225,8 @@ TLet g:tlib_tag_substitute = {
 "             \ 'vim': '\(\w\|#\)',
 "             \ }
 
-TLet g:tlib_filename_sep = '/'
-" TLet g:tlib_filename_sep = exists('+shellslash') && !&shellslash ? '\' : '/'   " {{{2
+" TLet g:tlib_filename_sep = '/'
+TLet g:tlib_filename_sep = exists('+shellslash') && !&shellslash ? '\' : '/'
 
 " The cache directory. If empty, use |tlib#dir#MyRuntime|.'/cache'.
 " You might want to delete old files from this directory from time to 
