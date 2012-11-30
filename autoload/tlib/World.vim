@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2012-10-03.
-" @Revision:    0.1.1227
+" @Last Change: 2012-11-29.
+" @Revision:    0.1.1228
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -139,7 +139,7 @@ else
                     \ ])
         " TLogVAR self.width_filename
         exec 'syntax match TLibFilename /[^\/]\+$/ contained containedin=TLibDir'
-        exec 'syntax match TLibDir /\%>'. (1 + self.width_filename) .'c \(|\|\[[^]]*\]\) \zs\(\(\a:\|\.\.\..\{-}\)\?[\/][^&<>*|]\{-}\)\?[^\/]\+$/ contained containedin=TLibMarker contains=TLibFilename'
+        exec 'syntax match TLibDir /\%>'. (1 + self.width_filename) .'c \(|\|\[[^]]*\]\) \zs\(\(\a:\|\.\.\|\.\.\..\{-}\)\?[\/][^&<>*|]\{-}\)\?[^\/]\+$/ contained containedin=TLibMarker contains=TLibFilename'
         exec 'syntax match TLibMarker /\%>'. (1 + self.width_filename) .'c \(|\|\[[^]]*\]\) \S.*$/ contains=TLibDir'
         hi def link TLibMarker Special
         hi def link TLibDir Directory
