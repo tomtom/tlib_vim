@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2012-05-11.
-" @Revision:    0.1.210
+" @Last Change: 2012-12-03.
+" @Revision:    0.1.213
 
 
 " |tlib#cache#Purge()|: Remove cache files older than N days.
@@ -35,6 +35,10 @@ TLet g:tlib#cache#verbosity = 1
 " |tlib#cache#Purge()|.
 TLet g:tlib#cache#dont_purge = ['[\/]\.last_purge$']
 
+" If the cache filename is longer than N characters, use 
+" |pathshorten()|.
+TLet g:tlib#cache#max_filename = 200
+
 
 " :display: tlib#cache#Dir(?mode = 'bg')
 " The default cache directory.
@@ -51,7 +55,8 @@ endf
 " :def: function! tlib#cache#Filename(type, ?file=%, ?mkdir=0, ?dir='')
 function! tlib#cache#Filename(type, ...) "{{{3
     " TLogDBG 'bufname='. bufname('.')
-    let dir = a:0 >= 3 && !empty(a:3) ? a:3 : tlib#cache#Dir()
+    let dir0 = a:0 >= 3 && !empty(a:3) ? a:3 : tlib#cache#Dir()
+    let dir = dir0
     if a:0 >= 1 && !empty(a:1)
         let file  = a:1
     else
@@ -87,6 +92,9 @@ function! tlib#cache#Filename(type, ...) "{{{3
         endtry
     endif
     let cache_file = tlib#file#Join([dir, file])
+    if len(cache_file) > g:tlib#cache#max_filename
+        let cache_file = tlib#cache#Filename(a:type, pathshorten(file), mkdir, dir0)
+    endif
     " TLogVAR cache_file
     return cache_file
 endf
