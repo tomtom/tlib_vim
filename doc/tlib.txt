@@ -121,6 +121,7 @@ Contents~
         g:tlib#cache#run_script ................. |g:tlib#cache#run_script|
         g:tlib#cache#verbosity .................. |g:tlib#cache#verbosity|
         g:tlib#cache#dont_purge ................. |g:tlib#cache#dont_purge|
+        g:tlib#cache#max_filename ............... |g:tlib#cache#max_filename|
         tlib#cache#Dir .......................... |tlib#cache#Dir()|
         tlib#cache#Filename ..................... |tlib#cache#Filename()|
         tlib#cache#Save ......................... |tlib#cache#Save()|
@@ -484,7 +485,8 @@ g:tlib_tag_substitute
     This applies only if the tag cmd field (see |taglist()|) is used.
 
                                                     *g:tlib_filename_sep*
-g:tlib_filename_sep            (default: '/')
+g:tlib_filename_sep            (default: exists('+shellslash') && !&shellslash ? '\' : '/')
+    TLet g:tlib_filename_sep = '/'
 
                                                     *g:tlib_cache*
 g:tlib_cache                   (default: '')
@@ -922,6 +924,11 @@ g:tlib#cache#dont_purge        (default: ['[\/]\.last_purge$'])
     A list of regexps that are matched against partial filenames of the 
     cached files. If a regexp matches, the file won't be removed by 
     |tlib#cache#Purge()|.
+
+                                                    *g:tlib#cache#max_filename*
+g:tlib#cache#max_filename      (default: 200)
+    If the cache filename is longer than N characters, use 
+    |pathshorten()|.
 
                                                     *tlib#cache#Dir()*
 tlib#cache#Dir(?mode = 'bg')
