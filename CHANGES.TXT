@@ -373,3 +373,17 @@ version: "1.01"
   MD5 checksum: 5a6da7fc99c7fc7584e8fc2f7bf86fe4
 version: "1.02"
 
+  - tlib#cache#Value(cfile, generator, ftime, ...): cache value & check timestamp
+  - Replaced g:tlib#cache#silent with g:tlib#cache#verbosity
+  - FormatFilenames: improved handling of utf8 characters
+  - tlib#persistent#Value()
+  - tlib#input#List: Allow filename indiactors defined by the caller
+  - Custom filename_indicators are displayed after (and clearly separted from) the standard indicators
+  - Check the return value of an unknown_key agent
+  - Format filename = "l": Allow ".." as start of a directory name
+  - Format filename = "l": If the filename is just a filename's tail, display it on both sides
+  - Set g:tlib_filename_sep to "\" on Windows (again)
+  - g:tlib#cache#max_filename: If the cache filename is longer than N characters, use |pathshorten()|.
+  MD5 checksum: b64ce6764f39f40bfc95f3916bbb0057
+version: "1.04"
+
