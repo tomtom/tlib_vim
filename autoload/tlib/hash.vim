@@ -1,13 +1,10 @@
-" hash.vim
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Created:     2012-12-14.
-" @Last Change: 2010-09-26.
-" @Revision:    187
+" @Revision:    203
 
 
 function! tlib#hash#CRC32(chars) "{{{3
-    if 0 && has('ruby')
+    if has('ruby')
         let rv = ''
         ruby << EOR
         require 'zlib'
