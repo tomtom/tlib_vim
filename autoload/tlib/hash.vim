@@ -70,6 +70,9 @@ endf
 
 
 function! tlib#hash#Adler32(chars) "{{{3
+    if !exists('*or')
+        throw "TLIB: Vim version doesn't support bitwise or()"
+    endif
     let mod_adler = 65521
     let a = 1
     let b = 0
