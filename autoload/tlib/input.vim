@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2012-10-01.
-" @Revision:    0.0.967
+" @Last Change: 2012-12-18.
+" @Revision:    0.0.981
 
 
 " :filedoc:
@@ -161,6 +161,7 @@ function! tlib#input#ListW(world, ...) "{{{3
 
     try
         while !empty(world.state) && world.state !~ '^exit' && (world.show_empty || !empty(world.base))
+            let post_keys = ''
             " TLogDBG 'while'
             " TLogVAR world.state
             " let time01 = str2float(reltimestr(reltime()))  " DBG
@@ -382,30 +383,47 @@ function! tlib#input#ListW(world, ...) "{{{3
                         let world.state = 'exit empty'
                     endif
                 elseif c == "\<LeftMouse>"
-                    let world.prefidx = world.GetLineIdx(v:mouse_lnum)
-                    " let world.offset  = world.prefidx
-                    " TLogVAR v:mouse_lnum, world.prefidx
-                    if empty(world.prefidx)
-                        " call feedkeys(c, 't')
-                        let c = tlib#char#Get(world.timeout)
-                        let world.state = 'help'
-                        continue
-                    endif
-                    throw 'pick'
-                elseif c == "\<RightMouse>"
-                    if g:tlib#input#use_popup && world.has_menu
-                        " if v:mouse_lnum != line('.')
-                        " endif
+                    if v:mouse_win == world.list_wnr
                         let world.prefidx = world.GetLineIdx(v:mouse_lnum)
-                        let world.state = 'redisplay'
-                        call world.DisplayList()
-                        if line('w$') - v:mouse_lnum < 6
-                            popup ]TLibInputListPopupMenu
+                        " let world.offset  = world.prefidx
+                        if empty(world.prefidx)
+                            " call feedkeys(c, 't')
+                            let c = tlib#char#Get(world.timeout)
+                            let world.state = 'help'
+                            continue
+                        endif
+                        throw 'pick'
+                    else
+                        let post_keys = v:mouse_lnum .'gg'. v:mouse_col .'|'. c
+                        if world.allow_suspend
+                            let world = tlib#agent#SuspendToParentWindow(world, world.rv)
                         else
-                            popup! ]TLibInputListPopupMenu
+                            let world.state = 'exit empty'
+                        endif
+                    endif
+                elseif c == "\<RightMouse>"
+                    if v:mouse_win == world.list_wnr
+                        if g:tlib#input#use_popup && world.has_menu
+                            " if v:mouse_lnum != line('.')
+                            " endif
+                            let world.prefidx = world.GetLineIdx(v:mouse_lnum)
+                            let world.state = 'redisplay'
+                            call world.DisplayList()
+                            if line('w$') - v:mouse_lnum < 6
+                                popup ]TLibInputListPopupMenu
+                            else
+                                popup! ]TLibInputListPopupMenu
+                            endif
+                        else
+                            let world.state = 'redisplay'
                         endif
                     else
-                        let world.state = 'redisplay'
+                        let post_keys = v:mouse_lnum .'gg'. v:mouse_col .'|'. c
+                        if world.allow_suspend
+                            let world = tlib#agent#SuspendToParentWindow(world, world.rv)
+                        else
+                            let world.state = 'exit empty'
+                        endif
                     endif
                     " TLogVAR world.prefidx, world.state
                 elseif has_key(world.key_map[world.key_mode], 'unknown_key')
@@ -590,6 +608,10 @@ function! tlib#input#ListW(world, ...) "{{{3
         " endfor
         echo
         redraw!
+        if !empty(post_keys)
+            " TLogVAR post_keys
+            call feedkeys(post_keys)
+        endif
     endtry
 endf
 
