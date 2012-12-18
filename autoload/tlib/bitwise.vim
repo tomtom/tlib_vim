@@ -1,6 +1,6 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    93
+" @Revision:    95
 
 
 function! tlib#bitwise#Num2Bits(num) "{{{3
