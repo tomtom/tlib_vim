@@ -1,6 +1,6 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    92
+" @Revision:    93
 
 
 function! tlib#bitwise#Num2Bits(num) "{{{3
@@ -26,7 +26,11 @@ function! tlib#bitwise#Bits2Num(bits, ...) "{{{3
     endfor
     " TLogVAR num
     if base == 10
-        return float2nr(num)
+        if type(base) == 5
+            return num
+        else
+            return float2nr(num)
+        endif
     else
         return tlib#number#ConvertBase(num, base)
     endif
