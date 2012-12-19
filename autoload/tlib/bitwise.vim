@@ -1,6 +1,6 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    95
+" @Revision:    124
 
 
 function! tlib#bitwise#Num2Bits(num) "{{{3
@@ -83,5 +83,59 @@ endf
 function! tlib#bitwise#ShiftLeft(bits, n) "{{{3
     let bits = repeat([0], a:n) + a:bits
     return bits
+endf
+
+
+function! tlib#bitwise#Add(num1, num2, ...) "{{{3
+    let rtype = a:0 >= 1 ? a:1 : 'num'
+    let bits1 = tlib#bitwise#Num2Bits(a:num1)
+    let bits2 = tlib#bitwise#Num2Bits(a:num2)
+    let range = range(max([len(bits1), len(bits2)]))
+    " TLogVAR bits1, bits2, range
+    let carry = 0
+    let bits  = []
+    for i in range
+        let sum = get(bits1, i) + get(bits2, i) + carry
+        if sum == 3
+            let bit = 1
+            let carry = 1
+        elseif sum == 2
+            let bit = 0
+            let carry = 1
+        elseif sum == 1
+            let bit = 1
+            let carry = 0
+        elseif sum == 0
+            let bit = 0
+            let carry = 0
+        endif
+        call add(bits, bit)
+        " TLogVAR i, bits, bit
+    endfor
+    if carry == 1
+        call add(bits, carry)
+    endif
+    if rtype == 'num' || (rtype == 'auto' && type(a:num1) <= 1)
+        return tlib#bitwise#Bits2Num(bits)
+    else
+        return bits
+    endif
+endf
+
+
+function! tlib#bitwise#Sub(num1, num2, ...) "{{{3
+    let rtype = a:0 >= 1 ? a:1 : 'num'
+    let bits1 = tlib#bitwise#Num2Bits(a:num1)
+    let bits2 = tlib#bitwise#Num2Bits(a:num2)
+    let range = range(max([len(bits1), len(bits2)]))
+    let bits2 = map(range, '!get(bits2, v:val)')
+    let bits2 = tlib#bitwise#Add(bits2, [1], 'bits')
+    let bits3 = tlib#bitwise#Add(bits1, bits2, 'bits')
+    let bits = bits3[0 : -2]
+    if rtype == 'num' || (rtype == 'auto' && type(a:num1) <= 1)
+        return tlib#bitwise#Bits2Num(bits)
+    else
+        return bits
+    endif
 endf
 
