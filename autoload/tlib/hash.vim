@@ -1,6 +1,6 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    218
+" @Revision:    219
 
 
 function! tlib#hash#CRC32B(chars) "{{{3
@@ -8,7 +8,7 @@ function! tlib#hash#CRC32B(chars) "{{{3
         let rv = ''
         ruby << EOR
         require 'zlib'
-        VIM::command('let rv = "%08x"' % Zlib.crc32(VIM::evaluate("a:chars")))
+        VIM::command('let rv = "%08X"' % Zlib.crc32(VIM::evaluate("a:chars")))
 EOR
     " elseif has('python')
     " elseif has('perl')
