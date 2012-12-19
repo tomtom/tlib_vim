@@ -185,6 +185,15 @@ Contents~
         tlib#agent#Null ......................... |tlib#agent#Null()|
         tlib#agent#ExecAgentByName .............. |tlib#agent#ExecAgentByName()|
         tlib#agent#CompleteAgentNames ........... |tlib#agent#CompleteAgentNames()|
+        tlib#bitwise#Num2Bits ................... |tlib#bitwise#Num2Bits()|
+        tlib#bitwise#Bits2Num ................... |tlib#bitwise#Bits2Num()|
+        tlib#bitwise#AND ........................ |tlib#bitwise#AND()|
+        tlib#bitwise#OR ......................... |tlib#bitwise#OR()|
+        tlib#bitwise#XOR ........................ |tlib#bitwise#XOR()|
+        tlib#bitwise#ShiftRight ................. |tlib#bitwise#ShiftRight()|
+        tlib#bitwise#ShiftLeft .................. |tlib#bitwise#ShiftLeft()|
+        tlib#bitwise#Add ........................ |tlib#bitwise#Add()|
+        tlib#bitwise#Sub ........................ |tlib#bitwise#Sub()|
         g:tlib#Filter_cnfx#expander ............. |g:tlib#Filter_cnfx#expander|
         tlib#Filter_cnfx#New .................... |tlib#Filter_cnfx#New()|
         tlib#url#Decode ......................... |tlib#url#Decode()|
@@ -214,6 +223,7 @@ Contents~
         tlib#input#CommandSelect ................ |tlib#input#CommandSelect()|
         tlib#input#Edit ......................... |tlib#input#Edit()|
         tlib#input#Dialog ....................... |tlib#input#Dialog()|
+        tlib#number#ConvertBase ................. |tlib#number#ConvertBase()|
         tlib#file#Split ......................... |tlib#file#Split()|
         tlib#file#Join .......................... |tlib#file#Join()|
         tlib#file#Relative ...................... |tlib#file#Relative()|
@@ -249,6 +259,9 @@ Contents~
         tlib#dir#CD ............................. |tlib#dir#CD()|
         tlib#dir#Push ........................... |tlib#dir#Push()|
         tlib#dir#Pop ............................ |tlib#dir#Pop()|
+        g:tlib#hash#use_crc32 ................... |g:tlib#hash#use_crc32|
+        tlib#hash#CRC32B ........................ |tlib#hash#CRC32B()|
+        tlib#hash#Adler32 ....................... |tlib#hash#Adler32()|
         tlib#win#Set ............................ |tlib#win#Set()|
         tlib#win#GetLayout ...................... |tlib#win#GetLayout()|
         tlib#win#SetLayout ...................... |tlib#win#SetLayout()|
@@ -1185,6 +1198,37 @@ tlib#agent#CompleteAgentNames(ArgLead, CmdLine, CursorPos)
 
 
 ========================================================================
+autoload/tlib/bitwise.vim~
+
+                                                    *tlib#bitwise#Num2Bits()*
+tlib#bitwise#Num2Bits(num)
+
+                                                    *tlib#bitwise#Bits2Num()*
+tlib#bitwise#Bits2Num(bits, ...)
+
+                                                    *tlib#bitwise#AND()*
+tlib#bitwise#AND(num1, num2, ...)
+
+                                                    *tlib#bitwise#OR()*
+tlib#bitwise#OR(num1, num2, ...)
+
+                                                    *tlib#bitwise#XOR()*
+tlib#bitwise#XOR(num1, num2, ...)
+
+                                                    *tlib#bitwise#ShiftRight()*
+tlib#bitwise#ShiftRight(bits, n)
+
+                                                    *tlib#bitwise#ShiftLeft()*
+tlib#bitwise#ShiftLeft(bits, n)
+
+                                                    *tlib#bitwise#Add()*
+tlib#bitwise#Add(num1, num2, ...)
+
+                                                    *tlib#bitwise#Sub()*
+tlib#bitwise#Sub(num1, num2, ...)
+
+
+========================================================================
 autoload/tlib/Filter_cnfx.vim~
 
                                                     *g:tlib#Filter_cnfx#expander*
@@ -1431,6 +1475,13 @@ tlib#input#Dialog(text, options, default)
 
 
 ========================================================================
+autoload/tlib/number.vim~
+
+                                                    *tlib#number#ConvertBase()*
+tlib#number#ConvertBase(num, base, ...)
+
+
+========================================================================
 autoload/tlib/file.vim~
 
                                                     *tlib#file#Split()*
@@ -1638,6 +1689,19 @@ tlib#dir#Push(dir, ?locally=0)
 
                                                     *tlib#dir#Pop()*
 tlib#dir#Pop()
+
+
+========================================================================
+autoload/tlib/hash.vim~
+
+                                                    *g:tlib#hash#use_crc32*
+g:tlib#hash#use_crc32          (default: 'auto')
+
+                                                    *tlib#hash#CRC32B()*
+tlib#hash#CRC32B(chars)
+
+                                                    *tlib#hash#Adler32()*
+tlib#hash#Adler32(chars)
 
 
 ========================================================================

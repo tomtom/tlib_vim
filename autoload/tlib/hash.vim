@@ -1,6 +1,6 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    222
+" @Revision:    224
 
 
 if !exists('g:tlib#hash#use_crc32')
@@ -9,15 +9,15 @@ endif
 
 
 function! tlib#hash#CRC32B(chars) "{{{3
-    if has('ruby') && g:tlib#hash#use_crc32 =~ '^\(auto\|ruby\)$'
+    if has('ruby') && g:tlib#hash#use_crc32 =~ '\<\(auto\|ruby\)\>'
         let rv = ''
         ruby << EOR
         require 'zlib'
         VIM::command('let rv = "%08X"' % Zlib.crc32(VIM::evaluate("a:chars")))
 EOR
-    " elseif has('python') && g:tlib#hash#use_crc32 =~ '^\(auto\|python\)$'
-    " elseif has('perl') && g:tlib#hash#use_crc32 =~ '^\(auto\|perl\)$'
-    " elseif has('tcl') && g:tlib#hash#use_crc32 =~ '^\(auto\|tcl\)$'
+    " elseif has('python') && g:tlib#hash#use_crc32 =~ '\<\(auto\|python\)\>'
+    " elseif has('perl') && g:tlib#hash#use_crc32 =~ '\<\(auto\|perl\)\>'
+    " elseif has('tcl') && g:tlib#hash#use_crc32 =~ '\<\(auto\|tcl\)\>'
     else
         " based on http://rosettacode.org/wiki/CRC-32
         if !exists('s:crc_table')
@@ -42,6 +42,7 @@ EOR
 endf
 
 
+" :nodoc:
 function! tlib#hash#CreateCrcTable() "{{{3
     let sum = 0.0
     for exponent in [0, 1, 2, 4, 5, 7, 8, 10, 11, 12, 16, 22, 23, 26, 32]
