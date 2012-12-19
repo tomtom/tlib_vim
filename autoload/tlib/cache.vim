@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2012-12-03.
-" @Revision:    0.1.215
+" @Revision:    0.1.216
 
 
 " |tlib#cache#Purge()|: Remove cache files older than N days.
@@ -94,9 +94,10 @@ function! tlib#cache#Filename(type, ...) "{{{3
     let cache_file = tlib#file#Join([dir, file])
     if len(cache_file) > g:tlib#cache#max_filename
         let shortfilename = pathshorten(file)
-        if exists('*or')
-            let shortfilename .= '_'. tlib#hash#Adler32(file)
-        endif
+        let shortfilename .= '_'. tlib#hash#CRC32B(file)
+        " if exists('*or')
+        "     let shortfilename .= '_'. tlib#hash#Adler32(file)
+        " endif
         let cache_file = tlib#cache#Filename(a:type, shortfilename, mkdir, dir0)
     endif
     " TLogVAR cache_file
