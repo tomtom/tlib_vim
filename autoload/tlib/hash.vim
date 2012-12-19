@@ -1,18 +1,23 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    219
+" @Revision:    222
+
+
+if !exists('g:tlib#hash#use_crc32')
+    let g:tlib#hash#use_crc32 = 'auto'   "{{{2
+endif
 
 
 function! tlib#hash#CRC32B(chars) "{{{3
-    if has('ruby')
+    if has('ruby') && g:tlib#hash#use_crc32 =~ '^\(auto\|ruby\)$'
         let rv = ''
         ruby << EOR
         require 'zlib'
         VIM::command('let rv = "%08X"' % Zlib.crc32(VIM::evaluate("a:chars")))
 EOR
-    " elseif has('python')
-    " elseif has('perl')
-    " elseif has('tcl')
+    " elseif has('python') && g:tlib#hash#use_crc32 =~ '^\(auto\|python\)$'
+    " elseif has('perl') && g:tlib#hash#use_crc32 =~ '^\(auto\|perl\)$'
+    " elseif has('tcl') && g:tlib#hash#use_crc32 =~ '^\(auto\|tcl\)$'
     else
         " based on http://rosettacode.org/wiki/CRC-32
         if !exists('s:crc_table')
