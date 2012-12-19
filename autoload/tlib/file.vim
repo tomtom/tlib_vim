@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2012-03-23.
-" @Revision:    0.0.106
+" @Revision:    0.0.128
 
 if &cp || exists("loaded_tlib_file_autoload")
     finish
@@ -60,14 +60,14 @@ function! tlib#file#Relative(filename, basedir) "{{{3
     " TLogVAR a:filename, a:basedir
     " TLogDBG getcwd()
     " TLogDBG expand('%:p')
-    let f0 = fnamemodify(a:filename, ':p')
+    let b0 = tlib#file#Absolute(a:basedir)
+    let b  = tlib#file#Split(b0)
+    " TLogVAR b
+    let f0 = tlib#file#Absolute(a:filename)
     let fn = fnamemodify(f0, ':t')
     let fd = fnamemodify(f0, ':h')
     let f  = tlib#file#Split(fd)
-    " TLogVAR f
-    let b0 = fnamemodify(a:basedir, ':p')
-    let b  = tlib#file#Split(b0)
-    " TLogVAR b
+    " TLogVAR f0, fn, fd, f
     if f[0] != b[0]
         let rv = f0
     else
@@ -78,10 +78,25 @@ function! tlib#file#Relative(filename, basedir) "{{{3
             call remove(f, 0)
             call remove(b, 0)
         endwh
+        " TLogVAR f, b
         let rv = tlib#file#Join(repeat(['..'], len(b)) + f + [fn])
     endif
     " TLogVAR rv
     return rv
+endf
+
+
+function! tlib#file#Absolute(filename, ...) "{{{3
+    if filereadable(a:filename)
+        let filename = fnamemodify(a:filename, ':p')
+    elseif a:filename =~ '^\(/\|[^\/]\+:\)'
+        let filename = a:filename
+    else
+        let cwd = a:0 >= 1 ? a:1 : getcwd()
+        let filename = tlib#file#Join([cwd, a:filename])
+    endif
+    let filename = substitute(filename, '[\/]\zs[^\/]\+[\/]\.\.[\/]', '', 'g')
+    return filename
 endf
 
 
