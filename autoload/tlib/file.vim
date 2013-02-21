@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2012-03-23.
-" @Revision:    0.0.128
+" @Revision:    0.0.130
 
 if &cp || exists("loaded_tlib_file_autoload")
     finish
@@ -95,6 +95,7 @@ function! tlib#file#Absolute(filename, ...) "{{{3
         let cwd = a:0 >= 1 ? a:1 : getcwd()
         let filename = tlib#file#Join([cwd, a:filename])
     endif
+    let filename = substitute(filename, '\(^\|[\/]\)\zs\.[\/]', '', 'g')
     let filename = substitute(filename, '[\/]\zs[^\/]\+[\/]\.\.[\/]', '', 'g')
     return filename
 endf
