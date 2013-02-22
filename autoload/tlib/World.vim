@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2013-02-19.
-" @Revision:    0.1.1231
+" @Last Change: 2013-02-22.
+" @Revision:    0.1.1250
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -927,12 +927,14 @@ endf
 function! s:prototype.Resize(hsize, vsize) dict "{{{3
     " TLogVAR self.scratch_vertical, a:hsize, a:vsize
     let world_resize = ''
+    let winpos = ''
     let scratch_split = get(self, 'scratch_split', 1)
     " TLogVAR scratch_split
     if scratch_split > 0
         if self.scratch_vertical
             if a:vsize
                 let world_resize = 'vert resize '. a:vsize
+                let winpos = tlib#fixes#Winpos()
                 " let w:winresize = {'v': a:vsize}
                 setlocal winfixwidth
             endif
@@ -945,8 +947,11 @@ function! s:prototype.Resize(hsize, vsize) dict "{{{3
         endif
     endif
     if !empty(world_resize)
-        " TLogVAR world_resize
+        " TLogVAR world_resize, winpos
         exec world_resize
+        if !empty(winpos)
+            exec winpos
+        endif
         " redraw!
     endif
 endf

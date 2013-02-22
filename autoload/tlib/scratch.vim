@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-07-18.
-" @Last Change: 2012-02-08.
-" @Revision:    0.0.167
+" @Last Change: 2013-02-22.
+" @Revision:    0.0.175
 
 if &cp || exists("loaded_tlib_scratch_autoload")
     finish
@@ -34,11 +34,13 @@ function! tlib#scratch#UseScratch(...) "{{{3
         " let ft = &ft
         let ft = '*'
     else
+        let winpos = ''
         let bn = bufnr(id)
         let wpos = get(keyargs, 'scratch_pos', g:tlib_scratch_pos)
         " TLogVAR keyargs.scratch_vertical
         if get(keyargs, 'scratch_vertical')
             let wpos .= ' vertical'
+            let winpos = tlib#fixes#Winpos()
         endif
         " TLogVAR wpos
         let scratch_split = get(keyargs, 'scratch_split', 1)
@@ -73,7 +75,10 @@ function! tlib#scratch#UseScratch(...) "{{{3
             " silent exec 'split '. id
         endif
         let ft = get(keyargs, 'scratch_filetype', '')
-        " TLogVAR ft
+        " TLogVAR ft, winpos
+        if !empty(winpos)
+            exec winpos
+        endif
     endif
     setlocal buftype=nofile
     setlocal bufhidden=hide
@@ -106,7 +111,11 @@ function! tlib#scratch#CloseScratch(keyargs, ...) "{{{3
             if wn != -1
                 " TLogDBG winnr()
                 let wb = tlib#win#Set(wn)
+                let winpos = tlib#fixes#Winpos()
                 wincmd c
+                if get(a:keyargs, 'scratch_vertical') && !empty(winpos)
+                    exec winpos
+                endif
                 " exec wb 
                 " redraw
                 " TLogVAR winnr()

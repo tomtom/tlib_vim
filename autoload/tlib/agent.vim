@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-24.
-" @Last Change: 2012-10-03.
-" @Revision:    0.1.208
+" @Last Change: 2013-02-22.
+" @Revision:    0.1.209
 
 
 " :filedoc:
@@ -401,7 +401,11 @@ function! tlib#agent#EditFileInVSplit(world, selected) "{{{3
     call a:world.CloseScratch()
     " call tlib#file#With('edit', 'buffer', a:selected[0:0], a:world)
     " call tlib#file#With('vertical split', 'vertical sbuffer', a:selected[1:-1], a:world)
+    let winpos = tlib#fixes#Winpos()
     call tlib#file#With('vertical split', 'vertical sbuffer', a:selected, a:world)
+    if !empty(winpos)
+        exec winpos
+    endif
     return tlib#agent#Exit(a:world, a:selected)
 endf
 
