@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2013-02-22.
-" @Revision:    0.0.995
+" @Last Change: 2013-03-11.
+" @Revision:    0.0.996
 
 
 " :filedoc:
@@ -157,6 +157,7 @@ function! tlib#input#ListW(world, ...) "{{{3
     let &l:scrolloff = 0
     let @/ = ''
     let dlist = []
+    let post_keys = ''
     " let &laststatus = 2
 
     try
