@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2012-12-03.
-" @Revision:    0.1.217
+" @Last Change: 2013-03-11.
+" @Revision:    0.1.218
 
 
 " |tlib#cache#Purge()|: Remove cache files older than N days.
@@ -80,21 +80,22 @@ function! tlib#cache#Filename(type, ...) "{{{3
     " TLogVAR dir
     let file  = fnamemodify(file, ':t')
     " TLogVAR file, dir, mkdir
-    if mkdir && !isdirectory(dir)
-        try
-            call mkdir(dir, 'p')
-        catch /^Vim\%((\a\+)\)\=:E739:/
-            if filereadable(dir) && !isdirectory(dir)
-                echoerr 'TLib: Cannot create directory for cache file because a file with the same name exists (please delete it):' dir
-                " call delete(dir)
-                " call mkdir(dir, 'p')
-            endif
-        endtry
-    endif
     let cache_file = tlib#file#Join([dir, file])
     if len(cache_file) > g:tlib#cache#max_filename
         let shortfilename = pathshorten(file) .'_'. tlib#hash#Adler32(file)
         let cache_file = tlib#cache#Filename(a:type, shortfilename, mkdir, dir0)
+    else
+        if mkdir && !isdirectory(dir)
+            try
+                call mkdir(dir, 'p')
+            catch /^Vim\%((\a\+)\)\=:E739:/
+                if filereadable(dir) && !isdirectory(dir)
+                    echoerr 'TLib: Cannot create directory for cache file because a file with the same name exists (please delete it):' dir
+                    " call delete(dir)
+                    " call mkdir(dir, 'p')
+                endif
+            endtry
+        endif
     endif
     " TLogVAR cache_file
     return cache_file
