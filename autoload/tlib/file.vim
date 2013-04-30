@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2013-03-11.
-" @Revision:    0.0.135
+" @Last Change: 2013-04-30.
+" @Revision:    0.0.139
 
 if &cp || exists("loaded_tlib_file_autoload")
     finish
@@ -136,7 +136,7 @@ function! tlib#file#With(fcmd, bcmd, files, ...) "{{{3
             if filereadable(f)
                 if !empty(a:fcmd)
                     " TLogDBG a:fcmd .' '. tlib#arg#Ex(f)
-                    exec 'autocmd TLibFileRead BufRead' escape(f, ' ') 'let s:bufread=expand("<afile>:p")'
+                    exec 'autocmd TLibFileRead BufRead' escape(f, '\ ') 'let s:bufread=expand("<afile>:p")'
                     try 
                         exec a:fcmd .' '. tlib#arg#Ex(f)
                     finally
