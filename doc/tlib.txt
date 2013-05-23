@@ -227,6 +227,7 @@ Contents~
         tlib#file#Split ......................... |tlib#file#Split()|
         tlib#file#Join .......................... |tlib#file#Join()|
         tlib#file#Relative ...................... |tlib#file#Relative()|
+        tlib#file#Absolute ...................... |tlib#file#Absolute()|
         tlib#file#With .......................... |tlib#file#With()|
         tlib#paragraph#GetMetric ................ |tlib#paragraph#GetMetric()|
         tlib#paragraph#Move ..................... |tlib#paragraph#Move()|
@@ -252,7 +253,9 @@ Contents~
         tlib#arg#Key ............................ |tlib#arg#Key()|
         tlib#arg#StringAsKeyArgs ................ |tlib#arg#StringAsKeyArgs()|
         tlib#arg#Ex ............................. |tlib#arg#Ex()|
+        tlib#fixes#Winpos ....................... |tlib#fixes#Winpos()|
         tlib#dir#CanonicName .................... |tlib#dir#CanonicName()|
+        tlib#dir#NativeName ..................... |tlib#dir#NativeName()|
         tlib#dir#PlainName ...................... |tlib#dir#PlainName()|
         tlib#dir#Ensure ......................... |tlib#dir#Ensure()|
         tlib#dir#MyRuntime ...................... |tlib#dir#MyRuntime()|
@@ -260,8 +263,13 @@ Contents~
         tlib#dir#Push ........................... |tlib#dir#Push()|
         tlib#dir#Pop ............................ |tlib#dir#Pop()|
         g:tlib#hash#use_crc32 ................... |g:tlib#hash#use_crc32|
+        g:tlib#hash#use_adler32 ................. |g:tlib#hash#use_adler32|
         tlib#hash#CRC32B ........................ |tlib#hash#CRC32B()|
+        tlib#hash#CRC32B_ruby ................... |tlib#hash#CRC32B_ruby()|
+        tlib#hash#CRC32B_vim .................... |tlib#hash#CRC32B_vim()|
         tlib#hash#Adler32 ....................... |tlib#hash#Adler32()|
+        tlib#hash#Adler32_vim ................... |tlib#hash#Adler32_vim()|
+        tlib#hash#Adler32_tlib .................. |tlib#hash#Adler32_tlib()|
         tlib#win#Set ............................ |tlib#win#Set()|
         tlib#win#GetLayout ...................... |tlib#win#GetLayout()|
         tlib#win#SetLayout ...................... |tlib#win#SetLayout()|
@@ -1505,6 +1513,9 @@ tlib#file#Relative(filename, basedir)
       => 'bar/filename.txt'
 <
 
+                                                    *tlib#file#Absolute()*
+tlib#file#Absolute(filename, ...)
+
                                                     *tlib#file#With()*
 tlib#file#With(fcmd, bcmd, files, ?world={})
 
@@ -1657,12 +1668,29 @@ tlib#arg#Ex(arg, ?chars='%#! ')
 
 
 ========================================================================
+autoload/tlib/fixes.vim~
+
+                                                    *tlib#fixes#Winpos()*
+tlib#fixes#Winpos()
+
+
+========================================================================
 autoload/tlib/dir.vim~
 
                                                     *tlib#dir#CanonicName()*
 tlib#dir#CanonicName(dirname)
     EXAMPLES: >
       tlib#dir#CanonicName('foo/bar')
+      => 'foo/bar/'
+<
+
+                                                    *tlib#dir#NativeName()*
+tlib#dir#NativeName(dirname)
+    EXAMPLES: >
+      tlib#dir#NativeName('foo/bar/')
+      On Windows:
+      => 'foo\bar\'
+      On Linux:
       => 'foo/bar/'
 <
 
@@ -1695,13 +1723,28 @@ tlib#dir#Pop()
 autoload/tlib/hash.vim~
 
                                                     *g:tlib#hash#use_crc32*
-g:tlib#hash#use_crc32          (default: 'auto')
+g:tlib#hash#use_crc32          (default: '')
+
+                                                    *g:tlib#hash#use_adler32*
+g:tlib#hash#use_adler32        (default: '')
 
                                                     *tlib#hash#CRC32B()*
 tlib#hash#CRC32B(chars)
 
+                                                    *tlib#hash#CRC32B_ruby()*
+tlib#hash#CRC32B_ruby(chars)
+
+                                                    *tlib#hash#CRC32B_vim()*
+tlib#hash#CRC32B_vim(chars)
+
                                                     *tlib#hash#Adler32()*
 tlib#hash#Adler32(chars)
+
+                                                    *tlib#hash#Adler32_vim()*
+tlib#hash#Adler32_vim(chars)
+
+                                                    *tlib#hash#Adler32_tlib()*
+tlib#hash#Adler32_tlib(chars)
 
 
 ========================================================================
