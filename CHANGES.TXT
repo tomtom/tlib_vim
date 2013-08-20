@@ -387,3 +387,36 @@ version: "1.02"
   MD5 checksum: b64ce6764f39f40bfc95f3916bbb0057
 version: "1.04"
 
+version: "1.05"
+  - tlib#hash: Adler32 & CRC32 (using zlib via ruby) algorithms
+  - tlib#cache#Filename(): If the cache filename is too long, add the Adler32 checksum to the shortened path
+  - tlib#cache#Filename(): Use tlib#hash#Adler32() only if the or() function exists
+  - tlib#hash#Adler32(): Raise error, if or() doesn't exist
+  - tlib#hash#CRC32(): Alternative implementation of crc32 (doesn't work yet, thus currently disabled)
+  - tlib#bitwise: Bitwise operations for older versions of vim
+  - tlib#number: Base conversion
+  - tlib#input#ListW(): Handle mouse clicks more correctly
+  - tlib#bitwise#Num2Bits(): Supports returning floats
+  - tlib#hash#CRC32(): Alternative implementation of crc32 (doesn't work yet)
+  - tlib#hash#CRC32(): Re-enable ruby version
+  - tlib#hash#CRC32B(): Implementation of CRC32B checksum in vimscript (used only if +ruby isn't available)
+  - tlib#hash#CRC32B(): vim version: cache the crc table
+  - tlib#cache#Filename(): Use tlib#hash#CRC32B(file) instead of not Adler32 for filenames too long
+  - tlib#hash#CRC32B(): ruby version: return upper case hex value
+  - g:tlib#hash#use_crc32: define which crc32b version should be used
+  - Moved spec files from vimtlib to tlib_vim
+  - tlib#bitwise#Add() and tlib#bitwise#Sub()
+  - tlib#file#Relative(): Wrong results for filenames that don't exist
+  - Implementation of hash#Adler32 for earlier vim versions; g:tlib#hash#use_adler32
+  - tlib#cache#Filename(): Use adler32 again
+  - addon-info
+  - tlib#file#Absolute(): remove redundant "." parts in full filename
+  - win32: Fix moving window when using :vertical for tlib#inpu#List()
+  - tlib#cache#Filename(): Don't create wrong directory if the cache filename is too long
+  - tlib#file#Join(): if strip_slashes, also strip redundant (back)slashes
+  - tlib#input#ListW(): Always set post_keys variable
+  - tlib#file#With(): escape backslashes
+  - tlib#cmd#OutputAsList(): Support for nesting
+  - tlib#dir#NativeName(dirname)
+  MD5 checksum: 493f9beca44374de386f20d1613155e3
+
