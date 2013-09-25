@@ -557,8 +557,8 @@ function! tlib#agent#ExecAgentByName(world, selected) "{{{3
             let agent_names[def.help] = def.agent
         endif
     endfor
-    let s:agent_names = join(sort(keys(agent_names)), "\n")
-    let command = input('Command: ', '', 'custom,tlib#agent#CompleteAgentNames')
+    let s:agent_names = sort(keys(agent_names))
+    let command = input('Command: ', '', 'customlist,tlib#agent#CompleteAgentNames')
     " TLogVAR command
     if !has_key(agent_names, command)
         " TLogVAR command
@@ -585,6 +585,6 @@ endf
 
 
 function! tlib#agent#CompleteAgentNames(ArgLead, CmdLine, CursorPos)
-    return s:agent_names
+    return filter(copy(s:agent_names), 'stridx(v:val, a:ArgLead) != -1')
 endf
 
