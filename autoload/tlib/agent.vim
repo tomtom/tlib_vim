@@ -3,12 +3,15 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-24.
-" @Last Change: 2013-02-22.
-" @Revision:    0.1.209
+" @Last Change: 2013-09-25.
+" @Revision:    0.1.238
 
 
 " :filedoc:
 " Various agents for use as key handlers in tlib#input#List()
+
+" Number of items to move when pressing <c-up/down> in the input list window.
+TLet g:tlib_scroll_lines = 10
 
 
 " General {{{1
