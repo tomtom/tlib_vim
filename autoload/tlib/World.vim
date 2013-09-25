@@ -919,14 +919,15 @@ function! s:prototype.DisplayHelp() dict "{{{3
             call self.PushHelp('<C-o>', 'Switch to origin')
         endif
         if stridx(self.type, 'm') != -1
-            call self.PushHelp('<S-up/down>', '(Un)Select items')
+            call self.PushHelp('<S-Up/Down>', '(Un)Select items')
             call self.PushHelp('#, <C-Space>', '(Un)Select the current item')
             call self.PushHelp('<C|M-a>', '(Un)Select all items')
+            call self.PushHelp('<F9>/<C-F9>', '(Un)Restrict view to selection')
             " \ '<c-\>        ... Show only selected',
         endif
     endif
 
-    " TLogVAR len(self._help)
+    " TLogVAR len(self.temp_lines)
     call self.matcher.Help(self)
 
     " TLogVAR self.key_mode
@@ -1111,6 +1112,13 @@ function! s:prototype.SetStatusline(query) dict "{{{3
         endif
         if self.key_mode != 'default'
             call add(options, 'map:'. self.key_mode)
+        endif
+        if !empty(self.filtered_items)
+            if g:tlib_inputlist_shortmessage
+                call add(options, 'R')
+            else
+                call add(options, 'restricted')
+            endif
         endif
         if !empty(options)
             let sopts = printf('[%s]', join(options, ', '))
