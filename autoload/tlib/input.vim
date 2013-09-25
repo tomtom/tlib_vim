@@ -791,7 +791,7 @@ function! tlib#input#Resume(name, pick, bufnr) "{{{3
     " TLogVAR a:name, a:pick
     echo
     if bufnr('%') != a:bufnr
-        if g:tlib_debug
+        if g:tlib#debug
             echohl WarningMsg
             echom "tlib#input#Resume: Internal error: Not in scratch buffer:" bufname('%')
             echohl NONE
@@ -799,7 +799,7 @@ function! tlib#input#Resume(name, pick, bufnr) "{{{3
         let br = tlib#buffer#Set(a:bufnr)
     endif
     if !exists('b:tlib_'. a:name)
-        if g:tlib_debug
+        if g:tlib#debug
             echohl WarningMsg
             echom "tlib#input#Resume: Internal error: b:tlib_". a:name ." does not exist:" bufname('%')
             echohl NONE
