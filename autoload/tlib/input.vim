@@ -68,6 +68,14 @@ TLet g:tlib#input#filter_mode = 'cnfx'
 " See |tlib#input#List()|.
 TLet g:tlib#input#higroup = 'IncSearch'
 
+" When 1, automatically select the last remaining item only if the list 
+" had only one item to begin with.
+" When 2, automatically select a last remaining item after applying 
+" any filters.
+" See |tlib#input#List()|.
+TLet g:tlib_pick_last_item = 1
+
+
 
 " If true, define a popup menu for |tlib#input#List()| and related 
 " functions.
