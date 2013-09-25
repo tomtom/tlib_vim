@@ -65,7 +65,7 @@ let s:prototype = tlib#Object#New({
             \ 'offset': 1,
             \ 'offset_horizontal': 0,
             \ 'on_leave': [],
-            \ 'pick_last_item': tlib#var#Get('tlib_pick_last_item', 'bg'),
+            \ 'pick_last_item': tlib#var#Get('tlib#input#pick_last_item', 'bg'),
             \ 'post_handlers': [],
             \ 'query': '',
             \ 'resize': 0,
