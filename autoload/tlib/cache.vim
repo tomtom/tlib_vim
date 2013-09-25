@@ -3,9 +3,15 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2013-03-11.
-" @Revision:    0.1.218
+" @Last Change: 2013-09-25.
+" @Revision:    0.1.220
 
+
+" The cache directory. If empty, use |tlib#dir#MyRuntime|.'/cache'.
+" You might want to delete old files from this directory from time to 
+" time with a command like: >
+"   find ~/vimfiles/cache/ -atime +31 -type f -print -delete
+TLet g:tlib_cache = ''
 
 " |tlib#cache#Purge()|: Remove cache files older than N days.
 TLet g:tlib#cache#purge_days = 31
