@@ -16,6 +16,12 @@
 TLet g:tlib#input#sortprefs_threshold = 200
 
 
+" If a list contains more items, |tlib#input#List()| does not perform an 
+" incremental "live search" but uses |input()| to query the user for a 
+" filter. This is useful on slower machines or with very long lists.
+TLet g:tlib#input#livesearch_threshold = 1000
+
+
 
 " If true, define a popup menu for |tlib#input#List()| and related 
 " functions.
@@ -451,7 +457,7 @@ function! tlib#input#ListW(world, ...) "{{{3
                     else
                         let world.idx = ''
                         " TLogVAR world.filter
-                        if world.llen > g:tlib_inputlist_livesearch_threshold
+                        if world.llen > g:tlib#input#livesearch_threshold
                             let pattern = input('Filter: ', world.CleanFilter(world.filter[0][0]) . nr2char(c))
                             if empty(pattern)
                                 let world.state = 'exit empty'
