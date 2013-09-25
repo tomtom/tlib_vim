@@ -116,6 +116,76 @@ TLet g:tlib_numeric_chars = {
             " \ 57: 48,
 
 
+" :nodefault:
+" The default key bindings for single-item-select list views. If you 
+" want to use <c-j>, <c-k> to move the cursor up and down, add these two 
+" lines to after/plugin/02tlib.vim: >
+"
+"   let g:tlib#input#keyagents_InputList_s[10] = 'tlib#agent#Down'  " <c-j>
+"   let g:tlib#input#keyagents_InputList_s[11] = 'tlib#agent#Up'    " <c-k>
+TLet g:tlib#input#keyagents_InputList_s = {
+            \ "\<PageUp>":   'tlib#agent#PageUp',
+            \ "\<PageDown>": 'tlib#agent#PageDown',
+            \ "\<Up>":       'tlib#agent#Up',
+            \ "\<Down>":     'tlib#agent#Down',
+            \ "\<c-Up>":     'tlib#agent#UpN',
+            \ "\<c-Down>":   'tlib#agent#DownN',
+            \ "\<Left>":     'tlib#agent#ShiftLeft',
+            \ "\<Right>":    'tlib#agent#ShiftRight',
+            \ 18:            'tlib#agent#Reset',
+            \ 242:           'tlib#agent#Reset',
+            \ 17:            'tlib#agent#Input',
+            \ 241:           'tlib#agent#Input',
+            \ 27:            'tlib#agent#Exit',
+            \ 26:            'tlib#agent#Suspend',
+            \ 250:           'tlib#agent#Suspend',
+            \ 15:            'tlib#agent#SuspendToParentWindow',  
+            \ 63:            'tlib#agent#Help',
+            \ "\<F1>":       'tlib#agent#Help',
+            \ "\<F10>":      'tlib#agent#ExecAgentByName',
+            \ "\<S-Esc>":    'tlib#agent#ExecAgentByName',
+            \ "\<bs>":       'tlib#agent#ReduceFilter',
+            \ "\<del>":      'tlib#agent#ReduceFilter',
+            \ "\<c-bs>":     'tlib#agent#PopFilter',
+            \ "\<m-bs>":     'tlib#agent#PopFilter',
+            \ "\<c-del>":    'tlib#agent#PopFilter',
+            \ "\<m-del>":    'tlib#agent#PopFilter',
+            \ "\<s-space>":  'tlib#agent#Wildcard',
+            \ 191:           'tlib#agent#Debug',
+            \ char2nr(g:tlib#input#or):  'tlib#agent#OR',
+            \ char2nr(g:tlib#input#and): 'tlib#agent#AND',
+            \ }
+
+
+" :nodefault:
+TLet g:tlib#input#keyagents_InputList_m = {
+            \ 35:          'tlib#agent#Select',
+            \ "\<s-up>":   'tlib#agent#SelectUp',
+            \ "\<s-down>": 'tlib#agent#SelectDown',
+            \ 1:           'tlib#agent#SelectAll',
+            \ 225:         'tlib#agent#SelectAll',
+            \ "\<F9>":     'tlib#agent#RestrictView',
+            \ "\<C-F9>":   'tlib#agent#UnrestrictView',
+            \ }
+" "\<c-space>": 'tlib#agent#Select'
+
+
+" :nodefault:
+TLet g:tlib#input#handlers_EditList = [
+            \ {'key': 5,  'agent': 'tlib#agent#EditItem',    'key_name': '<c-e>', 'help': 'Edit item'},
+            \ {'key': 4,  'agent': 'tlib#agent#DeleteItems', 'key_name': '<c-d>', 'help': 'Delete item(s)'},
+            \ {'key': 14, 'agent': 'tlib#agent#NewItem',     'key_name': '<c-n>', 'help': 'New item'},
+            \ {'key': 24, 'agent': 'tlib#agent#Cut',         'key_name': '<c-x>', 'help': 'Cut item(s)'},
+            \ {'key':  3, 'agent': 'tlib#agent#Copy',        'key_name': '<c-c>', 'help': 'Copy item(s)'},
+            \ {'key': 22, 'agent': 'tlib#agent#Paste',       'key_name': '<c-v>', 'help': 'Paste item(s)'},
+            \ {'pick_last_item': 0},
+            \ {'return_agent': 'tlib#agent#EditReturnValue'},
+            \ {'help_extra': [
+            \      'Submit changes by pressing ENTER or <c-s> or <c-w><cr>',
+            \      'Cancel editing by pressing <c-w>c'
+            \ ]},
+            \ ]
+
 
 " If true, define a popup menu for |tlib#input#List()| and related 
 " functions.
@@ -753,18 +823,19 @@ function! s:Init(world, cmd) "{{{3
             if has_key(a:world.key_map, a:world.key_mode)
                 let a:world.key_map[a:world.key_mode] = extend(
                             \ a:world.key_map[a:world.key_mode],
-                            \ copy(g:tlib_keyagents_InputList_s),
+                            \ copy(g:tlib#input#keyagents_InputList_s),
                             \ 'keep')
             else
-                let a:world.key_map[a:world.key_mode] = copy(g:tlib_keyagents_InputList_s)
+                let a:world.key_map[a:world.key_mode] = copy(g:tlib#input#keyagents_InputList_s)
             endif
         else
             let a:world.key_map = {
-                        \ a:world.key_mode : copy(g:tlib_keyagents_InputList_s)
+                        \ a:world.key_mode : copy(g:tlib#input#keyagents_InputList_s)
                         \ }
         endif
+        " TLogVAR a:world.type
         if stridx(a:world.type, 'm') != -1
-            call extend(a:world.key_map[a:world.key_mode], g:tlib_keyagents_InputList_m, 'force')
+            call extend(a:world.key_map[a:world.key_mode], g:tlib#input#keyagents_InputList_m, 'force')
         endif
         for key_mode in keys(a:world.key_map)
             let a:world.key_map[key_mode] = map(a:world.key_map[key_mode], 'type(v:val) == 4 ? v:val : {"agent": v:val}')
@@ -878,7 +949,7 @@ endf
 " EXAMPLES: >
 "   echo tlib#input#EditList('Edit:', [100,200,300])
 function! tlib#input#EditList(query, list, ...) "{{{3
-    let handlers = a:0 >= 1 && !empty(a:1) ? a:1 : g:tlib_handlers_EditList
+    let handlers = a:0 >= 1 && !empty(a:1) ? a:1 : g:tlib#input#handlers_EditList
     let default  = a:0 >= 2 ? a:2 : []
     let timeout  = a:0 >= 3 ? a:3 : 0
     " TLogVAR handlers
