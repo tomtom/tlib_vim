@@ -63,6 +63,11 @@ TLet g:tlib#input#livesearch_threshold = 1000
 TLet g:tlib#input#filter_mode = 'cnfx'
 
 
+" The highlight group to use for showing matches in the input list 
+" window.
+" See |tlib#input#List()|.
+TLet g:tlib#input#higroup = 'IncSearch'
+
 
 " If true, define a popup menu for |tlib#input#List()| and related 
 " functions.

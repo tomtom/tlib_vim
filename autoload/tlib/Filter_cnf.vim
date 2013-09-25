@@ -3,11 +3,11 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2008-11-25.
-" @Last Change: 2012-09-26.
-" @Revision:    0.0.90
+" @Last Change: 2013-09-25.
+" @Revision:    0.0.92
 
 let s:prototype = tlib#Object#New({'_class': ['Filter_cnf'], 'name': 'cnf'}) "{{{2
-let s:prototype.highlight = g:tlib_inputlist_higroup
+let s:prototype.highlight = g:tlib#input#higroup
 
 " The search pattern for |tlib#input#List()| is in conjunctive normal 
 " form: (P1 OR P2 ...) AND (P3 OR P4 ...) ...
