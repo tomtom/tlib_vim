@@ -84,6 +84,7 @@ let s:prototype = tlib#Object#New({
             \ 'state': 'display', 
             \ 'state_handlers': [],
             \ 'sticky': 0,
+            \ 'temp_lines': [],
             \ 'temp_prompt': [],
             \ 'timeout': 0,
             \ 'timeout_resolution': 2,
@@ -885,12 +886,12 @@ function! s:prototype.PushHelp(...) dict "{{{3
     " TLogVAR a:000
     if a:0 == 1
         if type(a:1) == 3
-            let self._help += a:1
+            let self.temp_lines += a:1
         else
-            call add(self._help, a:1)
+            call add(self.temp_lines, a:1)
         endif
     elseif a:0 == 2
-        call add(self._help, a:000)
+        call add(self.temp_lines, a:000)
     else
         throw "TLIB: PushHelp: Wrong number of arguments: ". string(a:000)
     endif
@@ -900,7 +901,7 @@ endf
 
 " :nodoc:
 function! s:prototype.DisplayHelp() dict "{{{3
-    let self._help = self.InitHelp()
+    let self.temp_lines = self.InitHelp()
     call self.PushHelp('<Esc>', self.key_mode == 'default' ? 'Abort' : 'Reset keymap')
     call self.PushHelp('Enter, <cr>', 'Pick the current item')
     call self.PushHelp('<M-Number>',  'Pick an item')
@@ -950,20 +951,24 @@ function! s:prototype.DisplayHelp() dict "{{{3
         call self.PushHelp(self.help_extra)
     endif
 
-    " TLogVAR len(self._help)
+    " TLogVAR len(self.temp_lines)
     call self.PushHelp([
                 \ '',
                 \ 'Matches at word boundaries are prioritized.',
                 \ ])
-    let self._help = s:FormatHelp(self._help)
+    let self.temp_lines = s:FormatHelp(self.temp_lines)
+    call self.PrintLines()
+endf
+
+
+function! s:prototype.PrintLines() dict "{{{3
     let self.temp_prompt = ['Press any key to continue.', 'Question']
-    " call tlib#normal#WithRegister('gg"tdG', 't')
     call tlib#buffer#DeleteRange('1', '$')
-    call append(0, self._help)
-    " call tlib#normal#WithRegister('G"tddgg', 't')
+    call append(0, self.temp_lines)
     call tlib#buffer#DeleteRange('$', '$')
     1
-    call self.Resize(len(self._help), 0)
+    call self.Resize(len(self.temp_lines), 0)
+    let self.temp_lines = []
 endf
 
 
@@ -1032,6 +1037,9 @@ function! s:prototype.DisplayList(...) dict "{{{3
         call self.ScrollToOffset()
     elseif self.state == 'help'
         call self.DisplayHelp()
+        call self.SetStatusline(query)
+    elseif self.state == 'printlines'
+        call self.PrintLines()
         call self.SetStatusline(query)
     else
         " TLogVAR query
