@@ -284,6 +284,26 @@ endf
 
 
 " :nodoc:
+function! s:prototype.SelectItemsByNames(mode, items) dict "{{{3
+    for item in a:items
+        let bi = index(self.base, item) + 1
+        " TLogVAR item, bi
+        if bi > 0
+            let si = index(self.sel_idx, bi)
+            " TLogVAR self.sel_idx
+            " TLogVAR si
+            if si == -1
+                call add(self.sel_idx, bi)
+            elseif a:mode == 'toggle'
+                call remove(self.sel_idx, si)
+            endif
+        endif
+    endfor
+    return 1
+endf
+
+
+" :nodoc:
 function! s:prototype.SelectItem(mode, index) dict "{{{3
     let bi = self.GetBaseIdx(a:index)
     " if self.RespondTo('MaySelectItem')
