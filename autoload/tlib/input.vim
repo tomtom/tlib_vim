@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2013-03-11.
-" @Revision:    0.0.996
+" @Last Change: 2013-09-25.
+" @Revision:    0.0.1112
 
 
 " :filedoc:
@@ -535,6 +535,11 @@ function! tlib#input#ListW(world, ...) "{{{3
                 " TLogVAR world.timeout
                 let c = tlib#char#Get(world.timeout, world.timeout_resolution)
                 " TLogVAR c, has_key(world.key_map[world.key_mode],c)
+                let cmod = getcharmod()
+                if c !~ '\D' && c > 0 && cmod != 0
+                    let c = printf("<%s-%s>", cmod, c)
+                endif
+                " TLogVAR c, cmod
                 " TLogDBG string(sort(keys(world.key_map[world.key_mode])))
                 if world.state != ''
                     " continue
