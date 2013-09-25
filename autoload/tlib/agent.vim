@@ -111,6 +111,27 @@ function! tlib#agent#Reset(world, selected) "{{{3
 endf
 
 
+function! tlib#agent#RestrictView(world, selected) "{{{3
+    " TLogVAR a:selected
+    let filtered_items = map(copy(a:selected), 'index(a:world.base, v:val) + 1')
+    " TLogVAR 1, filtered_items
+    let filtered_items = filter(filtered_items, 'v:val > 0')
+    " TLogVAR 2, filtered_items
+    if !empty(filtered_items)
+        let a:world.filtered_items = filtered_items
+    endif
+    let a:world.state = 'display'
+    return a:world
+endf
+
+
+function! tlib#agent#UnrestrictView(world, selected) "{{{3
+    let a:world.filtered_items = []
+    let a:world.state = 'display'
+    return a:world
+endf
+
+
 function! tlib#agent#Input(world, selected) "{{{3
     let flt0 = a:world.CleanFilter(a:world.filter[0][0])
     let flt1 = input('Filter: ', flt0)

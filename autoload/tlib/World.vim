@@ -71,6 +71,7 @@ let s:prototype = tlib#Object#New({
             \ 'resize': 0,
             \ 'resize_vertical': 0,
             \ 'restore_from_cache': [],
+            \ 'filtered_items': [],
             \ 'retrieve_eval': '',
             \ 'return_agent': '',
             \ 'rv': '',
@@ -595,18 +596,21 @@ function! s:prototype.BuildTableList() dict "{{{3
     " TLogVAR time0
     call self.SetFilter()
     " TLogVAR self.filter_neg, self.filter_pos
-    if empty(self.filter_pos) && empty(self.filter_neg)
-        let self.table = range(1, len(self.base))
+    let self.table = range(1, len(self.base))
+    " TLogVAR self.filtered_items
+    let copy_base = 1
+    if !empty(self.filtered_items)
+        let self.table = filter(self.table, 'index(self.filtered_items, v:val) != -1')
+        let copy_base = 0
+    endif
+    if !empty(self.filter_pos) || !empty(self.filter_neg)
+        let self.table = filter(self.table, 'self.MatchBaseIdx(v:val)')
+        let copy_base = 0
+    endif
+    if copy_base
         let self.list = copy(self.base)
     else
-        " let time1 = str2float(reltimestr(reltime()))  " DBG
-        " TLogVAR time1, time1 - time0
-        let self.table = filter(range(1, len(self.base)), 'self.MatchBaseIdx(v:val)')
-        " let time2 = str2float(reltimestr(reltime()))  " DBG
-        " TLogVAR time2, time2 - time0
         let self.list  = map(copy(self.table), 'self.GetBaseItem(v:val)')
-        " let time3 = str2float(reltimestr(reltime()))  " DBG
-        " TLogVAR time3, time3 - time0
     endif
 endf
 
