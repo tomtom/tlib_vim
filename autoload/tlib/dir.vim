@@ -3,13 +3,17 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2013-05-22.
-" @Revision:    0.0.35
+" @Last Change: 2013-09-25.
+" @Revision:    0.0.37
 
 if &cp || exists("loaded_tlib_dir_autoload")
     finish
 endif
 let loaded_tlib_dir_autoload = 1
+
+" TLet g:tlib#dir#sep = '/'
+TLet g:tlib#dir#sep = exists('+shellslash') && !&shellslash ? '\' : '/'
+
 
 let s:dir_stack = []
 
@@ -18,7 +22,7 @@ let s:dir_stack = []
 "   => 'foo/bar/'
 function! tlib#dir#CanonicName(dirname) "{{{3
     if a:dirname !~ '[/\\]$'
-        return a:dirname . g:tlib_filename_sep
+        return a:dirname . g:tlib#dir#sep
     endif
     return a:dirname
 endf
@@ -31,7 +35,7 @@ endf
 "   On Linux:
 "   => 'foo/bar/'
 function! tlib#dir#NativeName(dirname) "{{{3
-    let sep = tlib#rx#EscapeReplace(g:tlib_filename_sep)
+    let sep = tlib#rx#EscapeReplace(g:tlib#dir#sep)
     let dirname = substitute(a:dirname, '[\/]', sep, 'g')
     return dirname
 endf
@@ -46,7 +50,7 @@ function! tlib#dir#PlainName(dirname) "{{{3
         let dirname = dirname[0 : -2]
     endwh
     return dirname
-    " return substitute(a:dirname, tlib#rx#Escape(g:tlib_filename_sep).'\+$', '', '')
+    " return substitute(a:dirname, tlib#rx#Escape(g:tlib#dir#sep).'\+$', '', '')
 endf
 
 
