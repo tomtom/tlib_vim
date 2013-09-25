@@ -580,12 +580,15 @@ function! tlib#input#ListW(world, ...) "{{{3
                     endif
                 elseif c == "\<RightMouse>"
                     if v:mouse_win == world.list_wnr
-                        if g:tlib#input#use_popup && world.has_menu
+                        call s:BuildMenu(world)
+                        if s:PopupmenuExists() == 1
                             " if v:mouse_lnum != line('.')
                             " endif
                             let world.prefidx = world.GetLineIdx(v:mouse_lnum)
                             let world.state = 'redisplay'
                             call world.DisplayList()
+                            let s:popup_world = world
+                            let s:popup_selected = world.GetSelectedItems(world.CurrentItem())
                             if line('w$') - v:mouse_lnum < 6
                                 popup ]TLibInputListPopupMenu
                             else
@@ -748,9 +751,8 @@ function! tlib#input#ListW(world, ...) "{{{3
         " let &laststatus = laststatus
         silent! let @/  = lastsearch
         let &l:scrolloff = scrolloff
-        if g:tlib#input#use_popup && world.has_menu
+        if s:PopupmenuExists() == 1
             silent! aunmenu ]TLibInputListPopupMenu
-            let world.has_menu = 0
         endif
 
         " TLogDBG 'finally 2'
@@ -853,7 +855,6 @@ function! s:Init(world, cmd) "{{{3
             let a:world.state .= ' '. a:cmd
         endif
     endif
-    call s:BuildMenu(a:world)
     " TLogVAR a:world.state, a:world.sticky
 endf
 
@@ -868,34 +869,73 @@ function! s:ExtendKeyMap(world, key_mode, key_handlers) "{{{3
 endf
 
 
+function s:PopupmenuExists()
+    if g:tlib#input#use_popup && exists(':popup') != 2
+        let rv = -1
+    else
+        try
+            let rv = 1
+            silent amenu ]TLibInputListPopupMenu
+        catch
+            let rv = 0
+        endtry
+    endif
+    " TLogVAR rv
+    return rv
+endf
+
+
 function! s:BuildMenu(world) "{{{3
-    if g:tlib#input#use_popup
-        if a:world.has_menu
-            silent! aunmenu ]TLibInputListPopupMenu
-        endif
+    if g:tlib#input#use_popup && s:PopupmenuExists() == 0
         amenu ]TLibInputListPopupMenu.Pick\ selected\ item <cr>
-        amenu ]TLibInputListPopupMenu.Select #
-        amenu ]TLibInputListPopupMenu.Select\ all <c-a>
-        amenu ]TLibInputListPopupMenu.Reset\ list <c-r>
         amenu ]TLibInputListPopupMenu.Cancel <esc>
+        amenu ]TLibInputListPopupMenu.Selection.Select #
+        amenu ]TLibInputListPopupMenu.Selection.Select\ all <c-a>
+        amenu ]TLibInputListPopupMenu.Selection.Reset\ list <c-r>
         amenu ]TLibInputListPopupMenu.-StandardEntries- :
-        let a:world.has_menu = 1
         for [key_mode, key_handlers] in items(a:world.key_map)
             let keys = sort(keys(key_handlers))
+            let mitems = {}
             for key in keys
                 let handler = key_handlers[key]
                 let k = get(handler, 'key', '')
                 if !empty(k) && has_key(handler, 'help') && !empty(handler.help)
                     if empty(key_mode) || key_mode == 'default'
-                        exec 'amenu ]TLibInputListPopupMenu.'. escape(handler.help, ' .\')
-                                    \ .' '. handler.key_name
+                        let mname = ''
                     else
-                        exec 'amenu ]TLibInputListPopupMenu'. 
-                                    \ '.'. escape(key_mode, ' .\')
-                                    \ '.'. escape(handler.help, ' .\')
-                                    \ .' '. handler.key_name
+                        let mname = escape(key_mode, ' .\') .'.'
                     endif
+                    if has_key(handler, 'submenu')
+                        let submenu = escape(handler.submenu, ' .\')
+                    else
+                        let submenu = '~'
+                    endif
+                    for mfield in ['menu', 'help', 'key_name', 'agent']
+                        if has_key(handler, mfield)
+                            let mname .= escape(handler[mfield], ' .\')
+                            break
+                        endif
+                    endfor
+                    if !has_key(mitems, submenu)
+                        let mitems[submenu] = {}
+                    endif
+                    let cmd = handler.key_name
+                    " let cmd = ':call feedkeys('. string(handler.key) .', "t")<cr>'
+                    let mitems[submenu][mname] = {'cmd': cmd}
                 endif
+            endfor
+            for msubname in sort(keys(mitems))
+                let msubitems = mitems[msubname]
+                if msubname == '~'
+                    let msubmname = ''
+                else
+                    let msubmname = msubname .'.'
+                endif
+                for mname in sort(keys(msubitems))
+                    let mitem = msubitems[mname]
+                    " echom 'DBG amenu ]TLibInputListPopupMenu.'. msubmname . mname .' '. mitem.cmd
+                    exec 'amenu ]TLibInputListPopupMenu.'. msubmname . mname .' '. mitem.cmd
+                endfor
             endfor
         endfor
     endif
