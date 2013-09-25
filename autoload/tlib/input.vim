@@ -10,6 +10,12 @@
 " :filedoc:
 " Input-related, select from a list etc.
 
+" If a list is bigger than this value, don't try to be smart when 
+" selecting an item. Be slightly faster instead.
+" See |tlib#input#List()|.
+TLet g:tlib#input#sortprefs_threshold = 200
+
+
 
 " If true, define a popup menu for |tlib#input#List()| and related 
 " functions.
@@ -251,7 +257,7 @@ function! tlib#input#ListW(world, ...) "{{{3
                             " TLogVAR world.idx, world.llen, world.state
                             " TLogDBG world.FilterIsEmpty()
                             if world.state == 'display'
-                                if world.idx == '' && world.llen < g:tlib_sortprefs_threshold && !world.FilterIsEmpty()
+                                if world.idx == '' && world.llen < g:tlib#input#sortprefs_threshold && !world.FilterIsEmpty()
                                     call world.SetPrefIdx()
                                 else
                                     let world.prefidx = world.idx == '' ? world.initial_index : world.idx
