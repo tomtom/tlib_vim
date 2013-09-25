@@ -76,6 +76,13 @@ TLet g:tlib#input#higroup = 'IncSearch'
 TLet g:tlib_pick_last_item = 1
 
 
+" :doc:
+" Keys for |tlib#input#List|~
+
+TLet g:tlib#input#and = ' '
+TLet g:tlib#input#or  = '|'
+TLet g:tlib#input#not = '-'
+
 
 " If true, define a popup menu for |tlib#input#List()| and related 
 " functions.

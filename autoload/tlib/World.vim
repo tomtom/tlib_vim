@@ -305,7 +305,7 @@ function! s:prototype.GetRx0(...) dict "{{{3
         " TLogVAR filter
         let rx = join(reverse(filter(copy(filter), '!empty(v:val)')), '\|')
         " TLogVAR rx
-        if !empty(rx) && (negative ? rx[0] == g:tlib_inputlist_not : rx[0] != g:tlib_inputlist_not)
+        if !empty(rx) && (negative ? rx[0] == g:tlib#input#not : rx[0] != g:tlib#input#not)
             call add(rx0, rx)
         endif
     endfor
@@ -491,7 +491,7 @@ function! s:prototype.SetFilter() dict "{{{3
                 let mrx1 = mrx
             endif
             " TLogVAR rx
-            if rx[0] == g:tlib_inputlist_not
+            if rx[0] == g:tlib#input#not
                 if len(rx) > 1
                     call add(self.filter_neg, mrx1 .'\('. rx[1:-1] .'\)')
                 endif

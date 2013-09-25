@@ -33,7 +33,7 @@ endf
 " :nodoc:
 function! s:prototype.Help(world) dict "{{{3
     call a:world.PushHelp(
-                \ printf('"%s", "%s", "%sWORD"', g:tlib_inputlist_and, g:tlib_inputlist_or, g:tlib_inputlist_not),
+                \ printf('"%s", "%s", "%sWORD"', g:tlib#input#and, g:tlib#input#or, g:tlib#input#not),
                 \ 'AND, OR, NOT')
 endf
 
