@@ -83,6 +83,39 @@ TLet g:tlib#input#and = ' '
 TLet g:tlib#input#or  = '|'
 TLet g:tlib#input#not = '-'
 
+" When editing a list with |tlib#input#List|, typing these numeric chars 
+" (as returned by getchar()) will select an item based on its index, not 
+" based on its name. I.e. in the default setting, typing a "4" will 
+" select the fourth item, not the item called "4".
+" In order to make keys 0-9 filter the items in the list and make 
+" <m-[0-9]> select an item by its index, remove the keys 48 to 57 from 
+" this dictionary.
+" Format: [KEY] = BASE ... the number is calculated as KEY - BASE.
+" :nodefault:
+TLet g:tlib_numeric_chars = {
+            \ 176: 176,
+            \ 177: 176,
+            \ 178: 176,
+            \ 179: 176,
+            \ 180: 176,
+            \ 181: 176,
+            \ 182: 176,
+            \ 183: 176,
+            \ 184: 176,
+            \ 185: 176,
+            \}
+            " \ 48: 48,
+            " \ 49: 48,
+            " \ 50: 48,
+            " \ 51: 48,
+            " \ 52: 48,
+            " \ 53: 48,
+            " \ 54: 48,
+            " \ 55: 48,
+            " \ 56: 48,
+            " \ 57: 48,
+
+
 
 " If true, define a popup menu for |tlib#input#List()| and related 
 " functions.
