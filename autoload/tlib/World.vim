@@ -3,12 +3,32 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2013-07-16.
-" @Revision:    0.1.1251
+" @Last Change: 2013-09-11.
+" @Revision:    0.1.1270
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
 " Inherits from |tlib#Object#New|.
+
+
+" Size of the input list window (in percent) from the main size (of &lines).
+" See |tlib#input#List()|.
+TLet g:tlib_inputlist_pct = 50
+
+" Size of filename columns when listing filenames.
+" See |tlib#input#List()|.
+TLet g:tlib_inputlist_width_filename = '&co / 3'
+" TLet g:tlib_inputlist_width_filename = 25
+
+" If true, |tlib#input#List()| will show some indicators about the 
+" status of a filename (e.g. buflisted(), bufloaded() etc.).
+" This is disabled by default because vim checks also for the file on 
+" disk when doing this.
+TLet g:tlib_inputlist_filename_indicators = 0
+
+" If not null, display only a short info about the filter.
+TLet g:tlib_inputlist_shortmessage = 0
+
 
 
 " Known keys & values:
