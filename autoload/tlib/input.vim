@@ -22,6 +22,47 @@ TLet g:tlib#input#sortprefs_threshold = 200
 TLet g:tlib#input#livesearch_threshold = 1000
 
 
+" Determine how |tlib#input#List()| and related functions work.
+" Can be "cnf", "cnfd", "cnfx", "seq", or "fuzzy". See:
+"   cnfx ... Like cnfd but |g:tlib#Filter_cnfx#expander| is interpreted 
+"            as a wildcard (this is the default method)
+"     - A plus character ("+") acts as a wildcard as if ".\{-}" (see 
+"       |/\{-|) were entered.
+"     - Examples:
+"         - "f+o" matches "fo", "fxo", and "fxxxoo", but doesn't match 
+"           "far".
+"     - Otherwise it is a derivate of the cnf method (see below).
+"     - See also |tlib#Filter_cnfx#New()|.
+"   cnfd ... Like cnf but "." is interpreted as a wildcard, i.e. it is 
+"            expanded to "\.\{-}"
+"     - A period character (".") acts as a wildcard as if ".\{-}" (see 
+"       |/\{-|) were entered.
+"     - Examples:
+"         - "f.o" matches "fo", "fxo", and "fxxxoo", but doesn't match 
+"           "far".
+"     - Otherwise it is a derivate of the cnf method (see below).
+"     - See also |tlib#Filter_cnfd#New()|.
+"   cnf .... Match substrings
+"     - A blank creates an AND conjunction, i.e. the next pattern has to 
+"       match too.
+"     - A pipe character ("|") creates an OR conjunction, either this or 
+"       the next next pattern has to match.
+"     - Patterns are very 'nomagic' |regexp| with a |\V| prefix.
+"     - A pattern starting with "-" makes the filter exclude items 
+"       matching that pattern.
+"     - Examples:
+"         - "foo bar" matches items that contain the strings "foo" AND 
+"           "bar".
+"         - "foo|bar boo|far" matches items that contain either ("foo" OR 
+"           "bar") AND ("boo" OR "far").
+"     - See also |tlib#Filter_cnf#New()|.
+"   seq .... Match sequences of characters
+"     - |tlib#Filter_seq#New()|
+"   fuzzy .. Match fuzzy character sequences
+"     - |tlib#Filter_fuzzy#New()|
+TLet g:tlib#input#filter_mode = 'cnfx'
+
+
 
 " If true, define a popup menu for |tlib#input#List()| and related 
 " functions.
@@ -70,7 +111,7 @@ TLet g:tlib#input#filename_max_width = '&co / 2'
 "     mi ... Return a list of indexes
 "
 " Several pattern matching styles are supported. See 
-" |g:tlib_inputlist_match|.
+" |g:tlib#input#filter_mode|.
 "
 " EXAMPLES: >
 "   echo tlib#input#List('s', 'Select one item', [100,200,300])
@@ -648,7 +689,7 @@ function! s:Init(world, cmd) "{{{3
         " TLogVAR a:world.initialized, a:world.win_wnr, a:world.bufnr
         let a:world.filetype = &filetype
         let a:world.fileencoding = &fileencoding
-        call a:world.SetMatchMode(tlib#var#Get('tlib_inputlist_match', 'wb'))
+        call a:world.SetMatchMode(tlib#var#Get('tlib#input#filter_mode', 'wb'))
         call a:world.Initialize()
         if !has_key(a:world, 'key_mode')
             let a:world.key_mode = 'default'

@@ -77,7 +77,7 @@ let s:prototype = tlib#Object#New({
 
 function! tlib#World#New(...)
     let object = s:prototype.New(a:0 >= 1 ? a:1 : {})
-    call object.SetMatchMode(tlib#var#Get('tlib_inputlist_match', 'g', 'cnf'))
+    call object.SetMatchMode(tlib#var#Get('tlib#input#filter_mode', 'g', 'cnf'))
     return object
 endf
 
@@ -526,7 +526,7 @@ function! s:prototype.SetMatchMode(match_mode) dict "{{{3
             let self.matcher = tlib#Filter_{a:match_mode}#New()
             call self.matcher.Init(self)
         catch /^Vim\%((\a\+)\)\=:E117/
-            throw 'tlib: Unknown mode for tlib_inputlist_match: '. a:match_mode
+            throw 'tlib: Unknown mode for tlib#input#filter_mode: '. a:match_mode
         endtry
     endif
 endf
