@@ -447,19 +447,18 @@ function! tlib#agent#ToggleScrollbind(world, selected) "{{{3
     return a:world
 endf
 
+
 function! tlib#agent#ShowInfo(world, selected)
+    let lines = []
     for f in a:selected
         if filereadable(f)
             let desc = [getfperm(f), strftime('%c', getftime(f)),  getfsize(f) .' bytes', getftype(f)]
-            echo fnamemodify(f, ':t') .':'
-            echo '  '. join(desc, '; ')
+            call add(lines, fnamemodify(f, ':t') .':')
+            call add(lines, '  '. join(desc, '; '))
         endif
     endfor
-    echohl MoreMsg
-    echo 'Press any key to continue'
-    echohl NONE
-    call getchar()
-    let a:world.state = 'redisplay'
+    let a:world.temp_lines = lines
+    let a:world.state = 'printlines'
     return a:world
 endf
 

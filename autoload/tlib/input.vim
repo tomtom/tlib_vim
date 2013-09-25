@@ -511,7 +511,7 @@ function! tlib#input#ListW(world, ...) "{{{3
                     "     let world.prefidx = world.offset
                     " endif
                     call world.DisplayList()
-                    if world.state == 'help'
+                    if world.state == 'help' || world.state == 'printlines'
                         let world.state = 'display'
                     else
                         let world.state = ''
