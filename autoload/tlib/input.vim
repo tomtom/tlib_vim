@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2013-09-25.
-" @Revision:    0.0.1112
+" @Last Change: 2013-09-26.
+" @Revision:    0.0.1207
 
 
 " :filedoc:
@@ -531,12 +531,26 @@ function! tlib#input#ListW(world, ...) "{{{3
                     continue
                 endif
 
-                " TLogVAR world.timeout
-                let c = tlib#char#Get(world.timeout, world.timeout_resolution)
-                " TLogVAR c, has_key(world.key_map[world.key_mode],c)
-                let cmod = getcharmod()
-                if c !~ '\D' && c > 0 && cmod != 0
-                    let c = printf("<%s-%s>", cmod, c)
+                if world.state =~ '\<eval\>'
+                    let query = matchstr(world.state, '\<eval\[\zs.\{-}\ze\]')
+                    if empty(query)
+                        let query = 'Waiting for input ... Press ESC to continue'
+                    endif
+                    let exec_cmd = input(query)
+                    if exec_cmd == ''
+                        let world.state = 'redisplay'
+                    else
+                        " TLogVAR exec_cmd
+                        exec exec_cmd
+                    endif
+                else
+                    " TLogVAR world.timeout
+                    let c = tlib#char#Get(world.timeout, world.timeout_resolution)
+                    " TLogVAR c, has_key(world.key_map[world.key_mode],c)
+                    let cmod = getcharmod()
+                    if c !~ '\D' && c > 0 && cmod != 0
+                        let c = printf("<%s-%s>", cmod, c)
+                    endif
                 endif
                 " TLogVAR c, cmod
                 " TLogDBG string(sort(keys(world.key_map[world.key_mode])))
@@ -603,9 +617,8 @@ function! tlib#input#ListW(world, ...) "{{{3
                             " endif
                             let world.prefidx = world.GetLineIdx(v:mouse_lnum)
                             let world.state = 'redisplay'
+                            let world.next_state = 'eval[Waiting for popup menu ... Press ESC to continue]'
                             call world.DisplayList()
-                            let s:popup_world = world
-                            let s:popup_selected = world.GetSelectedItems(world.CurrentItem())
                             if line('w$') - v:mouse_lnum < 6
                                 popup ]TLibInputListPopupMenu
                             else
@@ -904,12 +917,12 @@ endf
 
 function! s:BuildMenu(world) "{{{3
     if g:tlib#input#use_popup && s:PopupmenuExists() == 0
-        amenu ]TLibInputListPopupMenu.Pick\ selected\ item <cr>
-        amenu ]TLibInputListPopupMenu.Cancel <esc>
-        amenu ]TLibInputListPopupMenu.Selection.Select #
-        amenu ]TLibInputListPopupMenu.Selection.Select\ all <c-a>
-        amenu ]TLibInputListPopupMenu.Selection.Reset\ list <c-r>
-        amenu ]TLibInputListPopupMenu.-StandardEntries- :
+        call s:BuildItem('Pick\ selected\ item', {'eval': 'let world.state = "pick"'})
+        call s:BuildItem('Cancel', {'agent': 'tlib#agent#Exit'})
+        call s:BuildItem('Select', {'agent': 'tlib#agent#Select'})
+        call s:BuildItem('Select\ all', {'agent': 'tlib#agent#SelectAll'})
+        call s:BuildItem('Reset\ list', {'agent': 'tlib#agent#Reset'})
+        call s:BuildItem('-StandardEntries-', {'eval': 'let world.state = "redisplay"'})
         for [key_mode, key_handlers] in items(a:world.key_map)
             let keys = sort(keys(key_handlers))
             let mitems = {}
@@ -936,9 +949,7 @@ function! s:BuildMenu(world) "{{{3
                     if !has_key(mitems, submenu)
                         let mitems[submenu] = {}
                     endif
-                    let cmd = handler.key_name
-                    " let cmd = ':call feedkeys('. string(handler.key) .', "t")<cr>'
-                    let mitems[submenu][mname] = {'cmd': cmd}
+                    let mitems[submenu][mname] = handler
                 endif
             endfor
             for msubname in sort(keys(mitems))
@@ -949,13 +960,35 @@ function! s:BuildMenu(world) "{{{3
                     let msubmname = msubname .'.'
                 endif
                 for mname in sort(keys(msubitems))
-                    let mitem = msubitems[mname]
-                    " echom 'DBG amenu ]TLibInputListPopupMenu.'. msubmname . mname .' '. mitem.cmd
-                    exec 'amenu ]TLibInputListPopupMenu.'. msubmname . mname .' '. mitem.cmd
+                    let msname = msubmname . mname
+                    let handler = msubitems[mname]
+                    if has_key(handler, 'agent')
+                        call s:BuildItem(msname, {'agent': handler.agent})
+                    else
+                        call s:BuildItem(msname, {'key': handler.key_name})
+                    endif
                 endfor
             endfor
         endfor
     endif
+endf
+
+
+function! s:BuildItem(menu, def) "{{{3
+    for k in ['key', 'agent', 'eval']
+        if has_key(a:def, k)
+            let v = a:def[k]
+            if k == 'key'
+                exec 'amenu' (']TLibInputListPopupMenu.'. a:menu) ':let c = "\'. v .'"<cr>'
+            elseif k == 'agent'
+                exec 'amenu' (']TLibInputListPopupMenu.'. a:menu) ':let world.next_agent ='. string(v) .'<cr>'
+            elseif k == 'eval'
+                exec 'amenu' (']TLibInputListPopupMenu.'. a:menu) ':let world.next_eval ='. string(v) .'<cr>'
+            endif
+            return
+        endif
+    endfor
+    throw "tlib#BuildItem: Internal error: ". string(a:000)
 endf
 
 
