@@ -164,8 +164,7 @@ TLet g:tlib#input#keyagents_InputList_m = {
             \ "\<s-down>": 'tlib#agent#SelectDown',
             \ 1:           'tlib#agent#SelectAll',
             \ 225:         'tlib#agent#SelectAll',
-            \ "\<F9>":     'tlib#agent#RestrictView',
-            \ "\<C-F9>":   'tlib#agent#UnrestrictView',
+            \ "\<F9>":     'tlib#agent#ToggleRestrictView',
             \ }
 " "\<c-space>": 'tlib#agent#Select'
 

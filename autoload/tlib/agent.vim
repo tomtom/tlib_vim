@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-24.
-" @Last Change: 2013-09-25.
-" @Revision:    0.1.238
+" @Last Change: 2013-09-26.
+" @Revision:    0.1.240
 
 
 " :filedoc:
@@ -111,6 +111,15 @@ endf
 function! tlib#agent#Reset(world, selected) "{{{3
     let a:world.state = 'reset'
     return a:world
+endf
+
+
+function! tlib#agent#ToggleRestrictView(world, selected) "{{{3
+    if empty(a:world.filtered_items)
+        return tlib#agent#RestrictView(a:world, a:selected)
+    else
+        return tlib#agent#UnrestrictView(a:world, a:selected)
+    endif
 endf
 
 

@@ -926,7 +926,7 @@ function! s:prototype.DisplayHelp() dict "{{{3
             call self.PushHelp('<S-Up/Down>', '(Un)Select items')
             call self.PushHelp('#, <C-Space>', '(Un)Select the current item')
             call self.PushHelp('<C|M-a>', '(Un)Select all items')
-            call self.PushHelp('<F9>/<C-F9>', '(Un)Restrict view to selection')
+            call self.PushHelp('<F9>', '(Un)Restrict view to selection')
             " \ '<c-\>        ... Show only selected',
         endif
     endif
