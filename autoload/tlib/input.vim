@@ -540,7 +540,20 @@ function! tlib#input#ListW(world, ...) "{{{3
                 endif
                 " TLogVAR c, cmod
                 " TLogDBG string(sort(keys(world.key_map[world.key_mode])))
-                if world.state != ''
+
+                " TLogVAR world.next_agent, world.next_eval
+                if !empty(world.next_agent)
+                    let nagent = world.next_agent
+                    let world.next_agent = ''
+                    let world = call(nagent, [world, world.GetSelectedItems(world.CurrentItem())])
+                    call s:CheckAgentReturnValue(nagent, world)
+                elseif !empty(world.next_eval)
+                    let selected = world.GetSelectedItems(world.CurrentItem())
+                    let neval = world.next_eval
+                    let world.next_eval = ''
+                    exec neval
+                    call s:CheckAgentReturnValue(neval, world)
+                elseif world.state != ''
                     " continue
                 elseif has_key(world.key_map[world.key_mode], c)
                     let sr = @/
