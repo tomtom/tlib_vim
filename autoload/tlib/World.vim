@@ -692,7 +692,11 @@ endf
 
 " :nodoc:
 function! s:prototype.UseScratch() dict "{{{3
-    keepalt return tlib#scratch#UseScratch(self)
+    keepalt let rv = tlib#scratch#UseScratch(self)
+    " if expand('%:t') == self.scratch
+        let b:tlib_world = self
+    " endif
+    return rv
 endf
 
 
