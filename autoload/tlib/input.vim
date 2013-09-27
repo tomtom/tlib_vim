@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2013-09-26.
-" @Revision:    0.0.1207
+" @Revision:    0.0.1244
 
 
 " :filedoc:
@@ -520,7 +520,7 @@ function! tlib#input#ListW(world, ...) "{{{3
                 " TAssert IsNotEmpty(world.scratch)
                 let world.list_wnr = winnr()
 
-                " TLogVAR world.next_state, world.state
+                " TLogVAR world.state, world.next_state
                 if !empty(world.next_state)
                     let world.state = world.next_state
                     let world.next_state = ''
@@ -536,11 +536,13 @@ function! tlib#input#ListW(world, ...) "{{{3
                     if empty(query)
                         let query = 'Waiting for input ... Press ESC to continue'
                     endif
-                    let exec_cmd = input(query)
+                    call inputsave()
+                    let exec_cmd = input(query, '')
+                    call inputrestore()
+                    " TLogVAR exec_cmd
                     if exec_cmd == ''
                         let world.state = 'redisplay'
                     else
-                        " TLogVAR exec_cmd
                         exec exec_cmd
                     endif
                 else
@@ -612,11 +614,11 @@ function! tlib#input#ListW(world, ...) "{{{3
                 elseif c == "\<RightMouse>"
                     if v:mouse_win == world.list_wnr
                         call s:BuildMenu(world)
+                        let world.state = 'redisplay'
                         if s:PopupmenuExists() == 1
                             " if v:mouse_lnum != line('.')
                             " endif
                             let world.prefidx = world.GetLineIdx(v:mouse_lnum)
-                            let world.state = 'redisplay'
                             let world.next_state = 'eval[Waiting for popup menu ... Press ESC to continue]'
                             call world.DisplayList()
                             if line('w$') - v:mouse_lnum < 6
@@ -624,8 +626,6 @@ function! tlib#input#ListW(world, ...) "{{{3
                             else
                                 popup! ]TLibInputListPopupMenu
                             endif
-                        else
-                            let world.state = 'redisplay'
                         endif
                     else
                         let post_keys = v:mouse_lnum .'gg'. v:mouse_col .'|'. c
@@ -900,7 +900,10 @@ endf
 
 
 function s:PopupmenuExists()
-    if g:tlib#input#use_popup && exists(':popup') != 2
+    if !g:tlib#input#use_popup
+                \ || exists(':popup') != 2
+                \ || !has('gui_win32')
+                " \ || !(has('gui_win32') || has('gui_gtk') || has('gui_gtk'))
         let rv = -1
     else
         try
@@ -917,12 +920,12 @@ endf
 
 function! s:BuildMenu(world) "{{{3
     if g:tlib#input#use_popup && s:PopupmenuExists() == 0
-        call s:BuildItem('Pick\ selected\ item', {'eval': 'let world.state = "pick"'})
-        call s:BuildItem('Cancel', {'agent': 'tlib#agent#Exit'})
-        call s:BuildItem('Select', {'agent': 'tlib#agent#Select'})
-        call s:BuildItem('Select\ all', {'agent': 'tlib#agent#SelectAll'})
-        call s:BuildItem('Reset\ list', {'agent': 'tlib#agent#Reset'})
-        call s:BuildItem('-StandardEntries-', {'eval': 'let world.state = "redisplay"'})
+        call s:BuildItem('Pick\ selected\ item', {'key_name': '<cr>', 'eval': 'let world.state = "pick"'})
+        call s:BuildItem('Cancel', {'key_name': '<esc>', 'agent': 'tlib#agent#Exit'})
+        call s:BuildItem('Select', {'key_name': '#', 'agent': 'tlib#agent#Select'})
+        call s:BuildItem('Select\ all', {'key_name': '<c-a>', 'agent': 'tlib#agent#SelectAll'})
+        call s:BuildItem('Reset\ list', {'key_name': '<c-r>', 'agent': 'tlib#agent#Reset'})
+        call s:BuildItem('-StandardEntries-', {'key': ":", 'eval': 'let world.state = "redisplay"'})
         for [key_mode, key_handlers] in items(a:world.key_map)
             let keys = sort(keys(key_handlers))
             let mitems = {}
@@ -962,11 +965,12 @@ function! s:BuildMenu(world) "{{{3
                 for mname in sort(keys(msubitems))
                     let msname = msubmname . mname
                     let handler = msubitems[mname]
-                    if has_key(handler, 'agent')
-                        call s:BuildItem(msname, {'agent': handler.agent})
-                    else
-                        call s:BuildItem(msname, {'key': handler.key_name})
-                    endif
+                    call s:BuildItem(msname, handler)
+                    " if has_key(handler, 'agent')
+                    "     call s:BuildItem(msname, {'agent': handler.agent})
+                    " else
+                    "     call s:BuildItem(msname, {'key': handler.key_name})
+                    " endif
                 endfor
             endfor
         endfor
@@ -975,20 +979,50 @@ endf
 
 
 function! s:BuildItem(menu, def) "{{{3
-    for k in ['key', 'agent', 'eval']
-        if has_key(a:def, k)
-            let v = a:def[k]
-            if k == 'key'
-                exec 'amenu' (']TLibInputListPopupMenu.'. a:menu) ':let c = "\'. v .'"<cr>'
-            elseif k == 'agent'
-                exec 'amenu' (']TLibInputListPopupMenu.'. a:menu) ':let world.next_agent ='. string(v) .'<cr>'
-            elseif k == 'eval'
-                exec 'amenu' (']TLibInputListPopupMenu.'. a:menu) ':let world.next_eval ='. string(v) .'<cr>'
+    if has('gui_win32')
+        let key_mode = 'c'
+    elseif has('gui_gtk') || has('gui_gtk')
+        let key_mode = 'raw'
+    endif
+    for k in ['agent', 'eval', 'key_name', 'key']
+        if has('gui_win32')
+        elseif has('gui_gtk') || has('gui_gtk')
+            if k == 'agent' || k == 'eval'
+                continue
             endif
-            return
         endif
+        try 
+            if has_key(a:def, k)
+                let v = a:def[k]
+                if k == 'key'
+                    if key_mode == 'c'
+                        " echom 'DBG amenu' (']TLibInputListPopupMenu.'. a:menu) ':let c = "'. v .'"<cr>'
+                        exec 'amenu' (']TLibInputListPopupMenu.'. a:menu) ':let c = "'. v .'"<cr>'
+                    else
+                        " echom 'DBG amenu' (']TLibInputListPopupMenu.'. a:menu) v
+                        exec 'amenu' (']TLibInputListPopupMenu.'. a:menu) v
+                    endif
+                elseif k == 'key_name'
+                    if key_mode == 'c'
+                        " echom 'DBG amenu' (']TLibInputListPopupMenu.'. a:menu) ':let c = "\'. v .'"<cr>'
+                        exec 'amenu' (']TLibInputListPopupMenu.'. a:menu) ':let c = "\'. v .'"<cr>'
+                    else
+                        let key = v
+                        " echom 'DBG amenu' (']TLibInputListPopupMenu.'. a:menu) key
+                        exec 'amenu' (']TLibInputListPopupMenu.'. a:menu) key
+                    endif
+                elseif k == 'agent'
+                    " echom 'DBG amenu' (']TLibInputListPopupMenu.'. a:menu) ':let world.next_agent ='. string(v) .'<cr>'
+                    exec 'amenu' (']TLibInputListPopupMenu.'. a:menu) ':let world.next_agent ='. string(v) .'<cr>'
+                elseif k == 'eval'
+                    " echom 'DBG amenu' (']TLibInputListPopupMenu.'. a:menu) ':let world.next_eval ='. string(v) .'<cr>'
+                    exec 'amenu' (']TLibInputListPopupMenu.'. a:menu) ':let world.next_eval ='. string(v) .'<cr>'
+                endif
+                return
+            endif
+        catch
+        endtry
     endfor
-    throw "tlib#BuildItem: Internal error: ". string(a:000)
 endf
 
 
