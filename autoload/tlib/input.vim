@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2013-09-26.
-" @Revision:    0.0.1244
+" @Revision:    0.0.1259
 
 
 " :filedoc:
@@ -536,23 +536,29 @@ function! tlib#input#ListW(world, ...) "{{{3
                     if empty(query)
                         let query = 'Waiting for input ... Press ESC to continue'
                     endif
-                    call inputsave()
-                    let exec_cmd = input(query, '')
-                    call inputrestore()
-                    " TLogVAR exec_cmd
-                    if exec_cmd == ''
-                        let world.state = 'redisplay'
-                    else
-                        exec exec_cmd
+                    if has('gui_win32')
+                        call inputsave()
+                        let exec_cmd = input(query, '')
+                        call inputrestore()
+                        " TLogVAR exec_cmd
+                        if exec_cmd == ''
+                            let world.state = 'redisplay'
+                        else
+                            exec exec_cmd
+                        endif
+                    elseif has('gui_gtk') || has('gui_gtk2')
+                        let c = getchar()
+                        let cmod = getcharmod()
+                        " TLogVAR c, cmod
+                        if c !~ '\D' && c > 0 && cmod != 0
+                            let c = printf("<%s-%s>", cmod, c)
+                        endif
                     endif
                 else
                     " TLogVAR world.timeout
                     let c = tlib#char#Get(world.timeout, world.timeout_resolution)
                     " TLogVAR c, has_key(world.key_map[world.key_mode],c)
                     let cmod = getcharmod()
-                    if c !~ '\D' && c > 0 && cmod != 0
-                        let c = printf("<%s-%s>", cmod, c)
-                    endif
                 endif
                 " TLogVAR c, cmod
                 " TLogDBG string(sort(keys(world.key_map[world.key_mode])))
@@ -902,8 +908,8 @@ endf
 function s:PopupmenuExists()
     if !g:tlib#input#use_popup
                 \ || exists(':popup') != 2
-                \ || !has('gui_win32')
-                " \ || !(has('gui_win32') || has('gui_gtk') || has('gui_gtk'))
+                \ || !(has('gui_win32') || has('gui_gtk') || has('gui_gtk2'))
+                " \ || !has('gui_win32')
         let rv = -1
     else
         try
@@ -981,7 +987,7 @@ endf
 function! s:BuildItem(menu, def) "{{{3
     if has('gui_win32')
         let key_mode = 'c'
-    elseif has('gui_gtk') || has('gui_gtk')
+    elseif has('gui_gtk') || has('gui_gtk2')
         let key_mode = 'raw'
     endif
     for k in ['agent', 'eval', 'key_name', 'key']
