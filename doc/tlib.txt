@@ -130,6 +130,7 @@ Contents~
         tlib#agent#ShiftLeft ................... |tlib#agent#ShiftLeft()|
         tlib#agent#ShiftRight .................. |tlib#agent#ShiftRight()|
         tlib#agent#Reset ....................... |tlib#agent#Reset()|
+        tlib#agent#ToggleRestrictView .......... |tlib#agent#ToggleRestrictView()|
         tlib#agent#RestrictView ................ |tlib#agent#RestrictView()|
         tlib#agent#UnrestrictView .............. |tlib#agent#UnrestrictView()|
         tlib#agent#Input ....................... |tlib#agent#Input()|
@@ -203,7 +204,7 @@ Contents~
         g:tlib#input#and ....................... |g:tlib#input#and|
         g:tlib#input#or ........................ |g:tlib#input#or|
         g:tlib#input#not ....................... |g:tlib#input#not|
-        g:tlib_numeric_chars ................... |g:tlib_numeric_chars|
+        g:tlib#input#numeric_chars ............. |g:tlib#input#numeric_chars|
         g:tlib#input#keyagents_InputList_s ..... |g:tlib#input#keyagents_InputList_s|
         g:tlib#input#keyagents_InputList_m ..... |g:tlib#input#keyagents_InputList_m|
         g:tlib#input#handlers_EditList ......... |g:tlib#input#handlers_EditList|
@@ -948,6 +949,9 @@ tlib#agent#ShiftRight(world, selected)
                                                     *tlib#agent#Reset()*
 tlib#agent#Reset(world, selected)
 
+                                                    *tlib#agent#ToggleRestrictView()*
+tlib#agent#ToggleRestrictView(world, selected)
+
                                                     *tlib#agent#RestrictView()*
 tlib#agent#RestrictView(world, selected)
 
@@ -1325,8 +1329,8 @@ g:tlib#input#or                (default: '|')
                                                     *g:tlib#input#not*
 g:tlib#input#not               (default: '-')
 
-                                                    *g:tlib_numeric_chars*
-g:tlib_numeric_chars
+                                                    *g:tlib#input#numeric_chars*
+g:tlib#input#numeric_chars
     When editing a list with |tlib#input#List|, typing these numeric chars 
     (as returned by getchar()) will select an item based on its index, not 
     based on its name. I.e. in the default setting, typing a "4" will 
@@ -1380,7 +1384,7 @@ tlib#input#List(type. ?query='', ?list=[], ?handlers=[], ?default="", ?timeout=0
     of selected elements or its indexes.
 
     By default, typing numbers will select an item by its index. See 
-    |g:tlib_numeric_chars| to find out how to change this.
+    |g:tlib#input#numeric_chars| to find out how to change this.
 
     The item is automatically selected if the numbers typed equals the 
     number of digits of the list length. I.e. if a list contains 20 items, 

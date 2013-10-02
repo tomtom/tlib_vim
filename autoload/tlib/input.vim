@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2013-09-30.
-" @Revision:    0.0.1260
+" @Revision:    0.0.1262
 
 
 " :filedoc:
@@ -92,7 +92,7 @@ TLet g:tlib#input#not = '-'
 " this dictionary.
 " Format: [KEY] = BASE ... the number is calculated as KEY - BASE.
 " :nodefault:
-TLet g:tlib_numeric_chars = {
+TLet g:tlib#input#numeric_chars = {
             \ 176: 176,
             \ 177: 176,
             \ 178: 176,
@@ -215,7 +215,7 @@ TLet g:tlib#input#filename_max_width = '&co / 2'
 " of selected elements or its indexes.
 "
 " By default, typing numbers will select an item by its index. See 
-" |g:tlib_numeric_chars| to find out how to change this.
+" |g:tlib#input#numeric_chars| to find out how to change this.
 "
 " The item is automatically selected if the numbers typed equals the 
 " number of digits of the list length. I.e. if a list contains 20 items, 
@@ -285,7 +285,7 @@ function! tlib#input#List(type, ...) "{{{3
         let world.pick_last_item   = tlib#list#Find(handlers, 'has_key(v:val, "pick_last_item")', 
                     \ tlib#var#Get('tlib_pick_last_item', 'bg'), 'v:val.pick_last_item')
         let world.numeric_chars    = tlib#list#Find(handlers, 'has_key(v:val, "numeric_chars")', 
-                    \ tlib#var#Get('tlib_numeric_chars', 'bg'), 'v:val.numeric_chars')
+                    \ g:tlib#input#numeric_chars, 'v:val.numeric_chars')
         let world.key_handlers     = filter(copy(handlers), 'has_key(v:val, "key")')
         let filter                 = tlib#list#Find(handlers, 'has_key(v:val, "filter")', '', 'v:val.filter')
         if !empty(filter)
