@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2013-09-26.
-" @Revision:    0.0.1259
+" @Last Change: 2013-09-30.
+" @Revision:    0.0.1260
 
 
 " :filedoc:
@@ -537,9 +537,7 @@ function! tlib#input#ListW(world, ...) "{{{3
                         let query = 'Waiting for input ... Press ESC to continue'
                     endif
                     if has('gui_win32')
-                        call inputsave()
                         let exec_cmd = input(query, '')
-                        call inputrestore()
                         " TLogVAR exec_cmd
                         if exec_cmd == ''
                             let world.state = 'redisplay'
