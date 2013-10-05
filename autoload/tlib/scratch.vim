@@ -77,7 +77,7 @@ function! tlib#scratch#UseScratch(...) "{{{3
                 let cmd = 'edit'
             endif
             " TLogVAR cmd
-            silent exec 'noautocmd' cmd escape(id, '%#\ ')
+            silent exec 'noautocmd keepalt keepj' cmd escape(id, '%#\ ')
             " silent exec 'split '. id
         endif
         let ft = get(keyargs, 'scratch_filetype', '')
@@ -87,7 +87,7 @@ function! tlib#scratch#UseScratch(...) "{{{3
         endif
     endif
     setlocal buftype=nofile
-    setlocal bufhidden=hide
+    setlocal bufhidden=wipe
     setlocal noswapfile
     setlocal nobuflisted
     setlocal foldmethod=manual
