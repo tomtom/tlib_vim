@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-07-18.
 " @Last Change: 2013-09-25.
-" @Revision:    0.0.176
+" @Revision:    0.0.179
 
 if &cp || exists("loaded_tlib_scratch_autoload")
     finish
@@ -16,6 +16,11 @@ let loaded_tlib_scratch_autoload = 1
 " bottom. Set this variable to 'topleft' or '' to change this behaviour.
 " See |tlib#input#List()|.
 TLet g:tlib_scratch_pos = 'botright'
+
+" If you want the scratch buffer to be fully removed, you might want to 
+" set this variable to 'wipe'.
+" See also https://github.com/tomtom/tlib_vim/pull/16
+TLet g:tlib_scratch_hidden = 'hide'
 
 
 " :def: function! tlib#scratch#UseScratch(?keyargs={})
@@ -87,7 +92,7 @@ function! tlib#scratch#UseScratch(...) "{{{3
         endif
     endif
     setlocal buftype=nofile
-    setlocal bufhidden=wipe
+    let &l:bufhidden = g:tlib_scratch_hidden
     setlocal noswapfile
     setlocal nobuflisted
     setlocal foldmethod=manual
