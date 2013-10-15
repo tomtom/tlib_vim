@@ -90,6 +90,7 @@ Contents~
         tlib#char#IsAvailable .................. |tlib#char#IsAvailable()|
         tlib#char#GetWithTimeout ............... |tlib#char#GetWithTimeout()|
         g:tlib_scratch_pos ..................... |g:tlib_scratch_pos|
+        g:tlib_scratch_hidden .................. |g:tlib_scratch_hidden|
         tlib#scratch#UseScratch ................ |tlib#scratch#UseScratch()|
         tlib#scratch#CloseScratch .............. |tlib#scratch#CloseScratch()|
         tlib#autocmdgroup#Init ................. |tlib#autocmdgroup#Init()|
@@ -280,6 +281,10 @@ Contents~
         tlib#win#Width ......................... |tlib#win#Width()|
         tlib#win#WinDo ......................... |tlib#win#WinDo()|
         tlib#comments#Comments ................. |tlib#comments#Comments()|
+        tlib#grep#Do ........................... |tlib#grep#Do()|
+        tlib#grep#LocList ...................... |tlib#grep#LocList()|
+        tlib#grep#QuickFixList ................. |tlib#grep#QuickFixList()|
+        tlib#grep#List ......................... |tlib#grep#List()|
         tlib#Filter_cnf#New .................... |tlib#Filter_cnf#New()|
         prototype.Pretty
         tlib#Object#New ........................ |tlib#Object#New()|
@@ -734,6 +739,12 @@ g:tlib_scratch_pos             (default: 'botright')
     Scratch window position. By default the list window is opened on the 
     bottom. Set this variable to 'topleft' or '' to change this behaviour.
     See |tlib#input#List()|.
+
+                                                    *g:tlib_scratch_hidden*
+g:tlib_scratch_hidden          (default: 'hide')
+    If you want the scratch buffer to be fully removed, you might want to 
+    set this variable to 'wipe'.
+    See also https://github.com/tomtom/tlib_vim/pull/16
 
                                                     *tlib#scratch#UseScratch()*
 tlib#scratch#UseScratch(?keyargs={})
@@ -1787,6 +1798,22 @@ autoload/tlib/comments.vim~
                                                     *tlib#comments#Comments()*
 tlib#comments#Comments(...)
     function! tlib#comments#Comments(?rx='')
+
+
+========================================================================
+autoload/tlib/grep.vim~
+
+                                                    *tlib#grep#Do()*
+tlib#grep#Do(cmd, rx, files)
+
+                                                    *tlib#grep#LocList()*
+tlib#grep#LocList(rx, files)
+
+                                                    *tlib#grep#QuickFixList()*
+tlib#grep#QuickFixList(rx, files)
+
+                                                    *tlib#grep#List()*
+tlib#grep#List(rx, files)
 
 
 ========================================================================
