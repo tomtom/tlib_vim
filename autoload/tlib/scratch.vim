@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-07-18.
-" @Last Change: 2013-09-25.
-" @Revision:    0.0.179
+" @Last Change: 2013-10-16.
+" @Revision:    0.0.233
 
 if &cp || exists("loaded_tlib_scratch_autoload")
     finish
@@ -33,17 +33,13 @@ function! tlib#scratch#UseScratch(...) "{{{3
     exec tlib#arg#Let([['keyargs', {}]])
     " TLogDBG string(keys(keyargs))
     let id = get(keyargs, 'scratch', '__Scratch__')
-    " TLogVAR id
-    " TLogDBG winnr()
-    " TLogDBG bufnr(id)
-    " TLogDBG bufwinnr(id)
-    " TLogDBG bufnr('%')
-    if id =~ '^\d\+$' && bufwinnr(id) != -1
-        if bufnr('%') != id
-            exec 'noautocmd buffer! '. id
-        endif
-        " let ft = &ft
-        let ft = '*'
+    " TLogVAR id, bufwinnr(id)
+    " TLogVAR bufnr(id), bufname(id)
+    " TLogVAR 1, winnr(), bufnr('%'), bufname("%")
+    if bufwinnr(id) != -1
+        " exec 'noautocmd drop' fnameescape(bufname(id))
+        exec 'noautocmd keepalt keepj' bufwinnr(id) 'wincmd w'
+        " TLogVAR "reuse", bufnr("%"), bufname("%")
     else
         let winpos = ''
         let bn = bufnr(id)
@@ -90,19 +86,21 @@ function! tlib#scratch#UseScratch(...) "{{{3
         if !empty(winpos)
             exec winpos
         endif
-    endif
-    setlocal buftype=nofile
-    let &l:bufhidden = g:tlib_scratch_hidden
-    setlocal noswapfile
-    setlocal nobuflisted
-    setlocal foldmethod=manual
-    setlocal foldcolumn=0
-    setlocal modifiable
-    setlocal nospell
-    if &ft != '*'
-        let &ft = ft
+        setlocal buftype=nofile
+        let &l:bufhidden = g:tlib_scratch_hidden
+        setlocal noswapfile
+        setlocal nobuflisted
+        setlocal foldmethod=manual
+        setlocal foldcolumn=0
+        setlocal modifiable
+        setlocal nospell
+        " TLogVAR &ft, ft
+        if !empty(ft)
+            let &l:ft = ft
+        endif
     endif
     let keyargs.scratch = bufnr('%')
+    " TLogVAR 2, winnr(), bufnr('%'), bufname("%")
     return keyargs.scratch
 endf
 
