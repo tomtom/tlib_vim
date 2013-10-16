@@ -1,13 +1,14 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2013-10-14.
-" @Revision:    26
+" @Last Change: 2013-10-16.
+" @Revision:    31
 
 
 function! tlib#grep#Do(cmd, rx, files) "{{{3
-    let files = join(map(copy(a:files), 'tlib#arg#Ex(v:val)'), ' ')
-    " TLogVAR a:cmd, a:rx, files
+    " TLogVAR a:cmd, a:rx, a:files
+    let files = join(map(copy(a:files), 'tlib#arg#Ex(v:val, "")'), ' ')
     let rx = '/'. escape(a:rx, '/') .'/j'
+    " TLogVAR rx, files
     silent exec a:cmd rx files
 endf
 
