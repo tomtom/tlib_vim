@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-07-18.
 " @Last Change: 2013-10-16.
-" @Revision:    0.0.233
+" @Revision:    0.0.242
 
 if &cp || exists("loaded_tlib_scratch_autoload")
     finish
@@ -20,7 +20,7 @@ TLet g:tlib_scratch_pos = 'botright'
 " If you want the scratch buffer to be fully removed, you might want to 
 " set this variable to 'wipe'.
 " See also https://github.com/tomtom/tlib_vim/pull/16
-TLet g:tlib_scratch_hidden = 'hide'
+TLet g:tlib#scratch#hidden = 'hide'
 
 
 " :def: function! tlib#scratch#UseScratch(?keyargs={})
@@ -37,7 +37,7 @@ function! tlib#scratch#UseScratch(...) "{{{3
     " TLogVAR bufnr(id), bufname(id)
     " TLogVAR 1, winnr(), bufnr('%'), bufname("%")
     if bufwinnr(id) != -1
-        " exec 'noautocmd drop' fnameescape(bufname(id))
+        " echom 'DBG noautocmd keepalt keepj' bufwinnr(id) 'wincmd w'
         exec 'noautocmd keepalt keepj' bufwinnr(id) 'wincmd w'
         " TLogVAR "reuse", bufnr("%"), bufname("%")
     else
@@ -56,7 +56,7 @@ function! tlib#scratch#UseScratch(...) "{{{3
             let wn = bufwinnr(bn)
             if wn != -1
                 " TLogVAR wn
-                exec 'noautocmd' (wn .'wincmd w')
+                exec 'noautocmd keepalt keepj' (wn .'wincmd w')
             else
                 if scratch_split == 1
                     let cmd = wpos.' sbuffer!'
@@ -66,7 +66,7 @@ function! tlib#scratch#UseScratch(...) "{{{3
                     let cmd = 'buffer!'
                 endif
                 " TLogVAR cmd
-                silent exec 'noautocmd' cmd bn
+                silent exec 'noautocmd keepalt keepj' cmd bn
             endif
         else
             " TLogVAR id
