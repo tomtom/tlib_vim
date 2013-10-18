@@ -420,3 +420,48 @@ version: "1.05"
   - tlib#dir#NativeName(dirname)
   MD5 checksum: 493f9beca44374de386f20d1613155e3
 
+  - Rename g:tlib_debug to g:tlib#debug
+  - Renamed g:tlib_sortprefs_threshold to g:tlib#input#sortprefs_threshold
+  - Renamed g:tlib#input#livesearch_threshold
+  - Renamed g:tlib_inputlist_match to g:tlib#input#filter_mode
+  - Renamed g:tlib_inputlist_higroup to g:tlib#input#higroup
+  - Renamed g:tlib#debug
+  - Moved g:tlib_pick_last_item
+  - Renamed g:tlib#input#and, g:tlib#input#or, g:tlib#input#not
+  - Moved g:tlib_numeric_chars to autoload/tlib/input.vim
+  - Renamed g:tlib#input#keyagents_InputList_s, g:tlib#input#keyagents_InputList_m, g:tlib#input#handlers_EditList
+  - Moved g:tlib_inputlist_pct, g:tlib_inputlist_width_filename, g:tlib_inputlist_filename_indicators, g:tlib_inputlist_shortmessage to autoload/tlib/World.vim
+  - Renamed tlib#input#pick_last_item (2)
+  - prototype.SelectItemsByNames()
+  - filtered_items: Restricted view
+  - prototype.PrintLines()
+  - Restricted view (2)
+  - Moved g:tlib_scroll_lines to autoload/tlib/agent.vim
+  - prototype.PrintLines() (2)
+  - tlib#input: Improved handling of popup menu (allows submenu)
+  - tlib#input: Allow mods in keys
+  - Moved g:tlib_scratch_pos to autoload/tlib/scratch.vim
+  - Moved g:tlib_tags_extra, g:tlib_tag_substitute to autoload/tlib/tag.vim
+  - tlib#agent#CompleteAgentNames(): Respect Arglead
+  - Move g:tlib_viewline_position to autoload/tlib/buffer.vim
+  - Move g:tlib_cache to autoload/tlib/cache.vim
+  - Renamed g:tlib_filename_sep to g:tlib#dir#sep
+  - prototype.UseScratch(): Set b:tlib_world
+  - tlib#input: f9 toggles resticted view
+  - tlib#input: next_agent, next_eval
+  - tlib#input: Revised use of the popup menu
+  - tlib#input: Disable popup menu for gui_gtk
+  - tlib#input: Re-enabled the popup menu for gtk gui
+  - tlib#input: FIX popup menu on Windows
+  - Renamed g:tlib_numeric_chars to g:tlib#input#numeric_chars (disabled per-buffer values) (fixes #35)
+  - Improve scratch list
+  - New: tlib#grep
+  - Merge branch 'master' of https://github.com/bruno-/tlib_vim into pull16
+  - g:tlib_scratch_hidden: Configure how to "hide" the scratch buffer
+  - tlib#grep#Do: don't escape "*" in patterns
+  - Optimize use of visible scratch buffers
+  - World.scratch_hidden parameter
+  - scratch: Always use keepalt & keepjumps
+  MD5 checksum: 2e40449c47dc606ccef57aa0b1e22e8e
+version: "1.06"
+
