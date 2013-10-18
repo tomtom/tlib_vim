@@ -90,7 +90,7 @@ Contents~
         tlib#char#IsAvailable .................. |tlib#char#IsAvailable()|
         tlib#char#GetWithTimeout ............... |tlib#char#GetWithTimeout()|
         g:tlib_scratch_pos ..................... |g:tlib_scratch_pos|
-        g:tlib_scratch_hidden .................. |g:tlib_scratch_hidden|
+        g:tlib#scratch#hidden .................. |g:tlib#scratch#hidden|
         tlib#scratch#UseScratch ................ |tlib#scratch#UseScratch()|
         tlib#scratch#CloseScratch .............. |tlib#scratch#CloseScratch()|
         tlib#autocmdgroup#Init ................. |tlib#autocmdgroup#Init()|
@@ -740,8 +740,8 @@ g:tlib_scratch_pos             (default: 'botright')
     bottom. Set this variable to 'topleft' or '' to change this behaviour.
     See |tlib#input#List()|.
 
-                                                    *g:tlib_scratch_hidden*
-g:tlib_scratch_hidden          (default: 'hide')
+                                                    *g:tlib#scratch#hidden*
+g:tlib#scratch#hidden          (default: 'hide')
     If you want the scratch buffer to be fully removed, you might want to 
     set this variable to 'wipe'.
     See also https://github.com/tomtom/tlib_vim/pull/16
