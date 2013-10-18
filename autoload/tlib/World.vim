@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
 " @Last Change: 2013-09-26.
-" @Revision:    0.1.1278
+" @Revision:    0.1.1297
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -39,6 +39,7 @@ let s:prototype = tlib#Object#New({
             \ 'allow_suspend': 1,
             \ 'base': [], 
             \ 'bufnr': -1,
+            \ 'buffer_local': 1,
             \ 'cache_var': '',
             \ 'display_format': '',
             \ 'fileencoding': &fileencoding,
@@ -79,6 +80,7 @@ let s:prototype = tlib#Object#New({
             \ 'rv': '',
             \ 'scratch': '__InputList__',
             \ 'scratch_filetype': 'tlibInputList',
+            \ 'scratch_hidden': g:tlib#scratch#hidden,
             \ 'scratch_vertical': 0,
             \ 'scratch_split': 1,
             \ 'sel_idx': [],
@@ -694,7 +696,14 @@ endf
 
 " :nodoc:
 function! s:prototype.UseScratch() dict "{{{3
-    keepalt let rv = tlib#scratch#UseScratch(self)
+    " if type(self.scratch) != 0 && get(self, 'buffer_local', 1)
+    "     if self.scratch != fnamemodify(self.scratch, ':p')
+    "         let self.scratch = tlib#file#Join([expand('%:p:h'), self.scratch])
+    "         " TLogVAR self.scratch
+    "     endif
+    "     " let self.scratch_hidden = 'wipe'
+    " endif
+    keepjumps keepalt let rv = tlib#scratch#UseScratch(self)
     " if expand('%:t') == self.scratch
         let b:tlib_world = self
     " endif

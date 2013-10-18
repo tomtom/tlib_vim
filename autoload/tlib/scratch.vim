@@ -87,7 +87,7 @@ function! tlib#scratch#UseScratch(...) "{{{3
             exec winpos
         endif
         setlocal buftype=nofile
-        let &l:bufhidden = g:tlib_scratch_hidden
+        let &l:bufhidden = get(keyargs, 'scratch_hidden', g:tlib#scratch#hidden)
         setlocal noswapfile
         setlocal nobuflisted
         setlocal foldmethod=manual
