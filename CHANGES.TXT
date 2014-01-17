@@ -465,3 +465,10 @@ version: "1.05"
   MD5 checksum: 2e40449c47dc606ccef57aa0b1e22e8e
 version: "1.06"
 
+version: "1.07"
+  - Help template
+  - prototype.Highlight_filename(): Use matchstr() instead of fnamemodify()
+  - Display buffer-related filename indicators only if g:tlib_inputlist_filename_indicators is true
+  - tlib#file#Join(): strip_slashes defaults to 1
+  MD5 checksum: 6c8fa96fd3747be05df848ee93dd789b
+
