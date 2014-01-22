@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2013-09-30.
-" @Revision:    0.0.1262
+" @Last Change: 2014-01-22.
+" @Revision:    0.0.1275
 
 
 " :filedoc:
@@ -443,14 +443,7 @@ function! tlib#input#ListW(world, ...) "{{{3
                             " TLogDBG 5
                             " TLogDBG len(world.list)
                             " TLogVAR world.list
-                            let dlist = copy(world.list)
-                            " TLogVAR world.display_format
-                            if !empty(world.display_format)
-                                let display_format = world.display_format
-                                let cache = world.fmt_display
-                                " TLogVAR display_format, fmt_entries
-                                call map(dlist, 'world.FormatName(cache, display_format, v:val)')
-                            endif
+                            let dlist = world.DisplayFormat(world.list)
                             " TLogVAR world.prefidx
                             " TLogDBG 6
                             " let time6 = str2float(reltimestr(reltime()))  " DBG
