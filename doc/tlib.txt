@@ -38,6 +38,13 @@ Contents~
         :TBrowseOutput ......................... |:TBrowseOutput|
         :TBrowseScriptnames .................... |:TBrowseScriptnames|
         :TTimeCommand .......................... |:TTimeCommand|
+        Add .................................... |Add()|
+        TestGetArg ............................. |TestGetArg()|
+        TestGetArg1 ............................ |TestGetArg1()|
+        TestArgs ............................... |TestArgs()|
+        TestArgs1 .............................. |TestArgs1()|
+        TestArgs2 .............................. |TestArgs2()|
+        TestArgs3 .............................. |TestArgs3()|
         g:tlib#debug ........................... |g:tlib#debug|
         tlib#notify#Echo ....................... |tlib#notify#Echo()|
         tlib#notify#TrimMessage ................ |tlib#notify#TrimMessage()|
@@ -407,6 +414,33 @@ plugin/02tlib.vim~
                                                     *:TTimeCommand*
 :TTimeCommand CMD
     Time the execution time of CMD.
+
+
+========================================================================
+test/tlib.vim~
+
+                                                    *Add()*
+Add(a,b)
+    List
+
+                                                    *TestGetArg()*
+TestGetArg(...)
+    Optional arguments
+
+                                                    *TestGetArg1()*
+TestGetArg1(...)
+
+                                                    *TestArgs()*
+TestArgs(...)
+
+                                                    *TestArgs1()*
+TestArgs1(...)
+
+                                                    *TestArgs2()*
+TestArgs2(...)
+
+                                                    *TestArgs3()*
+TestArgs3(...)
 
 
 ========================================================================
