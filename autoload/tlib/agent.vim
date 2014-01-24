@@ -561,7 +561,7 @@ endf
 
 function! tlib#agent#ExecAgentByName(world, selected) "{{{3
     let s:agent_names_world = a:world
-    let agent_names = {}
+    let agent_names = {'Help': 'tlib#agent#Help'}
     for def in values(a:world.key_map[a:world.key_mode])
         if has_key(def, 'help') && !empty(def.help) && has_key(def, 'agent') && !empty(def.agent)
             let agent_names[def.help] = def.agent

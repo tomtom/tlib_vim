@@ -139,7 +139,6 @@ TLet g:tlib#input#keyagents_InputList_s = {
             \ 26:            'tlib#agent#Suspend',
             \ 250:           'tlib#agent#Suspend',
             \ 15:            'tlib#agent#SuspendToParentWindow',  
-            \ 63:            'tlib#agent#Help',
             \ "\<F1>":       'tlib#agent#Help',
             \ "\<F10>":      'tlib#agent#ExecAgentByName',
             \ "\<S-Esc>":    'tlib#agent#ExecAgentByName',
@@ -154,6 +153,7 @@ TLet g:tlib#input#keyagents_InputList_s = {
             \ char2nr(g:tlib#input#or):  'tlib#agent#OR',
             \ char2nr(g:tlib#input#and): 'tlib#agent#AND',
             \ }
+            " \ 63:            'tlib#agent#Help',
 
 
 " :nodefault:
