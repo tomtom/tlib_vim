@@ -23,16 +23,15 @@ TLet g:tlib#input#livesearch_threshold = 1000
 
 
 " Determine how |tlib#input#List()| and related functions work.
-" Can be "cnf", "cnfd", "cnfx", "seq", or "fuzzy". See:
-"   cnfx ... Like cnfd but |g:tlib#Filter_cnfx#expander| is interpreted 
-"            as a wildcard (this is the default method)
-"     - A plus character ("+") acts as a wildcard as if ".\{-}" (see 
-"       |/\{-|) were entered.
+" Can be "glob", "cnf", "cnfd", "seq", or "fuzzy". See:
+"   glob ... Like cnf but "*" and "?" (see |g:tlib#Filter_glob#seq|, 
+"       |g:tlib#Filter_glob#char|) are interpreted as glob-like 
+"       |wildcards| (this is the default method)
 "     - Examples:
-"         - "f+o" matches "fo", "fxo", and "fxxxoo", but doesn't match 
+"         - "f*o" matches "fo", "fxo", and "fxxxoo", but doesn't match 
 "           "far".
 "     - Otherwise it is a derivate of the cnf method (see below).
-"     - See also |tlib#Filter_cnfx#New()|.
+"     - See also |tlib#Filter_glob#New()|.
 "   cnfd ... Like cnf but "." is interpreted as a wildcard, i.e. it is 
 "            expanded to "\.\{-}"
 "     - A period character (".") acts as a wildcard as if ".\{-}" (see 
@@ -60,7 +59,7 @@ TLet g:tlib#input#livesearch_threshold = 1000
 "     - |tlib#Filter_seq#New()|
 "   fuzzy .. Match fuzzy character sequences
 "     - |tlib#Filter_fuzzy#New()|
-TLet g:tlib#input#filter_mode = 'cnfx'
+TLet g:tlib#input#filter_mode = 'glob'
 
 
 " The highlight group to use for showing matches in the input list 
