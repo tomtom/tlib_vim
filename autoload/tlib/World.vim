@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-05-01.
-" @Last Change: 2014-01-22.
-" @Revision:    0.1.1354
+" @Last Change: 2014-01-23.
+" @Revision:    0.1.1360
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -968,16 +968,17 @@ function! s:prototype.DisplayHelp() dict "{{{3
     let self.temp_lines = self.InitHelp()
     call self.PushHelp('<Esc>', self.key_mode == 'default' ? 'Abort' : 'Reset keymap')
     call self.PushHelp('Enter, <cr>', 'Pick the current item')
-    call self.PushHelp('<M-Number>',  'Pick an item')
     call self.PushHelp('Mouse', 'L: Pick item, R: Show menu')
+    call self.PushHelp('<M-Number>',  'Select an item')
     call self.PushHelp('<BS>, <C-BS>', 'Reduce filter')
     call self.PushHelp('<S-Esc>, <F10>', 'Enter command')
 
     if self.key_mode == 'default'
-        call self.PushHelp('<C|M-r>',     'Reset the display')
+        call self.PushHelp('<C|M-r>',      'Reset the display')
         call self.PushHelp('Up/Down',      'Next/previous item')
-        call self.PushHelp('<C|M-q>',     'Edit top filter string')
+        call self.PushHelp('<C|M-q>',      'Edit top filter string')
         call self.PushHelp('Page Up/Down', 'Scroll')
+        call self.PushHelp('<S-Space>',    'Enter * Wildcard')
         if self.allow_suspend
             call self.PushHelp('<C|M-z>', 'Suspend/Resume')
             call self.PushHelp('<C-o>', 'Switch to origin')
@@ -1209,7 +1210,7 @@ function! s:prototype.Query() dict "{{{3
     if g:tlib_inputlist_shortmessage
         let query = 'Filter: '. self.DisplayFilter()
     else
-        let query = self.query .' (filter: '. self.DisplayFilter() .'; press "?" for help)'
+        let query = self.query .' (filter: '. self.DisplayFilter() .'; press <F1> for help)'
     endif
     return query
 endf
