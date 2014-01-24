@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-24.
-" @Last Change: 2013-11-05.
-" @Revision:    0.1.242
+" @Last Change: 2014-01-23.
+" @Revision:    0.1.246
 
 
 " :filedoc:
@@ -51,6 +51,20 @@ endf
 function! tlib#agent#PageDown(world, selected) "{{{3
     let a:world.offset += (winheight(0) / 2)
     let a:world.state = 'scroll'
+    return a:world
+endf
+
+
+function! tlib#agent#Home(world, selected) "{{{3
+    let a:world.prefidx = 1
+    let a:world.state = 'redisplay'
+    return a:world
+endf
+
+
+function! tlib#agent#End(world, selected) "{{{3
+    let a:world.prefidx = len(a:world.list)
+    let a:world.state = 'redisplay'
     return a:world
 endf
 

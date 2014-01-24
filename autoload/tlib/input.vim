@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2014-01-22.
-" @Revision:    0.0.1275
+" @Last Change: 2014-01-23.
+" @Revision:    0.0.1283
 
 
 " :filedoc:
@@ -125,6 +125,8 @@ TLet g:tlib#input#numeric_chars = {
 TLet g:tlib#input#keyagents_InputList_s = {
             \ "\<PageUp>":   'tlib#agent#PageUp',
             \ "\<PageDown>": 'tlib#agent#PageDown',
+            \ "\<Home>":     'tlib#agent#Home',
+            \ "\<End>":      'tlib#agent#End',
             \ "\<Up>":       'tlib#agent#Up',
             \ "\<Down>":     'tlib#agent#Down',
             \ "\<c-Up>":     'tlib#agent#UpN',
