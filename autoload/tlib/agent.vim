@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-24.
-" @Last Change: 2014-01-23.
-" @Revision:    0.1.246
+" @Last Change: 2014-01-29.
+" @Revision:    0.1.248
 
 
 " :filedoc:
@@ -477,7 +477,7 @@ function! tlib#agent#ShowInfo(world, selected)
     for f in a:selected
         if filereadable(f)
             let desc = [getfperm(f), strftime('%c', getftime(f)),  getfsize(f) .' bytes', getftype(f)]
-            call add(lines, fnamemodify(f, ':t') .':')
+            call add(lines, fnamemodify(f, ':p'))
             call add(lines, '  '. join(desc, '; '))
         endif
     endfor
