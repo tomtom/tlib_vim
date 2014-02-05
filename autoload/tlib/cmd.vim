@@ -58,10 +58,12 @@ endf
 "   call tlib#cmd#BrowseOutputWithCallback('tlib#cmd#ParseScriptname', 'scriptnames')
 function! tlib#cmd#BrowseOutputWithCallback(callback, command) "{{{3
     let list = tlib#cmd#OutputAsList(a:command)
-    let cmd = tlib#input#List('s', 'Output of: '. a:command, list)
-    if !empty(cmd)
-        let Callback = function(a:callback)
-        call call(Callback, [cmd])
+    let cmds = tlib#input#List('m', 'Output of: '. a:command, list)
+    if !empty(cmds)
+        for cmd in cmds
+            let Callback = function(a:callback)
+            call call(Callback, [cmd])
+        endfor
     endif
 endf
 
