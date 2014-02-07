@@ -1,10 +1,7 @@
-" World.vim -- The World prototype for tlib#input#List()
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Created:     2007-05-01.
-" @Last Change: 2014-01-23.
-" @Revision:    0.1.1360
+" @Revision:    1389
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -75,6 +72,7 @@ let s:prototype = tlib#Object#New({
             \ 'resize_vertical': 0,
             \ 'restore_from_cache': [],
             \ 'filtered_items': [],
+            \ 'resume_state': '', 
             \ 'retrieve_eval': '',
             \ 'return_agent': '',
             \ 'rv': '',
@@ -92,6 +90,7 @@ let s:prototype = tlib#Object#New({
             \ 'temp_prompt': [],
             \ 'timeout': 0,
             \ 'timeout_resolution': 2,
+            \ 'tabpagenr': -1,
             \ 'type': '', 
             \ 'win_wnr': -1,
             \ 'win_height': -1,
@@ -809,6 +808,7 @@ function! s:prototype.UseInputListScratch() dict "{{{3
     if !exists('b:tlib_list_init')
         call tlib#autocmdgroup#Init()
         autocmd TLib VimResized <buffer> call feedkeys("\<c-j>", 't')
+        " autocmd TLib WinLeave <buffer> let b:tlib_world_event = 'WinLeave' | call feedkeys("\<c-j>", 't')
         let b:tlib_list_init = 1
     endif
     if !exists('w:tlib_list_init')
@@ -1282,6 +1282,9 @@ endf
 " :nodoc:
 function! s:prototype.SwitchWindow(where) dict "{{{3
     " TLogDBG string(tlib#win#List())
+    if self.tabpagenr != tabpagenr()
+        call tlib#tab#Set(self.tabpagenr)
+    endif
     let wnr = get(self, a:where.'_wnr')
     " TLogVAR self, wnr
     return tlib#win#Set(wnr)
@@ -1356,5 +1359,10 @@ function! s:prototype.RestoreOrigin(...) dict "{{{3
     exec 'buffer! '. self.bufnr
     call setpos('.', self.cursor)
     " TLogDBG "RestoreOrigin1 ". string(tlib#win#List())
+endf
+
+
+function! s:prototype.Suspend() dict "{{{3
+    call tlib#agent#Suspend(self, self.rv)
 endf
 

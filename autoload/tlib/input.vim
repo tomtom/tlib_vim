@@ -1,10 +1,7 @@
-" input.vim
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Created:     2007-06-30.
-" @Last Change: 2014-01-23.
-" @Revision:    0.0.1283
+" @Revision:    1315
 
 
 " :filedoc:
@@ -345,6 +342,16 @@ function! tlib#input#ListW(world, ...) "{{{3
             " TLogVAR time01, time01 - time0
             try
                 call s:RunStateHandlers(world)
+
+                " if exists('b:tlib_world_event')
+                "     let event = b:tlib_world_event
+                "     unlet! b:tlib_world_event
+                "     if event == 'WinLeave'
+                "         " let world.resume_state = world.state
+                "         let world = tlib#agent#Suspend(world, world.rv)
+                "         break
+                "     endif
+                " endif
 
                 " let time02 = str2float(reltimestr(reltime()))  " DBG
                 " TLogVAR time02, time02 - time0
@@ -843,6 +850,9 @@ function! s:Init(world, cmd) "{{{3
         else
             call a:world.Retrieve(1)
         endif
+        " if !empty(a:world.resume_state)
+        "     let a:world.state = a:world.resume_state
+        " endif
     elseif !a:world.initialized
         " TLogVAR a:world.initialized, a:world.win_wnr, a:world.bufnr
         let a:world.filetype = &filetype
