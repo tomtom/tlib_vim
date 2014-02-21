@@ -123,10 +123,18 @@ endf
 " or does not exist, create it calling a generator function.
 function! tlib#cache#Value(cfile, generator, ftime, ...) "{{{3
     if !filereadable(a:cfile) || (a:ftime != 0 && getftime(a:cfile) < a:ftime)
-        let args = a:0 >= 1 ? a:1 : []
-        let val = call(a:generator, args)
-        " TLogVAR a:generator, args, val
-        call tlib#cache#Save(a:cfile, {'val': val})
+        if empty(a:generator) && a:0 >= 1
+            TLogVAR a:1
+            let val = a:1
+        else
+            let args = a:0 >= 1 ? a:1 : []
+            TLogVAR a:generator, args
+            let val = call(a:generator, args)
+        endif
+        TLogVAR val
+        let cval = {'val': val}
+        TLogVAR cval
+        call tlib#cache#Save(a:cfile, cval)
         return val
     else
         let val = tlib#cache#Get(a:cfile)
