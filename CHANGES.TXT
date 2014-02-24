@@ -472,3 +472,22 @@ version: "1.07"
   - tlib#file#Join(): strip_slashes defaults to 1
   MD5 checksum: 6c8fa96fd3747be05df848ee93dd789b
 
+version: "1.08"
+  - list#input: Improved support for file indicators (closes #17)
+  - tlib#char#Get(): Optionally, also return mod
+  - tlib#input#ListW: Use #DisplayFormat(world.list)
+  - Renamed cnfx filter to glob & minor filter-related enhancements
+  - list#input: Make help available as command; help cannot be called via ?
+  - list#input: Improved help message
+  - list#input: Support Home & End keys
+  - list#input: Added glob filter
+  - tlib#agent#ShowInfo: Show full filename
+  - tlib#cmd#BrowseOutputWithCallback: Support calling callback with multiple results
+  - tlib#cmd#ParseScriptname: Properly parse results from :scriptnames
+  - tlib#tab#Set()
+  - Prepare for proper handling of scratch_split == -1
+  - tlib#vim#CopyFunction()
+  - tlib#cache#Value(): If generator is empty, use the optional argument as start value
+  - tlib#persistent#Get() refers to tlib#cache#Get()
+  MD5 checksum: 459ec620168d1ae9b18c69eb3f991832
+
