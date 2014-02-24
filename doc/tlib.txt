@@ -60,6 +60,7 @@ Contents~
         tlib#vim#Maximize ...................... |tlib#vim#Maximize()|
         tlib#vim#RestoreWindow ................. |tlib#vim#RestoreWindow()|
         g:tlib#vim#use_wmctrl .................. |g:tlib#vim#use_wmctrl|
+        tlib#vim#CopyFunction .................. |tlib#vim#CopyFunction()|
         tlib#progressbar#Init .................. |tlib#progressbar#Init()|
         tlib#progressbar#Display ............... |tlib#progressbar#Display()|
         tlib#progressbar#Restore ............... |tlib#progressbar#Restore()|
@@ -96,6 +97,9 @@ Contents~
         tlib#char#Get .......................... |tlib#char#Get()|
         tlib#char#IsAvailable .................. |tlib#char#IsAvailable()|
         tlib#char#GetWithTimeout ............... |tlib#char#GetWithTimeout()|
+        g:tlib#Filter_glob#seq ................. |g:tlib#Filter_glob#seq|
+        g:tlib#Filter_glob#char ................ |g:tlib#Filter_glob#char|
+        tlib#Filter_glob#New ................... |tlib#Filter_glob#New()|
         g:tlib_scratch_pos ..................... |g:tlib_scratch_pos|
         g:tlib#scratch#hidden .................. |g:tlib#scratch#hidden|
         tlib#scratch#UseScratch ................ |tlib#scratch#UseScratch()|
@@ -242,6 +246,7 @@ Contents~
         g:tlib_inputlist_shortmessage .......... |g:tlib_inputlist_shortmessage|
         tlib#World#New ......................... |tlib#World#New()|
         prototype.PrintLines
+        prototype.Suspend
         tlib#tab#BufMap ........................ |tlib#tab#BufMap()|
         tlib#tab#TabWinNr ...................... |tlib#tab#TabWinNr()|
         tlib#tab#Set ........................... |tlib#tab#Set()|
@@ -485,7 +490,7 @@ tlib#persistent#Dir(?mode = 'bg')
 tlib#persistent#Filename(type, ?file=%, ?mkdir=0)
 
                                                     *tlib#persistent#Get()*
-tlib#persistent#Get(cfile)
+tlib#persistent#Get(...)
 
                                                     *tlib#persistent#Value()*
 tlib#persistent#Value(...)
@@ -533,6 +538,9 @@ g:tlib#vim#use_wmctrl          (default: executable('wmctrl'))
     windows. Some window managers have problem coping with the 
     default method of setting 'lines' and 'columns' to a large 
     value.
+
+                                                    *tlib#vim#CopyFunction()*
+tlib#vim##CopyFunction(old, new, overwrite=0)
 
 
 ========================================================================
@@ -766,6 +774,25 @@ tlib#char#GetWithTimeout(timeout, ...)
 
 
 ========================================================================
+autoload/tlib/Filter_glob.vim~
+
+                                                    *g:tlib#Filter_glob#seq*
+g:tlib#Filter_glob#seq         (default: '*')
+    A character that should be expanded to '\.\{-}'.
+
+                                                    *g:tlib#Filter_glob#char*
+g:tlib#Filter_glob#char        (default: '?')
+    A character that should be expanded to '\.\?'.
+
+                                                    *tlib#Filter_glob#New()*
+tlib#Filter_glob#New(...)
+    The same as |tlib#Filter_cnf#New()| but a a customizable character 
+    |see tlib#Filter_glob#seq| is expanded to '\.\{-}' and 
+    |g:tlib#Filter_glob#char| is expanded to '\.'.
+    The pattern is a '/\V' very no-'/magic' regexp pattern.
+
+
+========================================================================
 autoload/tlib/scratch.vim~
 
                                                     *g:tlib_scratch_pos*
@@ -863,7 +890,7 @@ tlib#cache#Filename(type, ?file=%, ?mkdir=0, ?dir='')
 tlib#cache#Save(cfile, dictionary)
 
                                                     *tlib#cache#Get()*
-tlib#cache#Get(cfile)
+tlib#cache#Get(cfile, ...)
 
                                                     *tlib#cache#Value()*
 tlib#cache#Value(cfile, generator, ftime, ...)
@@ -1592,6 +1619,8 @@ g:tlib_inputlist_shortmessage  (default: 0)
 tlib#World#New(...)
 
 prototype.PrintLines
+
+prototype.Suspend
 
 
 ========================================================================
