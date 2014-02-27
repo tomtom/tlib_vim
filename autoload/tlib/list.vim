@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2011-03-18.
-" @Revision:    36
+" @Revision:    42
 
 
 """ List related functions {{{1
@@ -140,15 +140,29 @@ endf
 
 
 function! tlib#list#Uniq(list, ...) "{{{3
-    TVarArg ['get_value', '']
+    TVarArg ['get_value', ''], ['remove_empty', 0]
     let s:uniq_values = {}
+    let empty = []
+    if remove_empty
+        call filter(a:list, '!empty(v:val)')
+    else
+        for item in filter(copy(a:list), '!empty(v:val)')
+            if index(empty, item) == -1
+                call add(empty, item)
+            endif
+        endfor
+    endif
     if empty(get_value)
         call filter(a:list, 's:UniqValue(v:val)')
     else
         call filter(a:list, 's:UniqValue(eval(printf(get_value, string(v:val))))')
     endif
     unlet s:uniq_values
-    return a:list
+    if remove_empty
+        return a:list
+    else
+        return extend(a:list, empty)
+    endif
 endf
 
 
