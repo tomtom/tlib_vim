@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2013-09-25.
-" @Revision:    0.1.231
+" @Revision:    0.1.243
 
 
 " The cache directory. If empty, use |tlib#dir#MyRuntime|.'/cache'.
@@ -112,9 +112,32 @@ function! tlib#cache#Filename(type, ...) "{{{3
 endf
 
 
+let s:timestamps = {}
+
+
+function! s:SetTimestamp(cfile, type) "{{{3
+    if !has_key(s:timestamps, a:cfile)
+        let s:timestamps[a:cfile] = {}
+    endif
+    let s:timestamps[a:cfile].atime = getftime(a:cfile)
+    let s:timestamps[a:cfile][a:type] = s:timestamps[a:cfile].atime
+endf
+
+
 function! tlib#cache#Save(cfile, dictionary) "{{{3
     " TLogVAR a:cfile, a:dictionary
-    call tlib#persistent#Save(a:cfile, a:dictionary)
+    if !empty(a:cfile)
+        " TLogVAR a:dictionary
+        call writefile([string(a:dictionary)], a:cfile, 'b')
+        call s:SetTimestamp(a:cfile, 'write')
+    endif
+endf
+
+
+function! tlib#cache#MTime(cfile) "{{{3
+    let mtime = {'mtime': getftime(a:cfile)}
+    let mtime = extend(mtime, get(s:timestamps, a:cfile, {}))
+    return mtime
 endf
 
 
@@ -122,6 +145,7 @@ function! tlib#cache#Get(cfile, ...) "{{{3
     call tlib#cache#MaybePurge()
     if !empty(a:cfile) && filereadable(a:cfile)
         let val = readfile(a:cfile, 'b')
+        call s:SetTimestamp(a:cfile, 'read')
         return eval(join(val, "\n"))
     else
         let default = a:0 >= 1 ? a:1 : {}
