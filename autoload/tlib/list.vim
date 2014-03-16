@@ -4,7 +4,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
 " @Last Change: 2011-03-18.
-" @Revision:    42
+" @Revision:    43
 
 
 """ List related functions {{{1
@@ -146,7 +146,7 @@ function! tlib#list#Uniq(list, ...) "{{{3
     if remove_empty
         call filter(a:list, '!empty(v:val)')
     else
-        for item in filter(copy(a:list), '!empty(v:val)')
+        for item in filter(copy(a:list), 'empty(v:val)')
             if index(empty, item) == -1
                 call add(empty, item)
             endif
