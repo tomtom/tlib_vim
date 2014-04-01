@@ -502,3 +502,14 @@ version: "1.08"
   MD5 checksum: b5fb4107d63930c2c8b1f0f6b3a7ff07
 version: "1.09"
 
+  - tlib#cache#Filename(): Use sha256() for VIM >= 7.4
+  - tlib#cache#Value(): Undo previous hack
+  - tlib#list#Uniq(): option to remove empty values
+  - tlib#cache#MTime(); tlib#persistent#Save() calls tlib#cache#Save()
+  - tlib#input#ListW: Temporarily set noshowmode
+  - tlib#list#Uniq(): Fix handling of empty items
+  - lis picker: Remove <C-Space> from help
+  - tlib#list#Uniq(): Implementation based on syntastic#util#unique(list) by scrooloose
+  MD5 checksum: b5fb4107d63930c2c8b1f0f6b3a7ff07
+version: "1.09"
+
