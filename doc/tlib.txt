@@ -2066,7 +2066,7 @@ tlib#string#RemoveBackslashes(text, ?chars=' ')
     chars).
 
                                                     *tlib#string#Chomp()*
-tlib#string#Chomp(string)
+tlib#string#Chomp(string, ?max=0)
 
                                                     *tlib#string#Format()*
 tlib#string#Format(template, dict)
