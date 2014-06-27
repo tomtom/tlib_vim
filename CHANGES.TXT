@@ -513,3 +513,7 @@ version: "1.09"
   MD5 checksum: b5fb4107d63930c2c8b1f0f6b3a7ff07
 version: "1.09"
 
+  - tlib#string#Chomp: Optional argument: max number of chars that should be removed
+  MD5 checksum: 8c1b94e25045580874e2f892d509291b
+version: "1.10"
+
