@@ -2,8 +2,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2012-03-08.
-" @Last Change: 2014-06-30.
-" @Revision:    127
+" @Last Change: 2014-07-01.
+" @Revision:    131
 
 
 " A dictionarie of supported VCS (currently: git, hg, svn, bzr).
@@ -49,7 +49,13 @@ if !empty(g:tlib#vcs#check)
             let g:tlib#vcs#executables[s:cmd] = executable(s:cmd1) ? s:cmd1 : ''
         endif
     endfor
+    unlet! s:cmd s:def s:cmd1
 endif
+
+
+function! tlib#vcs#Executable(type) "{{{3
+    return get(g:tlib#vcs#executables, a:type, '')
+endf
 
 
 function! tlib#vcs#FindVCS(filename) "{{{3
