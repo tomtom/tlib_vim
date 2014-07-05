@@ -517,3 +517,12 @@ version: "1.09"
   MD5 checksum: 8c1b94e25045580874e2f892d509291b
 version: "1.10"
 
+  - tlib#vcs#FindVCS(filename): Wrong parameters to fnamemodifiy if filename is a directory
+  - Some system-related functions (e.g. facilitate use of cygwin tools)
+  - tlib#arg#StringAsKeyArgsEqual(), tlib#arg#StringAsKeyArgs(): Support "key=val" type argument lists
+  - tlib#vcs#Executable()
+  - scripts/create_crc_table.rb
+  - tlib#var#Get(): For namespaces other than global, replace "#" with "_"
+  MD5 checksum: 4a33f2f23e1fc6600b32e7f8323e001e
+version: "1.11"
+
