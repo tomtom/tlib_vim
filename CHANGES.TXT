@@ -526,3 +526,9 @@ version: "1.10"
   MD5 checksum: 4a33f2f23e1fc6600b32e7f8323e001e
 version: "1.11"
 
+  - tlib#list#ToDictionary()
+  - tlib#dir#CanonicName(): Use tlib#file#Canonic()
+  - tlib#file#Canonic()
+  MD5 checksum: 7995ab58f31eb6673d20deab8761838e
+version: "1.12"
+
