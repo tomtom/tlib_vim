@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1393
+" @Revision:    1394
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -688,7 +688,7 @@ endf
 function! s:prototype.SetInitialFilter(filter) dict "{{{3
     " let self.initial_filter = [[''], [a:filter]]
     if type(a:filter) == 3
-        let self.initial_filter = copy(a:filter)
+        let self.initial_filter = deepcopy(a:filter)
     else
         let self.initial_filter = [[a:filter]]
     endif
