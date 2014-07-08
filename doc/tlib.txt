@@ -77,6 +77,7 @@ Contents~
         tlib#list#RemoveAll .................... |tlib#list#RemoveAll()|
         tlib#list#Zip .......................... |tlib#list#Zip()|
         tlib#list#Uniq ......................... |tlib#list#Uniq()|
+        tlib#list#ToDictionary ................. |tlib#list#ToDictionary()|
         tlib#cmd#OutputAsList .................. |tlib#cmd#OutputAsList()|
         tlib#cmd#BrowseOutput .................. |tlib#cmd#BrowseOutput()|
         tlib#cmd#BrowseOutputWithCallback ...... |tlib#cmd#BrowseOutputWithCallback()|
@@ -240,6 +241,7 @@ Contents~
         tlib#file#Join ......................... |tlib#file#Join()|
         tlib#file#Relative ..................... |tlib#file#Relative()|
         tlib#file#Absolute ..................... |tlib#file#Absolute()|
+        tlib#file#Canonic ...................... |tlib#file#Canonic()|
         tlib#file#With ......................... |tlib#file#With()|
         g:tlib#sys#windows ..................... |g:tlib#sys#windows|
         g:tlib#sys#null ........................ |g:tlib#sys#null|
@@ -670,6 +672,9 @@ tlib#list#Zip(lists, ?default='')
 
                                                     *tlib#list#Uniq()*
 tlib#list#Uniq(list, ...)
+
+                                                    *tlib#list#ToDictionary()*
+tlib#list#ToDictionary(list, default, ...)
 
 
 ========================================================================
@@ -1586,6 +1591,9 @@ tlib#file#Relative(filename, basedir)
 
                                                     *tlib#file#Absolute()*
 tlib#file#Absolute(filename, ...)
+
+                                                    *tlib#file#Canonic()*
+tlib#file#Canonic(filename, ...)
 
                                                     *tlib#file#With()*
 tlib#file#With(fcmd, bcmd, files, ?world={})
