@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1394
+" @Revision:    1395
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -815,7 +815,11 @@ function! s:prototype.UseInputListScratch() dict "{{{3
     endif
     if !exists('w:tlib_list_init')
         " TLogVAR scratch
-        syntax match InputlListIndex /^\d\+:/
+        if has_key(self, 'index_next_syntax')
+            exec 'syntax match InputlListIndex /^\d\+:\s/ nextgroup='. self.index_next_syntax
+        else
+            syntax match InputlListIndex /^\d\+:\s/
+        endif
         syntax match InputlListCursor /^\d\+\* .*$/ contains=InputlListIndex
         syntax match InputlListSelected /^\d\+# .*$/ contains=InputlListIndex
         hi def link InputlListIndex Constant
