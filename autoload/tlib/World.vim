@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1395
+" @Revision:    1396
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -1123,9 +1123,10 @@ function! s:prototype.DisplayList(...) dict "{{{3
         if self.state =~ '\<display\>'
             call self.Resize(self.GetResize(ll), eval(get(self, 'resize_vertical', 0)))
             call tlib#normal#WithRegister('gg"tdG', 't')
+            let lines = copy(list)
+            " let lines = map(lines, 'substitute(v:val, ''[[:cntrl:][:space:]]'', " ", "g")')
             let w = winwidth(0) - &fdc
             " let w = winwidth(0) - &fdc - 1
-            let lines = copy(list)
             let lines = map(lines, 'printf("%-'. w .'.'. w .'s", substitute(v:val, ''[[:cntrl:][:space:]]'', " ", "g"))')
             " TLogVAR lines
             call append(0, lines)
