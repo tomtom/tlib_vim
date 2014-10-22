@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1330
+" @Revision:    1334
 
 
 " :filedoc:
@@ -759,7 +759,6 @@ function! tlib#input#ListW(world, ...) "{{{3
                 return ''
             endif
         elseif !empty(world.return_agent)
-            " TLog "return_agent"
             " TLogDBG 'return agent'
             " TLogVAR world.return_agent
             call world.CloseScratch()
