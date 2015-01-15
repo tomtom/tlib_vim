@@ -1,15 +1,7 @@
-" file.vim
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Created:     2007-06-30.
-" @Last Change: 2014-07-07.
-" @Revision:    0.0.150
-
-if &cp || exists("loaded_tlib_file_autoload")
-    finish
-endif
-let loaded_tlib_file_autoload = 1
+" @Revision:    151
 
 
 """ File related {{{1
