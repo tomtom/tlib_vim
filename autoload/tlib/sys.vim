@@ -66,7 +66,7 @@ endf
 if !exists('g:tlib#sys#check_cygpath')
     " If true, check whether we have to convert a path via cyppath -- 
     " see |tlib#sys#MaybeUseCygpath|
-    let g:tlib#sys#check_cygpath = g:tlib#sys#windows && tlib#sys#IsExecutable('cygpath')   "{{{2
+    let g:tlib#sys#check_cygpath = g:tlib#sys#windows && tlib#sys#IsExecutable('cygpath', 1)   "{{{2
 endif
 
 
