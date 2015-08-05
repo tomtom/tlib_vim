@@ -1,6 +1,6 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2014-06-30.
+" @Last Change: 2015-08-05.
 " @Revision:    25
 
 
@@ -12,6 +12,35 @@ endif
 if !exists('g:tlib#sys#null')
     let g:tlib#sys#null = g:tlib#sys#windows ? 'NUL' : (filereadable('/dev/null') ? '/dev/null' : '')    "{{{2
 endif
+
+
+let s:cygwin = {}
+
+function! tlib#sys#IsCygwinBin(cmd) "{{{3
+    " TLogVAR a:cmd
+    if !g:tlib#sys#windows
+        return 0
+    elseif has_key(s:cygwin, a:cmd)
+        let rv = s:cygwin[a:cmd]
+    else
+        if !tlib#sys#IsExecutable('cygpath', 1) || !tlib#sys#IsExecutable('which', 1)
+            let rv = 0
+        else
+            let which = substitute(system('which '. shellescape(a:cmd)), '\n$', '', '')
+            " echom "DBG which:" which
+            if which =~ '^/'
+                let filename = system('cygpath -ma '. shellescape(which))
+                " echom "DBG filename:" filename
+                let rv = filename =~ g:tlib#sys#cygwin_path_rx
+            else
+                let rv = 0
+            endif
+        endif
+        let s:cygwin[a:cmd] = rv
+    endif
+    " TLogVAR rv
+    return rv
+endf
 
 
 let s:executables = {}
@@ -53,35 +82,6 @@ if !exists('g:tlib#sys#cygwin_expr')
     " expression.
     let g:tlib#sys#cygwin_expr = '"bash -c ''". escape(%s, "''\\") ."''"'   "{{{2
 endif
-
-
-let s:cygwin = {}
-
-function! tlib#sys#IsCygwinBin(cmd) "{{{3
-    " TLogVAR a:cmd
-    if !g:tlib#sys#windows
-        return 0
-    elseif has_key(s:cygwin, a:cmd)
-        let rv = s:cygwin[a:cmd]
-    else
-        if !tlib#sys#IsExecutable('cygpath', 1) || !tlib#sys#IsExecutable('which', 1)
-            let rv = 0
-        else
-            let which = substitute(system('which '. shellescape(a:cmd)), '\n$', '', '')
-            " echom "DBG which:" which
-            if which =~ '^/'
-                let filename = system('cygpath -ma '. shellescape(which))
-                " echom "DBG filename:" filename
-                let rv = filename =~ g:tlib#sys#cygwin_path_rx
-            else
-                let rv = 0
-            endif
-        endif
-        let s:cygwin[a:cmd] = rv
-    endif
-    " TLogVAR rv
-    return rv
-endf
 
 
 function! tlib#sys#GetCmd(cmd) "{{{3
