@@ -552,3 +552,14 @@ version: "1.13"
   MD5 checksum: 7dd8b17a1a5b555df979381dcbd4c9aa
 version: "1.13"
 
+version: "1.14"
+  - FIX #18: Make sure the scratch isn't readonly
+  - FIX: display filter (properly handle backslashes)
+  - Remove loaded_* guard from autoload files
+  - tlib#notify#Echo(): minor changes
+  - tlib#file#Edit() (used by tlib#agent#ViewFile)
+  - tlib#buffer#GetList(): Buffer numbers are converted to numbers
+  - tlib#sys: Change order of functions (move tlib#sys#IsCygwinBin to the (possibly FIX #19)
+  - g:tlib#sys#check_cygpath: Call tlib#sys#IsExecutable('cygpath', 1)  (possibly FIX #19)
+  MD5 checksum: 2cf6386218736a2d09db43c8e751e5a4
+
