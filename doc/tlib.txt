@@ -239,19 +239,23 @@ Contents~
         tlib#input#Edit ........................ |tlib#input#Edit()|
         tlib#input#Dialog ...................... |tlib#input#Dialog()|
         tlib#number#ConvertBase ................ |tlib#number#ConvertBase()|
+        g:tlib#file#drop ....................... |g:tlib#file#drop|
+        g:tlib#file#use_tabs ................... |g:tlib#file#use_tabs|
+        g:tlib#file#edit_cmds .................. |g:tlib#file#edit_cmds|
         tlib#file#Split ........................ |tlib#file#Split()|
         tlib#file#Join ......................... |tlib#file#Join()|
         tlib#file#Relative ..................... |tlib#file#Relative()|
         tlib#file#Absolute ..................... |tlib#file#Absolute()|
         tlib#file#Canonic ...................... |tlib#file#Canonic()|
         tlib#file#With ......................... |tlib#file#With()|
+        tlib#file#Edit ......................... |tlib#file#Edit()|
         g:tlib#sys#windows ..................... |g:tlib#sys#windows|
         g:tlib#sys#null ........................ |g:tlib#sys#null|
+        tlib#sys#IsCygwinBin ................... |tlib#sys#IsCygwinBin()|
         tlib#sys#IsExecutable .................. |tlib#sys#IsExecutable()|
         g:tlib#sys#check_cygpath ............... |g:tlib#sys#check_cygpath|
         g:tlib#sys#cygwin_path_rx .............. |g:tlib#sys#cygwin_path_rx|
         g:tlib#sys#cygwin_expr ................. |g:tlib#sys#cygwin_expr|
-        tlib#sys#IsCygwinBin ................... |tlib#sys#IsCygwinBin()|
         tlib#sys#GetCmd ........................ |tlib#sys#GetCmd()|
         tlib#sys#MaybeUseCygpath ............... |tlib#sys#MaybeUseCygpath()|
         tlib#sys#ConvertPath ................... |tlib#sys#ConvertPath()|
@@ -1582,6 +1586,16 @@ tlib#number#ConvertBase(num, base, ...)
 ========================================================================
 autoload/tlib/file.vim~
 
+                                                    *g:tlib#file#drop*
+g:tlib#file#drop               (default: has('gui'))
+    If true, use |:drop| to edit loaded buffers (only available with GUI).
+
+                                                    *g:tlib#file#use_tabs*
+g:tlib#file#use_tabs           (default: 0)
+
+                                                    *g:tlib#file#edit_cmds*
+g:tlib#file#edit_cmds          (default: g:tlib#file#use_tabs ? {'buffer': 'tab split | buffer', 'edit': 'tabedit'} : {})
+
                                                     *tlib#file#Split()*
 tlib#file#Split(filename)
     EXAMPLES: >
@@ -1612,6 +1626,11 @@ tlib#file#Canonic(filename, ...)
                                                     *tlib#file#With()*
 tlib#file#With(fcmd, bcmd, files, ?world={})
 
+                                                    *tlib#file#Edit()*
+tlib#file#Edit(fileid)
+    Return 0 if the file isn't readable/doesn't exist.
+    Otherwise return 1.
+
 
 ========================================================================
 autoload/tlib/sys.vim~
@@ -1622,11 +1641,14 @@ g:tlib#sys#windows             (default: &shell !~ 'sh' && (has('win16') || has(
                                                     *g:tlib#sys#null*
 g:tlib#sys#null                (default: g:tlib#sys#windows ? 'NUL' : (filereadable('/dev/null') ? '/dev/null' : ''))
 
+                                                    *tlib#sys#IsCygwinBin()*
+tlib#sys#IsCygwinBin(cmd)
+
                                                     *tlib#sys#IsExecutable()*
 tlib#sys#IsExecutable(cmd, ...)
 
                                                     *g:tlib#sys#check_cygpath*
-g:tlib#sys#check_cygpath       (default: g:tlib#sys#windows && tlib#sys#IsExecutable('cygpath'))
+g:tlib#sys#check_cygpath       (default: g:tlib#sys#windows && tlib#sys#IsExecutable('cygpath', 1))
     If true, check whether we have to convert a path via cyppath -- 
     see |tlib#sys#MaybeUseCygpath|
 
@@ -1639,9 +1661,6 @@ g:tlib#sys#cygwin_path_rx      (default: '/cygwin/')
 g:tlib#sys#cygwin_expr         (default: '"bash -c ''". escape(%s, "''\\") ."''"')
     For cygwin binaries, convert command calls using this vim 
     expression.
-
-                                                    *tlib#sys#IsCygwinBin()*
-tlib#sys#IsCygwinBin(cmd)
 
                                                     *tlib#sys#GetCmd()*
 tlib#sys#GetCmd(cmd)
