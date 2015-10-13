@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    151
+" @Revision:    163
 
 
 if !exists('g:tlib#file#drop')
@@ -19,6 +19,10 @@ if !exists('g:tlib#file#edit_cmds')
     let g:tlib#file#edit_cmds = g:tlib#file#use_tabs ? {'buffer': 'tab split | buffer', 'edit': 'tabedit'} : {}  "{{{2
 endif
 
+
+if !exists('g:tlib#file#absolute_filename_rx')
+    let g:tlib#file#absolute_filename_rx = '^\~\?[\/]'   "{{{2
+endif
 
 """ File related {{{1
 " For the following functions please see ../../test/tlib.vim for examples.
@@ -44,21 +48,32 @@ function! tlib#file#Split(filename) "{{{3
 endf
 
 
-" :display: tlib#file#Join(filename_parts, ?strip_slashes=1)
+" :display: tlib#file#Join(filename_parts, ?strip_slashes=1, ?maybe_absolute=0)
 " EXAMPLES: >
 "   tlib#file#Join(['foo', 'bar', 'filename.txt'])
 "   => 'foo/bar/filename.txt'
 function! tlib#file#Join(filename_parts, ...) "{{{3
-    TVarArg ['strip_slashes', 1]
+    TVarArg ['strip_slashes', 1], 'maybe_absolute'
     " TLogVAR a:filename_parts, strip_slashes
+    if maybe_absolute
+        let filename_parts = []
+        for part in a:filename_parts
+            if part =~ g:tlib#file#absolute_filename_rx
+                let filename_parts = []
+            endif
+            call add(filename_parts, part)
+        endfor
+    else
+        let filename_parts = a:filename_parts
+    endif
     if strip_slashes
         " let rx    = tlib#rx#Escape(g:tlib#dir#sep) .'$'
         let rx    = '[/\\]\+$'
-        let parts = map(copy(a:filename_parts), 'substitute(v:val, rx, "", "")')
+        let parts = map(copy(filename_parts), 'substitute(v:val, rx, "", "")')
         " TLogVAR parts
         return join(parts, g:tlib#dir#sep)
     else
-        return join(a:filename_parts, g:tlib#dir#sep)
+        return join(filename_parts, g:tlib#dir#sep)
     endif
 endf
 
