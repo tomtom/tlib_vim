@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2011-03-18.
-" @Revision:    57
+" @Last Change: 2015-10-13.
+" @Revision:    59
 
 
 """ List related functions {{{1
@@ -153,6 +153,7 @@ function! tlib#list#Uniq(list, ...) "{{{3
                 let seen[e] = 1
                 call add(uniques, e)
             endif
+            unlet e
         endfor
     else
         for e in a:list
@@ -161,6 +162,7 @@ function! tlib#list#Uniq(list, ...) "{{{3
                 let seen[v] = 1
                 call add(uniques, e)
             endif
+            unlet e
         endfor
     endif
     return uniques
