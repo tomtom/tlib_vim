@@ -1,7 +1,52 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-08-05.
-" @Revision:    25
+" @Last Change: 2015-10-13.
+" @Revision:    38
+
+
+if !exists('g:tlib#sys#special_protocols')
+    " A list of |regexp|s matching protocol names that should be handled 
+    " by |g:tlib#sys#system_browser|.
+    " CAVEAT: Must be a |\V| |regexp|.
+    let g:tlib#sys#special_protocols = ['https\?', 'nntp', 'mailto']   "{{{2
+endif
+
+
+if !exists('g:tlib#sys#special_suffixes')
+    " A list of |regexp|s matching suffixes that should be handled by 
+    " |g:tlib#sys#system_browser|.
+    " CAVEAT: Must be a |\V| |regexp|.
+    let g:tlib#sys#special_suffixes = ['xlsx\?', 'docx\?', 'pptx\?', 'accdb', 'mdb', 'sqlite', 'pdf', 'jpg', 'png', 'gif']    "{{{2
+endif
+
+
+if !exists('g:tlib#sys#system_rx')
+    " Open links matching this |regexp| with |g:tlib#sys#system_browser|.
+    " CAVEAT: Must be a |\V| |regexp|.
+    let g:tlib#sys#system_rx = printf('\V\%(\^\%(%s\):\|.\%(%s\)\)', join(g:tlib#sys#special_protocols, '\|'), join(g:tlib#sys#special_suffixes, '\|'))   "{{{2
+endif
+
+
+if !exists("g:tlib#sys#system_browser")
+    if exists('g:netrw_browsex_viewer')
+        " Open files in the system browser.
+        " :read: let g:tlib#sys#system_browser = ... "{{{2
+        let g:tlib#sys#system_browser = "exec 'silent !'. g:netrw_browsex_viewer shellescape('%s')" "{{{2
+    elseif has("win32") || has("win16") || has("win64")
+        " let g:tlib#sys#system_browser = "exec 'silent ! start \"\"' shellescape('%s')"
+        let g:tlib#sys#system_browser = "exec 'silent ! RunDll32.EXE URL.DLL,FileProtocolHandler' shellescape('%s')"
+    elseif has("mac")
+        let g:tlib#sys#system_browser = "exec 'silent !open' shellescape('%s')"
+    elseif exists('$XDG_CURRENT_DESKTOP') && !empty($XDG_CURRENT_DESKTOP)
+        let g:tlib#sys#system_browser = "exec 'silent !xdg-open' shellescape('%s') .'&'"
+    elseif $GNOME_DESKTOP_SESSION_ID != "" || $DESKTOP_SESSION == 'gnome'
+        let g:tlib#sys#system_browser = "exec 'silent !gnome-open' shellescape('%s')"
+    elseif exists("$KDEDIR") && !empty($KDEDIR)
+        let g:tlib#sys#system_browser = "exec 'silent !kfmclient exec' shellescape('%s')"
+    else
+        let g:tlib#sys#system_browser = ''
+    endif
+endif
 
 
 if !exists('g:tlib#sys#windows')
@@ -123,5 +168,31 @@ function! tlib#sys#FileArgs(cmd, files) "{{{3
         let files = map(copy(a:files), 'has_key(s:native_filenames, v:val) ? s:native_filenames[v:val] : tlib#sys#CygPath(v:val)')
         return files
     endif
+endf
+
+
+" Check whether filename matches |g:tlib#sys#system_rx|, i.e. whether it 
+" is a special file that should not be opened in vim.
+function! tlib#sys#IsSpecial(filename) abort "{{{3
+    return a:filename =~ g:tlib#sys#system_rx
+endf
+
+
+" Open filename with the default OS application (see 
+" |g:tlib#sys#system_browser|), if |tlib#sys#IsSpecial()| return 1. 
+" Returns 1 if successful or 0 otherwise.
+function! tlib#sys#Open(filename) abort "{{{3
+    if !empty(g:tlib#sys#system_browser) && tlib#sys#IsSpecial(a:filename)
+        try
+            let cmd = printf(g:tlib#sys#system_browser, escape(a:filename, ' %#!'))
+            exec cmd
+            return 1
+        catch
+            echohl ErrorMsg
+            echom v:exception
+            echohl NONE
+        endtry
+    endif
+    return 0
 endf
 
