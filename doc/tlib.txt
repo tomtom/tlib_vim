@@ -242,6 +242,7 @@ Contents~
         g:tlib#file#drop ....................... |g:tlib#file#drop|
         g:tlib#file#use_tabs ................... |g:tlib#file#use_tabs|
         g:tlib#file#edit_cmds .................. |g:tlib#file#edit_cmds|
+        g:tlib#file#absolute_filename_rx ....... |g:tlib#file#absolute_filename_rx|
         tlib#file#Split ........................ |tlib#file#Split()|
         tlib#file#Join ......................... |tlib#file#Join()|
         tlib#file#Relative ..................... |tlib#file#Relative()|
@@ -249,6 +250,11 @@ Contents~
         tlib#file#Canonic ...................... |tlib#file#Canonic()|
         tlib#file#With ......................... |tlib#file#With()|
         tlib#file#Edit ......................... |tlib#file#Edit()|
+        g:tlib#sys#special_protocols ........... |g:tlib#sys#special_protocols|
+        g:tlib#sys#special_suffixes ............ |g:tlib#sys#special_suffixes|
+        g:tlib#sys#system_rx ................... |g:tlib#sys#system_rx|
+        g:tlib#sys#system_browser .............. |g:tlib#sys#system_browser|
+        g:tlib#sys#system_browser .............. |g:tlib#sys#system_browser|
         g:tlib#sys#windows ..................... |g:tlib#sys#windows|
         g:tlib#sys#null ........................ |g:tlib#sys#null|
         tlib#sys#IsCygwinBin ................... |tlib#sys#IsCygwinBin()|
@@ -260,6 +266,8 @@ Contents~
         tlib#sys#MaybeUseCygpath ............... |tlib#sys#MaybeUseCygpath()|
         tlib#sys#ConvertPath ................... |tlib#sys#ConvertPath()|
         tlib#sys#FileArgs ...................... |tlib#sys#FileArgs()|
+        tlib#sys#IsSpecial ..................... |tlib#sys#IsSpecial()|
+        tlib#sys#Open .......................... |tlib#sys#Open()|
         tlib#paragraph#GetMetric ............... |tlib#paragraph#GetMetric()|
         tlib#paragraph#Move .................... |tlib#paragraph#Move()|
         g:tlib_inputlist_pct ................... |g:tlib_inputlist_pct|
@@ -1596,6 +1604,9 @@ g:tlib#file#use_tabs           (default: 0)
                                                     *g:tlib#file#edit_cmds*
 g:tlib#file#edit_cmds          (default: g:tlib#file#use_tabs ? {'buffer': 'tab split | buffer', 'edit': 'tabedit'} : {})
 
+                                                    *g:tlib#file#absolute_filename_rx*
+g:tlib#file#absolute_filename_rx (default: '^\~\?[\/]')
+
                                                     *tlib#file#Split()*
 tlib#file#Split(filename)
     EXAMPLES: >
@@ -1604,7 +1615,7 @@ tlib#file#Split(filename)
 <
 
                                                     *tlib#file#Join()*
-tlib#file#Join(filename_parts, ?strip_slashes=1)
+tlib#file#Join(filename_parts, ?strip_slashes=1, ?maybe_absolute=0)
     EXAMPLES: >
       tlib#file#Join(['foo', 'bar', 'filename.txt'])
       => 'foo/bar/filename.txt'
@@ -1634,6 +1645,30 @@ tlib#file#Edit(fileid)
 
 ========================================================================
 autoload/tlib/sys.vim~
+
+                                                    *g:tlib#sys#special_protocols*
+g:tlib#sys#special_protocols   (default: ['https\?', 'nntp', 'mailto'])
+    A list of |regexp|s matching protocol names that should be handled 
+    by |g:tlib#sys#system_browser|.
+    CAVEAT: Must be a |\V| |regexp|.
+
+                                                    *g:tlib#sys#special_suffixes*
+g:tlib#sys#special_suffixes    (default: ['xlsx\?', 'docx\?', 'pptx\?', 'accdb', 'mdb', 'sqlite', 'pdf', 'jpg', 'png', 'gif'])
+    A list of |regexp|s matching suffixes that should be handled by 
+    |g:tlib#sys#system_browser|.
+    CAVEAT: Must be a |\V| |regexp|.
+
+                                                    *g:tlib#sys#system_rx*
+g:tlib#sys#system_rx           (default: printf('\V\%(\^\%(%s\):\|.\%(%s\)\)', join(g:tlib#sys#special_protocols, '\|'), join(g:tlib#sys#special_suffixes, '\|')))
+    Open links matching this |regexp| with |g:tlib#sys#system_browser|.
+    CAVEAT: Must be a |\V| |regexp|.
+
+                                                    *g:tlib#sys#system_browser*
+g:tlib#sys#system_browser      (default: ...)
+    Open files in the system browser.
+
+                                                    *g:tlib#sys#system_browser*
+g:tlib#sys#system_browser      (default: "exec 'silent !'. g:netrw_browsex_viewer shellescape('%s')")
 
                                                     *g:tlib#sys#windows*
 g:tlib#sys#windows             (default: &shell !~ 'sh' && (has('win16') || has('win32') || has('win64')))
@@ -1676,6 +1711,17 @@ tlib#sys#ConvertPath(converter, filename)
 
                                                     *tlib#sys#FileArgs()*
 tlib#sys#FileArgs(cmd, files)
+
+                                                    *tlib#sys#IsSpecial()*
+tlib#sys#IsSpecial(filename)
+    Check whether filename matches |g:tlib#sys#system_rx|, i.e. whether it 
+    is a special file that should not be opened in vim.
+
+                                                    *tlib#sys#Open()*
+tlib#sys#Open(filename)
+    Open filename with the default OS application (see 
+    |g:tlib#sys#system_browser|), if |tlib#sys#IsSpecial()| return 1. 
+    Returns 1 if successful or 0 otherwise.
 
 
 ========================================================================
