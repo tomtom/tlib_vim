@@ -254,7 +254,6 @@ Contents~
         g:tlib#sys#special_suffixes ............ |g:tlib#sys#special_suffixes|
         g:tlib#sys#system_rx ................... |g:tlib#sys#system_rx|
         g:tlib#sys#system_browser .............. |g:tlib#sys#system_browser|
-        g:tlib#sys#system_browser .............. |g:tlib#sys#system_browser|
         g:tlib#sys#windows ..................... |g:tlib#sys#windows|
         g:tlib#sys#null ........................ |g:tlib#sys#null|
         tlib#sys#IsCygwinBin ................... |tlib#sys#IsCygwinBin()|
@@ -1662,10 +1661,6 @@ g:tlib#sys#special_suffixes    (default: ['xlsx\?', 'docx\?', 'pptx\?', 'accdb',
 g:tlib#sys#system_rx           (default: printf('\V\%(\^\%(%s\):\|.\%(%s\)\)', join(g:tlib#sys#special_protocols, '\|'), join(g:tlib#sys#special_suffixes, '\|')))
     Open links matching this |regexp| with |g:tlib#sys#system_browser|.
     CAVEAT: Must be a |\V| |regexp|.
-
-                                                    *g:tlib#sys#system_browser*
-g:tlib#sys#system_browser      (default: ...)
-    Open files in the system browser.
 
                                                     *g:tlib#sys#system_browser*
 g:tlib#sys#system_browser      (default: "exec 'silent !'. g:netrw_browsex_viewer shellescape('%s')")
