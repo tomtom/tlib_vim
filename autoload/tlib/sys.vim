@@ -1,7 +1,7 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-10-13.
-" @Revision:    38
+" @Last Change: 2015-10-15.
+" @Revision:    39
 
 
 if !exists('g:tlib#sys#special_protocols')
@@ -31,7 +31,7 @@ if !exists("g:tlib#sys#system_browser")
     if exists('g:netrw_browsex_viewer')
         " Open files in the system browser.
         " :read: let g:tlib#sys#system_browser = ... "{{{2
-        let g:tlib#sys#system_browser = "exec 'silent !'. g:netrw_browsex_viewer shellescape('%s')" "{{{2
+        let g:tlib#sys#system_browser = "exec 'silent !'. g:netrw_browsex_viewer shellescape('%s')"
     elseif has("win32") || has("win16") || has("win64")
         " let g:tlib#sys#system_browser = "exec 'silent ! start \"\"' shellescape('%s')"
         let g:tlib#sys#system_browser = "exec 'silent ! RunDll32.EXE URL.DLL,FileProtocolHandler' shellescape('%s')"
