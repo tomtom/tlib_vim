@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1405
+" @Revision:    1407
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -977,6 +977,7 @@ function! s:prototype.DisplayHelp() dict "{{{3
     call self.PushHelp('Mouse', 'L: Pick item, R: Show menu')
     call self.PushHelp('<M-Number>',  'Select an item')
     call self.PushHelp('<BS>, <C-BS>', 'Reduce filter')
+    call self.PushHelp('<Tab>', 'Complete word')
     call self.PushHelp('<S-Esc>, <F10>', 'Enter command')
 
     if self.key_mode == 'default'

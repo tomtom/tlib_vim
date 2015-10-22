@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1340
+" @Revision:    1345
 
 
 " :filedoc:
@@ -131,6 +131,7 @@ TLet g:tlib#input#keyagents_InputList_s = {
             \ "\<End>":      'tlib#agent#End',
             \ "\<Up>":       'tlib#agent#Up',
             \ "\<Down>":     'tlib#agent#Down',
+            \ 9:             'tlib#agent#Complete',
             \ "\<c-Up>":     'tlib#agent#UpN',
             \ "\<c-Down>":   'tlib#agent#DownN',
             \ "\<Left>":     'tlib#agent#ShiftLeft',
@@ -251,6 +252,9 @@ TLet g:tlib#input#filename_max_width = '&co / 2'
 "
 " Several pattern matching styles are supported. See 
 " |g:tlib#input#filter_mode|.
+"
+" Users can type <Tab> to complete the current filter with the longest 
+" match.
 "
 " EXAMPLES: >
 "   echo tlib#input#List('s', 'Select one item', [100,200,300])
@@ -518,7 +522,8 @@ function! tlib#input#ListW(world, ...) "{{{3
                     "     let world.offset = world.prefidx
                     " endif
                     " TLogDBG 8
-                    if world.initial_display || !tlib#char#IsAvailable()
+                    " TLogVAR world.initial_display, !tlib#char#IsAvailable()
+                    if world.state =~ '\<update\>' || world.initial_display || !tlib#char#IsAvailable()
                         " TLogDBG len(dlist)
                         call world.DisplayList(world.Query(), dlist)
                         call world.FollowCursor()
