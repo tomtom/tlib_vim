@@ -188,6 +188,7 @@ Contents~
         tlib#agent#Null ........................ |tlib#agent#Null()|
         tlib#agent#ExecAgentByName ............. |tlib#agent#ExecAgentByName()|
         tlib#agent#CompleteAgentNames .......... |tlib#agent#CompleteAgentNames()|
+        tlib#agent#Complete .................... |tlib#agent#Complete()|
         tlib#bitwise#Num2Bits .................. |tlib#bitwise#Num2Bits()|
         tlib#bitwise#Bits2Num .................. |tlib#bitwise#Bits2Num()|
         tlib#bitwise#AND ....................... |tlib#bitwise#AND()|
@@ -245,7 +246,6 @@ Contents~
         g:tlib#file#use_tabs ................... |g:tlib#file#use_tabs|
         g:tlib#file#edit_cmds .................. |g:tlib#file#edit_cmds|
         g:tlib#file#absolute_filename_rx ....... |g:tlib#file#absolute_filename_rx|
-        g:tlib#file#fs_enc ..................... |g:tlib#file#fs_enc|
         tlib#file#Split ........................ |tlib#file#Split()|
         tlib#file#Join ......................... |tlib#file#Join()|
         tlib#file#Relative ..................... |tlib#file#Relative()|
@@ -253,11 +253,6 @@ Contents~
         tlib#file#Canonic ...................... |tlib#file#Canonic()|
         tlib#file#With ......................... |tlib#file#With()|
         tlib#file#Edit ......................... |tlib#file#Edit()|
-        tlib#file#FsEncoding ................... |tlib#file#FsEncoding()|
-        tlib#file#NativeFilename ............... |tlib#file#NativeFilename()|
-        tlib#file#WithNative ................... |tlib#file#WithNative()|
-        tlib#file#IsDirectory .................. |tlib#file#IsDirectory()|
-        tlib#file#FileReadable ................. |tlib#file#FileReadable()|
         g:tlib#sys#special_protocols ........... |g:tlib#sys#special_protocols|
         g:tlib#sys#special_suffixes ............ |g:tlib#sys#special_suffixes|
         g:tlib#sys#system_rx ................... |g:tlib#sys#system_rx|
@@ -305,6 +300,7 @@ Contents~
         tlib#arg#Key ........................... |tlib#arg#Key()|
         tlib#arg#StringAsKeyArgs ............... |tlib#arg#StringAsKeyArgs()|
         tlib#arg#StringAsKeyArgsEqual .......... |tlib#arg#StringAsKeyArgsEqual()|
+        tlib#arg#GetOpts ....................... |tlib#arg#GetOpts()|
         tlib#arg#Ex ............................ |tlib#arg#Ex()|
         tlib#fixes#Winpos ...................... |tlib#fixes#Winpos()|
         g:tlib#dir#sep ......................... |g:tlib#dir#sep|
@@ -1211,6 +1207,9 @@ tlib#agent#ExecAgentByName(world, selected)
                                                     *tlib#agent#CompleteAgentNames()*
 tlib#agent#CompleteAgentNames(ArgLead, CmdLine, CursorPos)
 
+                                                    *tlib#agent#Complete()*
+tlib#agent#Complete(world, selected)
+
 
 ========================================================================
 autoload/tlib/bitwise.vim~
@@ -1542,6 +1541,9 @@ tlib#input#List(type. ?query='', ?list=[], ?handlers=[], ?default="", ?timeout=0
     Several pattern matching styles are supported. See 
     |g:tlib#input#filter_mode|.
 
+    Users can type <Tab> to complete the current filter with the longest 
+    match.
+
     EXAMPLES: >
       echo tlib#input#List('s', 'Select one item', [100,200,300])
       echo tlib#input#List('si', 'Select one item', [100,200,300])
@@ -1627,9 +1629,6 @@ g:tlib#file#edit_cmds          (default: g:tlib#file#use_tabs ? {'buffer': 'tab 
                                                     *g:tlib#file#absolute_filename_rx*
 g:tlib#file#absolute_filename_rx (default: '^\~\?[\/]')
 
-                                                    *g:tlib#file#fs_enc*
-g:tlib#file#fs_enc             (default: 'utf-8')
-
                                                     *tlib#file#Split()*
 tlib#file#Split(filename)
     EXAMPLES: >
@@ -1664,21 +1663,6 @@ tlib#file#With(fcmd, bcmd, files, ?world={})
 tlib#file#Edit(fileid)
     Return 0 if the file isn't readable/doesn't exist.
     Otherwise return 1.
-
-                                                    *tlib#file#FsEncoding()*
-tlib#file#FsEncoding(filename, ...)
-
-                                                    *tlib#file#NativeFilename()*
-tlib#file#NativeFilename(filename, ...)
-
-                                                    *tlib#file#WithNative()*
-tlib#file#WithNative(fn, filename, ...)
-
-                                                    *tlib#file#IsDirectory()*
-tlib#file#IsDirectory(filename)
-
-                                                    *tlib#file#FileReadable()*
-tlib#file#FileReadable(filename)
 
 
 ========================================================================
@@ -1918,10 +1902,13 @@ tlib#arg#Key(dict, list, ?default='')
     See |:TKeyArg|.
 
                                                     *tlib#arg#StringAsKeyArgs()*
-tlib#arg#StringAsKeyArgs(string, ?keys=[], ?evaluate=0, ?sep=':')
+tlib#arg#StringAsKeyArgs(string, ?keys=[], ?evaluate=0, ?sep=':', ?booleans=0)
 
                                                     *tlib#arg#StringAsKeyArgsEqual()*
 tlib#arg#StringAsKeyArgsEqual(string)
+
+                                                    *tlib#arg#GetOpts()*
+tlib#arg#GetOpts(args, ...)
 
                                                     *tlib#arg#Ex()*
 tlib#arg#Ex(arg, ?chars='%#! ')
