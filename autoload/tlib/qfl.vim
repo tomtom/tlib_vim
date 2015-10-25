@@ -2,7 +2,7 @@
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Last Change: 2015-10-25
-" @Revision:    28
+" @Revision:    31
 
 " :nodoc:
 TLet g:tlib#qfl#world = {
@@ -281,6 +281,7 @@ function! tlib#qfl#QflList(list, ...) abort "{{{3
     if !empty(world_dict)
         let world = tlib#eval#Extend(world, world_dict)
     endif
+    " TLogVAR world
     let world = tlib#World#New(world)
     " echom "DBG world" string(sort(keys(world)))
     let world.data  = copy(a:list)
