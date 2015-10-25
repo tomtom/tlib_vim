@@ -67,6 +67,7 @@ Contents~
         tlib#progressbar#Display ............... |tlib#progressbar#Display()|
         tlib#progressbar#Restore ............... |tlib#progressbar#Restore()|
         tlib#eval#FormatValue .................. |tlib#eval#FormatValue()|
+        tlib#eval#Extend ....................... |tlib#eval#Extend()|
         tlib#list#Inject ....................... |tlib#list#Inject()|
         tlib#list#Compact ...................... |tlib#list#Compact()|
         tlib#list#Flatten ...................... |tlib#list#Flatten()|
@@ -279,6 +280,7 @@ Contents~
         tlib#World#New ......................... |tlib#World#New()|
         prototype.PrintLines
         prototype.Suspend
+        tlib#loclist#Browse .................... |tlib#loclist#Browse()|
         tlib#tab#BufMap ........................ |tlib#tab#BufMap()|
         tlib#tab#TabWinNr ...................... |tlib#tab#TabWinNr()|
         tlib#tab#Set ........................... |tlib#tab#Set()|
@@ -331,6 +333,23 @@ Contents~
         tlib#grep#LocList ...................... |tlib#grep#LocList()|
         tlib#grep#QuickFixList ................. |tlib#grep#QuickFixList()|
         tlib#grep#List ......................... |tlib#grep#List()|
+        tlib#qfl#FormatQFLE .................... |tlib#qfl#FormatQFLE()|
+        tlib#qfl#QfeFilename ................... |tlib#qfl#QfeFilename()|
+        tlib#qfl#InitListBuffer ................ |tlib#qfl#InitListBuffer()|
+        tlib#qfl#Balloon ....................... |tlib#qfl#Balloon()|
+        tlib#qfl#AgentEditQFE .................. |tlib#qfl#AgentEditQFE()|
+        tlib#qfl#AgentPreviewQFE ............... |tlib#qfl#AgentPreviewQFE()|
+        tlib#qfl#AgentGotoQFE .................. |tlib#qfl#AgentGotoQFE()|
+        tlib#qfl#AgentWithSelected ............. |tlib#qfl#AgentWithSelected()|
+        tlib#qfl#RunCmdOnSelected .............. |tlib#qfl#RunCmdOnSelected()|
+        tlib#qfl#AgentSplitBuffer .............. |tlib#qfl#AgentSplitBuffer()|
+        tlib#qfl#AgentTabBuffer ................ |tlib#qfl#AgentTabBuffer()|
+        tlib#qfl#AgentVSplitBuffer ............. |tlib#qfl#AgentVSplitBuffer()|
+        tlib#qfl#AgentEditLine ................. |tlib#qfl#AgentEditLine()|
+        tlib#qfl#EditLine ...................... |tlib#qfl#EditLine()|
+        tlib#qfl#SetFollowCursor ............... |tlib#qfl#SetFollowCursor()|
+        tlib#qfl#QflList ....................... |tlib#qfl#QflList()|
+        tlib#qfl#Browse ........................ |tlib#qfl#Browse()|
         tlib#Filter_cnf#New .................... |tlib#Filter_cnf#New()|
         prototype.Pretty
         tlib#Object#New ........................ |tlib#Object#New()|
@@ -616,6 +635,9 @@ autoload/tlib/eval.vim~
 
                                                     *tlib#eval#FormatValue()*
 tlib#eval#FormatValue(value, ...)
+
+                                                    *tlib#eval#Extend()*
+tlib#eval#Extend(a, b)
 
 
 ========================================================================
@@ -940,7 +962,7 @@ tlib#cache#Dir(?mode = 'bg')
 tlib#cache#Filename(type, ?file=%, ?mkdir=0, ?dir='')
 
                                                     *tlib#cache#Save()*
-tlib#cache#Save(cfile, dictionary)
+tlib#cache#Save(cfile, dictionary, ...)
 
                                                     *tlib#cache#MTime()*
 tlib#cache#MTime(cfile)
@@ -949,7 +971,7 @@ tlib#cache#MTime(cfile)
 tlib#cache#Get(cfile, ...)
 
                                                     *tlib#cache#Value()*
-tlib#cache#Value(cfile, generator, ftime, ...)
+tlib#cache#Value(cfile, generator, ftime, ?generator_args=[], ?options={})
     Get a cached value from cfile. If it is outdated (compared to ftime) 
     or does not exist, create it calling a generator function.
 
@@ -1800,6 +1822,13 @@ prototype.Suspend
 
 
 ========================================================================
+autoload/tlib/loclist.vim~
+
+                                                    *tlib#loclist#Browse()*
+tlib#loclist#Browse(...)
+
+
+========================================================================
 autoload/tlib/tab.vim~
 
                                                     *tlib#tab#BufMap()*
@@ -2050,6 +2079,61 @@ tlib#grep#QuickFixList(rx, files)
 
                                                     *tlib#grep#List()*
 tlib#grep#List(rx, files)
+
+
+========================================================================
+autoload/tlib/qfl.vim~
+
+                                                    *tlib#qfl#FormatQFLE()*
+tlib#qfl#FormatQFLE(qfe)
+
+                                                    *tlib#qfl#QfeFilename()*
+tlib#qfl#QfeFilename(qfe)
+
+                                                    *tlib#qfl#InitListBuffer()*
+tlib#qfl#InitListBuffer(world)
+
+                                                    *tlib#qfl#Balloon()*
+tlib#qfl#Balloon()
+
+                                                    *tlib#qfl#AgentEditQFE()*
+tlib#qfl#AgentEditQFE(world, selected, ...)
+
+                                                    *tlib#qfl#AgentPreviewQFE()*
+tlib#qfl#AgentPreviewQFE(world, selected)
+
+                                                    *tlib#qfl#AgentGotoQFE()*
+tlib#qfl#AgentGotoQFE(world, selected)
+
+                                                    *tlib#qfl#AgentWithSelected()*
+tlib#qfl#AgentWithSelected(world, selected, ...)
+
+                                                    *tlib#qfl#RunCmdOnSelected()*
+tlib#qfl#RunCmdOnSelected(world, selected, cmd, ...)
+
+                                                    *tlib#qfl#AgentSplitBuffer()*
+tlib#qfl#AgentSplitBuffer(world, selected)
+
+                                                    *tlib#qfl#AgentTabBuffer()*
+tlib#qfl#AgentTabBuffer(world, selected)
+
+                                                    *tlib#qfl#AgentVSplitBuffer()*
+tlib#qfl#AgentVSplitBuffer(world, selected)
+
+                                                    *tlib#qfl#AgentEditLine()*
+tlib#qfl#AgentEditLine(world, selected)
+
+                                                    *tlib#qfl#EditLine()*
+tlib#qfl#EditLine(lnum)
+
+                                                    *tlib#qfl#SetFollowCursor()*
+tlib#qfl#SetFollowCursor(world, selected)
+
+                                                    *tlib#qfl#QflList()*
+tlib#qfl#QflList(list, ...)
+
+                                                    *tlib#qfl#Browse()*
+tlib#qfl#Browse(...)
 
 
 ========================================================================
