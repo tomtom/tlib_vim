@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1407
+" @Revision:    1414
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -375,6 +375,14 @@ function! s:prototype.SelectItem(mode, index) dict "{{{3
         call remove(self.sel_idx, si)
     endif
     return 1
+endf
+
+
+" :nodoc:
+function! s:prototype.FormatBaseFromData() abort dict "{{{3
+    if has_key(self, 'format_data') && has_key(self, 'data')
+        let self.base = map(copy(self.data), 'call(self.format_data, [v:val], self)')
+    endif    
 endf
 
 
@@ -853,6 +861,7 @@ function! s:prototype.Reset(...) dict "{{{3
     call self.UseInputListScratch()
     call self.ResetSelected()
     call self.Retrieve(!initial)
+    call self.FormatBaseFromData()
     return self
 endf
 

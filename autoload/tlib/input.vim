@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1345
+" @Revision:    1353
 
 
 " :filedoc:
@@ -948,7 +948,7 @@ function! s:ExtendKeyMap(world, key_mode, key_handlers) "{{{3
 endf
 
 
-function s:PopupmenuExists()
+function! s:PopupmenuExists()
     if !g:tlib#input#use_popup
                 \ || exists(':popup') != 2
                 \ || !(has('gui_win32') || has('gui_gtk') || has('gui_gtk2'))
