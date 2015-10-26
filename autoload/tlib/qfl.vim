@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-10-25
-" @Revision:    31
+" @Last Change: 2015-10-26
+" @Revision:    32
 
 " :nodoc:
 TLet g:tlib#qfl#world = {
@@ -277,7 +277,7 @@ function! tlib#qfl#QflList(list, ...) abort "{{{3
     if !anyway && empty(a:list)
         return
     endif
-    let world = deepcopy(g:tlib#qfl#world)
+    let world = copy(g:tlib#qfl#world)
     if !empty(world_dict)
         let world = tlib#eval#Extend(world, world_dict)
     endif
