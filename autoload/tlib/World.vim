@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1414
+" @Revision:    1419
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -824,7 +824,14 @@ function! s:prototype.UseInputListScratch() dict "{{{3
     if !exists('w:tlib_list_init')
         " TLogVAR scratch
         if has_key(self, 'index_next_syntax')
-            exec 'syntax match InputlListIndex /^\d\+:\s/ nextgroup='. self.index_next_syntax
+            if type(self.index_next_syntax) == 1
+                exec 'syntax match InputlListIndex /^\d\+:\s/ nextgroup='. self.index_next_syntax
+            elseif type(self.index_next_syntax) == 4
+                for [n, nsyn] in items(self.index_next_syntax)
+                    let fn = printf('%0'. world.index_width .'d', n)
+                    exec 'syntax match InputlListIndex /^'. fn .':\s/ nextgroup='. nsyn
+                endfor
+            endif
         else
             syntax match InputlListIndex /^\d\+:\s/
         endif
