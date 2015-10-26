@@ -1,7 +1,7 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    42
+" @Revision:    48
 
 
 function! tlib#eval#FormatValue(value, ...) "{{{3
@@ -53,10 +53,11 @@ function! tlib#eval#Extend(a, b) abort "{{{3
     elseif type(a:a) == 4 " dict
         for [k, v] in items(a:b)
             if has_key(a:a, k)
-                let a:a[k] = tlib#eval#Extend(a:a[k], v)
+                let a:a[k] = tlib#eval#Extend(copy(a:a[k]), v)
             else
                 let a:a[k] = v
             endif
+            unlet! k v
         endfor
         return a:a
     else
