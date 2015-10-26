@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-10-22.
-" @Revision:    121
+" @Last Change: 2015-10-26.
+" @Revision:    128
 
 
 " :def: function! tlib#arg#Get(n, var, ?default="", ?test='')
@@ -96,7 +96,11 @@ function! tlib#arg#GetOpts(args, ...) abort "{{{3
         if break == 1
             break
         elseif break == 2
-            throw 'tlib#arg#GetOpts: Show help'
+            if get(def, 'handle_exit_code', 0)
+                let opts.__exit__ = 5
+            else
+                throw 'tlib#arg#GetOpts: Show help'
+            endif
         endif
     endfor
     let opts.__rest__ = a:args[idx : -1]
