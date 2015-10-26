@@ -581,3 +581,21 @@ version: "1.15"
   - tlib#arg#GetOpts: Handle exit code
   MD5 checksum: 13fd8b0e4ba9cd932c57fc40ac3f641f
 
+version: "1.15"
+  - tlib#file#Join(): New optional argument: maybe_absolute Drop preceding parts if a part looks like an absolute filename
+  - tlib#sys#Open(), tlib#sys#IsSpecial() (moved from viki)
+  - tlib#list#Uniq(): Handle hetergenous lists
+  - FIX #21: duplicate help tag
+  - NEW tlib#dictionary#Rev()
+  - tlib#input#List(): Use <Tab> to complete current word
+  - NEW tlib#arg#GetOpts(); ENH tlib#arg#StringAsKeyArgsEqual()
+  - cache: Allow for in memory cache
+  - NEW tlib#eval#Extend()
+  - Move qfl/loclist browser from trag to tlib
+  - FIX tlib#eval#Extend()
+  - Simplify tlib#eval#Extend()
+  - World.index_next_syntax may be a dict
+  - tlib#qfl#QflList: Use copy()
+  - tlib#arg#GetOpts: Handle exit code
+  MD5 checksum: 13fd8b0e4ba9cd932c57fc40ac3f641f
+
