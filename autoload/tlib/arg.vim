@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-10-26.
-" @Revision:    128
+" @Last Change: 2015-10-27.
+" @Revision:    141
 
 
 " :def: function! tlib#arg#Get(n, var, ?default="", ?test='')
@@ -131,14 +131,15 @@ function! s:SetOpt(def, opts, idx, opt) abort "{{{3
         else
             let a:opts[ml[1]] = ml[2]
         endif
+    elseif a:opt =~# '^-\w='
+        let flagdefs = get(a:def, 'flags', {})
+        let flag = matchstr(a:opt, '^-\zs\w')
+        let rest = matchstr(a:opt, '^-\w\zs.*$')
+        call s:SetFlag(a:def, a:opts, idx, flag, rest, flagdefs)
     elseif a:opt =~# '^-\w\+$'
         let flagdefs = get(a:def, 'flags', {})
         for flag in split(substitute(a:opt, '^-', '', ''), '\zs')
-            if has_key(flagdefs, flag)
-                call s:SetOpt(a:def, a:opts, idx, flagdefs[flag])
-            else
-                let a:opts[flag] = 1
-            endif
+            call s:SetFlag(a:def, a:opts, idx, flag, '', flagdefs)
         endfor
     else
         let break = 1
@@ -147,6 +148,15 @@ function! s:SetOpt(def, opts, idx, opt) abort "{{{3
         endif
     endif
     return [break, idx]
+endf
+
+
+function! s:SetFlag(def, opts, idx, flag, rest, flagdefs) abort "{{{3
+    if has_key(a:flagdefs, a:flag)
+        call s:SetOpt(a:def, a:opts, a:idx, a:flagdefs[a:flag] . a:rest)
+    else
+        let a:opts[a:flag] = 1
+    endif
 endf
 
 
