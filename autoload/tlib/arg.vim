@@ -2,7 +2,7 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Last Change: 2015-10-27.
-" @Revision:    141
+" @Revision:    215
 
 
 " :def: function! tlib#arg#Get(n, var, ?default="", ?test='')
@@ -87,19 +87,42 @@ function! tlib#arg#StringAsKeyArgsEqual(string) "{{{1
 endf
 
 
+" :display: tlib#arg#GetOpts(args, ?def={})
+" Convert a list of strings of command-line arguments into a dictonary.
+"
+" The main use case is to pass [<f-args>], i.e. the command-line 
+" arguments of a command as list, from a command definition to this 
+" function.
+"
+" Example:
+" ['-h']
+" => If def contains a 'help' key, invoke |:help| on its value.
+"
+" ['-ab', '--foo', '--bar=BAR', 'bla', bla']
+" => {'a': 1, 'b': 1, 'foo': 1, 'bar': 'BAR', '__rest__': ['bla', 'bla']}
+"
+" ['-ab', '--', '--foo', '--bar=BAR']
+" => {'a': 1, 'b': 1, '__rest__': ['--foo', '--bar=BAR']}
 function! tlib#arg#GetOpts(args, ...) abort "{{{3
+    let throw = a:0 == 0
     TVarArg ['def', {}]
+    " TLogVAR def
     let opts = {'__exit__': 0}
+    for [key, vdef] in items(get(def, 'values', {}))
+        if has_key(vdef, 'default')
+            let opts[key] = vdef.default
+        endif
+    endfor
     let idx = 0
     for o in a:args
         let [break, idx] = s:SetOpt(def, opts, idx, o)
         if break == 1
             break
         elseif break == 2
-            if get(def, 'handle_exit_code', 0)
-                let opts.__exit__ = 5
-            else
+            if throw
                 throw 'tlib#arg#GetOpts: Show help'
+            else
+                let opts.__exit__ = 5
             endif
         endif
     endfor
@@ -108,14 +131,52 @@ function! tlib#arg#GetOpts(args, ...) abort "{{{3
 endf
 
 
+function! s:GetValueType(def) abort "{{{3
+    return get(a:def, 'type', type(get(a:def, 'default', '')))
+endf
+
+
 function! s:SetOpt(def, opts, idx, opt) abort "{{{3
+    " TLogVAR a:def
     let idx = a:idx + 1
     let break = 0
     if a:opt =~# '^\%(-[?h]\|--help\)$'
         if has_key(a:def, 'help')
             exec 'help' a:def.help
         else
-            echom "No help"
+            " TLogVAR a:def
+            let values = get(a:def, 'values', {})
+            let flags = get(a:def, 'flags', {})
+            if empty(values) && empty(flags)
+                echom 'No help'
+            else
+                if !empty(values)
+                    echom 'Options:'
+                    for [key, vdef] in sort(items(values))
+                        let opt = key
+                        let default = get(vdef, 'default', '')
+                        let type = s:GetValueType(vdef)
+                        if default =~ '^-\?\d\+\%(\.\d\+\)$'
+                            if type == -1
+                                let opt .= ' (flag)'
+                            elseif type == 1
+                                let opt .= '=INT'
+                            else
+                                let opt .= '=INT or maybe BOOL'
+                            endif
+                        elseif type(default) == 1
+                            let opt .= '=STRING'
+                        endif
+                        echom printf('  --%20s (default: %s)', opt, string(default))
+                    endfor
+                endif
+                if !empty(flags)
+                    echom 'Short flags:'
+                    for [sflag, lflag] in sort(items(flags))
+                        echom printf('  -%s -> %s', sflag, lflag)
+                    endfor
+                endif
+            endif
         endif
         let break = 2
     elseif a:opt =~# '^--no-.\+'
@@ -152,11 +213,41 @@ endf
 
 
 function! s:SetFlag(def, opts, idx, flag, rest, flagdefs) abort "{{{3
+    " TLogVAR a:def
     if has_key(a:flagdefs, a:flag)
         call s:SetOpt(a:def, a:opts, a:idx, a:flagdefs[a:flag] . a:rest)
     else
         let a:opts[a:flag] = 1
     endif
+endf
+
+
+":nodoc:
+function! tlib#arg#CComplete(def, ArgLead) abort "{{{3
+    let cs = {'-h': 1, '--help': 1}
+    let values = get(a:def, 'values', {})
+    for [name, vdef] in items(values)
+        let type = s:GetValueType(vdef)
+        if type >= 0
+            let name .= '='
+        else
+            let cs['--no-'. name] = 1
+        endif
+        let cs['--'. name] = 1
+    endfor
+    for [name, subst] in items(get(a:def, 'flags', {}))
+        let ldef = get(values, substitute(subst, '^--', '', ''), {})
+        let type = s:GetValueType(ldef)
+        if type >= 0
+            let name .= '='
+        endif
+        let cs['-'. name] = 1
+    endfor
+    let nchar = len(a:ArgLead)
+    if nchar > 0
+        call filter(cs, 'strpart(v:key, 0, nchar) ==# a:ArgLead')
+    endif
+    return sort(keys(cs))
 endf
 
 
