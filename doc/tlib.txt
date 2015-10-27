@@ -38,6 +38,7 @@ Contents~
         :TBrowseOutput ......................... |:TBrowseOutput|
         :TBrowseScriptnames .................... |:TBrowseScriptnames|
         :TTimeCommand .......................... |:TTimeCommand|
+        :TLibTrace ............................. |:TLibTrace|
         Add .................................... |Add()|
         TestGetArg ............................. |TestGetArg()|
         TestGetArg1 ............................ |TestGetArg1()|
@@ -217,6 +218,10 @@ Contents~
         tlib#tag#Format ........................ |tlib#tag#Format()|
         tlib#map#PumAccept ..................... |tlib#map#PumAccept()|
         tlib#Filter_cnfd#New ................... |tlib#Filter_cnfd#New()|
+        g:tlib#debug#backtrace ................. |g:tlib#debug#backtrace|
+        tlib#debug#Trace ....................... |tlib#debug#Trace()|
+        tlib#debug#Init ........................ |tlib#debug#Init()|
+        :TLibTrace ............................. |:TLibTrace|
         g:tlib#input#sortprefs_threshold ....... |g:tlib#input#sortprefs_threshold|
         g:tlib#input#livesearch_threshold ...... |g:tlib#input#livesearch_threshold|
         g:tlib#input#filter_mode ............... |g:tlib#input#filter_mode|
@@ -271,6 +276,7 @@ Contents~
         tlib#sys#FileArgs ...................... |tlib#sys#FileArgs()|
         tlib#sys#IsSpecial ..................... |tlib#sys#IsSpecial()|
         tlib#sys#Open .......................... |tlib#sys#Open()|
+        tlib#sys#SystemInDir ................... |tlib#sys#SystemInDir()|
         tlib#paragraph#GetMetric ............... |tlib#paragraph#GetMetric()|
         tlib#paragraph#Move .................... |tlib#paragraph#Move()|
         g:tlib_inputlist_pct ................... |g:tlib_inputlist_pct|
@@ -472,6 +478,9 @@ plugin/02tlib.vim~
                                                     *:TTimeCommand*
 :TTimeCommand CMD
     Time the execution time of CMD.
+
+                                                    *:TLibTrace*
+:TLibTrace
 
 
 ========================================================================
@@ -1398,6 +1407,22 @@ tlib#Filter_cnfd#New(...)
 
 
 ========================================================================
+autoload/tlib/debug.vim~
+
+                                                    *g:tlib#debug#backtrace*
+g:tlib#debug#backtrace         (default: 2)
+
+                                                    *tlib#debug#Trace()*
+tlib#debug#Trace(caller, vars, values)
+
+                                                    *tlib#debug#Init()*
+tlib#debug#Init()
+
+                                                    *:TLibTrace*
+:TLibTrace
+
+
+========================================================================
 autoload/tlib/input.vim~
 Input-related, select from a list etc.
 
@@ -1764,6 +1789,9 @@ tlib#sys#Open(filename)
     |g:tlib#sys#system_browser|), if |tlib#sys#IsSpecial()| return 1. 
     Returns 1 if successful or 0 otherwise.
 
+                                                    *tlib#sys#SystemInDir()*
+tlib#sys#SystemInDir(dir, expr, ?input='')
+
 
 ========================================================================
 autoload/tlib/paragraph.vim~
@@ -1937,7 +1965,22 @@ tlib#arg#StringAsKeyArgs(string, ?keys=[], ?evaluate=0, ?sep=':', ?booleans=0)
 tlib#arg#StringAsKeyArgsEqual(string)
 
                                                     *tlib#arg#GetOpts()*
-tlib#arg#GetOpts(args, ...)
+tlib#arg#GetOpts(args, ?def={})
+    Convert a list of strings of command-line arguments into a dictonary.
+
+    The main use case is to pass [<f-args>], i.e. the command-line 
+    arguments of a command as list, from a command definition to this 
+    function.
+
+    Example:
+    ['-h']
+    => If def contains a 'help' key, invoke |:help| on its value.
+
+    ['-ab', '--foo', '--bar=BAR', 'bla', bla']
+    => {'a': 1, 'b': 1, 'foo': 1, 'bar': 'BAR', '__rest__': ['bla', 'bla']}
+
+    ['-ab', '--', '--foo', '--bar=BAR']
+    => {'a': 1, 'b': 1, '__rest__': ['--foo', '--bar=BAR']}
 
                                                     *tlib#arg#Ex()*
 tlib#arg#Ex(arg, ?chars='%#! ')
