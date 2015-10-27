@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    39
+" @Revision:    40
 
 " TLet g:tlib#dir#sep = '/'
 TLet g:tlib#dir#sep = exists('+shellslash') && !&shellslash ? '\' : '/'
@@ -66,7 +66,7 @@ endf
 " :def: function! tlib#dir#CD(dir, ?locally=0) => CWD
 function! tlib#dir#CD(dir, ...) "{{{3
     TVarArg ['locally', 0]
-    let cmd = locally ? 'lcd ' : 'cd '
+    let cmd = locally ? 'lcd! ' : 'cd! '
     " let cwd = getcwd()
     let cmd .= tlib#arg#Ex(a:dir)
     " TLogVAR a:dir, locally, cmd

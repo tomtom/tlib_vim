@@ -2,8 +2,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2012-03-08.
-" @Last Change: 2014-09-30.
-" @Revision:    133
+" @Last Change: 2015-10-27.
+" @Revision:    141
 
 
 " A dictionarie of supported VCS (currently: git, hg, svn, bzr).
@@ -11,7 +11,7 @@
 TLet g:tlib#vcs#def = {
             \ 'git': {
             \     'dir': '.git',
-            \     'ls': 'git ls-files --full-name %s',
+            \     'ls': 'git ls-files --full-name',
             \     'diff': 'git diff --no-ext-diff -U0 %s'
             \ },
             \ 'hg': {
@@ -129,8 +129,8 @@ function! tlib#vcs#Ls(...) "{{{3
                 else
                     let cmd = ls
                 endif
-                " TLogVAR cmd
-                let filess = system(cmd)
+                " TLogVAR cmd, getcwd()
+                let filess = tlib#sys#SystemInDir(rootdir, cmd)
                 " TLogVAR filess
                 let files = split(filess, '\n')
                 call map(files, 'join([rootdir, v:val], "/")')
