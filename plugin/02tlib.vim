@@ -37,7 +37,7 @@ command! -nargs=+ TLet if !exists(matchstr(<q-args>, '^[^=[:space:]]\+')) | exec
 " EXAMPLES: >
 "   TScratch 'scratch': '__FOO__'
 "   => Open a scratch buffer named __FOO__
-command! -bar -nargs=* -bang TScratch call tlib#scratch#UseScratch({'scratch_split': '<bang>' != '!', <args>})
+command! -bar -nargs=* -bang TScratch call tlib#scratch#UseScratch({'scratch_split': empty('<bang>'), <args>})
 
 
 " :display: :TVarArg VAR1, [VAR2, DEFAULT2] ...
