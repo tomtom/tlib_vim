@@ -65,6 +65,7 @@ command! -nargs=+ TVarArg exec tlib#arg#Let([<args>])
 "   TBrowseOutput 20verb TeaseTheCulprit
 command! -nargs=1 -complete=command TBrowseOutput call tlib#cmd#BrowseOutput(<q-args>)
 
+
 " :display: :TBrowseScriptnames
 " List all sourced script names (the output of ':scriptnames').
 "
@@ -76,7 +77,8 @@ command! -nargs=1 -complete=command TBrowseOutput call tlib#cmd#BrowseOutput(<q-
 command! -nargs=0 -complete=command TBrowseScriptnames call tlib#cmd#TBrowseScriptnames()
 
 
-command! -nargs=+ TLibTrace :
+" :nodoc:
+command! -nargs=+ -bang TLibTrace :
 
 
 let &cpo = s:save_cpo
