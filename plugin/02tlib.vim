@@ -2,7 +2,7 @@
 " @Created:     2007-04-10.
 " @Last Change: 2015-10-28.
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    771
+" @Revision:    772
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " GetLatestVimScripts: 1863 1 tlib.vim
 " tlib.vim -- Some utility functions
@@ -77,7 +77,10 @@ command! -nargs=1 -complete=command TBrowseOutput call tlib#cmd#BrowseOutput(<q-
 command! -nargs=0 -complete=command TBrowseScriptnames call tlib#cmd#TBrowseScriptnames()
 
 
-" :nodoc:
+" :display: :TLibTrace GUARD, VAR1, VAR2...
+" If GUARD is a number that evaluates to true or if it is a string and 
+" g:tlib#debug#trace_GUARD is defined and true, display the values of 
+" VAR1, VAR2 ...
 command! -nargs=+ -bang TLibTrace :
 
 

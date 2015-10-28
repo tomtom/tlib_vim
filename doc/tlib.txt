@@ -30,14 +30,11 @@ installed.
 ========================================================================
 Contents~
 
-        :TRequire .............................. |:TRequire|
         :TLet .................................. |:TLet|
         :TScratch .............................. |:TScratch|
         :TVarArg ............................... |:TVarArg|
-        :TKeyArg ............................... |:TKeyArg|
         :TBrowseOutput ......................... |:TBrowseOutput|
         :TBrowseScriptnames .................... |:TBrowseScriptnames|
-        :TTimeCommand .......................... |:TTimeCommand|
         :TLibTrace ............................. |:TLibTrace|
         Add .................................... |Add()|
         TestGetArg ............................. |TestGetArg()|
@@ -86,6 +83,7 @@ Contents~
         tlib#cmd#BrowseOutputWithCallback ...... |tlib#cmd#BrowseOutputWithCallback()|
         tlib#cmd#DefaultBrowseOutput ........... |tlib#cmd#DefaultBrowseOutput()|
         tlib#cmd#ParseScriptname ............... |tlib#cmd#ParseScriptname()|
+        tlib#cmd#TBrowseScriptnames ............ |tlib#cmd#TBrowseScriptnames()|
         tlib#cmd#UseVertical ................... |tlib#cmd#UseVertical()|
         tlib#cmd#Time .......................... |tlib#cmd#Time()|
         tlib#cmd#Capture ....................... |tlib#cmd#Capture()|
@@ -221,7 +219,6 @@ Contents~
         g:tlib#debug#backtrace ................. |g:tlib#debug#backtrace|
         tlib#debug#Trace ....................... |tlib#debug#Trace()|
         tlib#debug#Init ........................ |tlib#debug#Init()|
-        :TLibTrace ............................. |:TLibTrace|
         g:tlib#input#sortprefs_threshold ....... |g:tlib#input#sortprefs_threshold|
         g:tlib#input#livesearch_threshold ...... |g:tlib#input#livesearch_threshold|
         g:tlib#input#filter_mode ............... |g:tlib#input#filter_mode|
@@ -305,7 +302,6 @@ Contents~
         o_sp ................................... |o_sp|
         tlib#arg#Get ........................... |tlib#arg#Get()|
         tlib#arg#Let ........................... |tlib#arg#Let()|
-        tlib#arg#Key ........................... |tlib#arg#Key()|
         tlib#arg#StringAsKeyArgs ............... |tlib#arg#StringAsKeyArgs()|
         tlib#arg#StringAsKeyArgsEqual .......... |tlib#arg#StringAsKeyArgsEqual()|
         tlib#arg#GetOpts ....................... |tlib#arg#GetOpts()|
@@ -398,14 +394,6 @@ Contents~
 ========================================================================
 plugin/02tlib.vim~
 
-                                                    *:TRequire*
-:TRequire NAME [VERSION [FILE]]
-    Make a certain vim file is loaded.
-
-    Conventions: If FILE isn't defined, plugin/NAME.vim is loaded. The 
-    file must provide a variable loaded_{NAME} that represents the version 
-    number.
-
                                                     *:TLet*
 :TLet VAR = VALUE
     Set a variable only if it doesn't already exist.
@@ -438,17 +426,6 @@ plugin/02tlib.vim~
       endf
 <
 
-                                                    *:TKeyArg*
-:TKeyArg DICT, VAR1, [VAR2, DEFAULT2] ...
-    A convenience wrapper for |tlib#arg#Let|.
-    EXAMPLES: >
-      function! Foo(keyargs)
-          TKeyArg a:keyargs, ['a', 1], 'b'
-          echo 'a='. a
-          echo 'b='. b
-      endf
-<
-
                                                     *:TBrowseOutput*
 :TBrowseOutput COMMAND
     Ever wondered how to efficiently browse the output of a command 
@@ -475,12 +452,11 @@ plugin/02tlib.vim~
       TBrowseScriptnames 
 <
 
-                                                    *:TTimeCommand*
-:TTimeCommand CMD
-    Time the execution time of CMD.
-
                                                     *:TLibTrace*
-:TLibTrace
+:TLibTrace GUARD, VAR1, VAR2...
+    If GUARD is a number that evaluates to true or if it is a string and 
+    g:tlib#debug#trace_GUARD is defined and true, display the values of 
+    VAR1, VAR2 ...
 
 
 ========================================================================
@@ -766,6 +742,9 @@ tlib#cmd#DefaultBrowseOutput(cmd)
 
                                                     *tlib#cmd#ParseScriptname()*
 tlib#cmd#ParseScriptname(line)
+
+                                                    *tlib#cmd#TBrowseScriptnames()*
+tlib#cmd#TBrowseScriptnames()
 
                                                     *tlib#cmd#UseVertical()*
 tlib#cmd#UseVertical(?rx='')
@@ -1418,9 +1397,6 @@ tlib#debug#Trace(caller, vars, values)
                                                     *tlib#debug#Init()*
 tlib#debug#Init()
 
-                                                    *:TLibTrace*
-:TLibTrace
-
 
 ========================================================================
 autoload/tlib/input.vim~
@@ -1953,10 +1929,6 @@ tlib#arg#Get(n, var, ?default="", ?test='')
 tlib#arg#Let(list, ?default='')
     Set a positional arguments from a variable argument list.
     See tlib#input#List() for an example.
-
-                                                    *tlib#arg#Key()*
-tlib#arg#Key(dict, list, ?default='')
-    See |:TKeyArg|.
 
                                                     *tlib#arg#StringAsKeyArgs()*
 tlib#arg#StringAsKeyArgs(string, ?keys=[], ?evaluate=0, ?sep=':', ?booleans=0)
