@@ -1,7 +1,7 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-10-27.
-" @Revision:    45
+" @Last Change: 2015-10-28.
+" @Revision:    48
 
 
 if !exists('g:tlib#sys#special_protocols')
