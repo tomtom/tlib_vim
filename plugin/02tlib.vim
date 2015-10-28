@@ -73,17 +73,6 @@ command! -bar -nargs=* -bang TScratch call tlib#scratch#UseScratch({'scratch_spl
 command! -nargs=+ TVarArg exec tlib#arg#Let([<args>])
 
 
-" :display: :TKeyArg DICT, VAR1, [VAR2, DEFAULT2] ...
-" A convenience wrapper for |tlib#arg#Let|.
-" EXAMPLES: >
-"   function! Foo(keyargs)
-"       TKeyArg a:keyargs, ['a', 1], 'b'
-"       echo 'a='. a
-"       echo 'b='. b
-"   endf
-command! -nargs=+ TKeyArg exec tlib#arg#Key([<args>])
-
-
 " :display: :TBrowseOutput COMMAND
 " Ever wondered how to efficiently browse the output of a command 
 " without redirecting it to a file? This command takes a command as 
