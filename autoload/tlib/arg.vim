@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-10-27.
-" @Revision:    215
+" @Last Change: 2015-10-28.
+" @Revision:    216
 
 
 " :def: function! tlib#arg#Get(n, var, ?default="", ?test='')
@@ -27,18 +27,6 @@ function! tlib#arg#Let(list, ...) "{{{3
     let default = a:0 >= 1 ? a:1 : ''
     let list = map(copy(a:list), 'type(v:val) == 3 ? v:val : [v:val, default]')
     let args = map(range(1, len(list)), 'call("tlib#arg#Get", [v:val] + list[v:val - 1])')
-    return join(args, ' | ')
-endf
-
-
-" :def: function! tlib#arg#Key(dict, list, ?default='')
-" See |:TKeyArg|.
-function! tlib#arg#Key(list, ...) "{{{3
-    let default = a:0 >= 1 ? a:1 : ''
-    let dict = a:list[0]
-    let list = map(copy(a:list[1:-1]), 'type(v:val) == 3 ? v:val : [v:val, default]')
-    let args = map(list, '"let ". v:val[0] ." = ". string(get(dict, v:val[0], v:val[1]))')
-    " TLogVAR dict, list, args
     return join(args, ' | ')
 endf
 
