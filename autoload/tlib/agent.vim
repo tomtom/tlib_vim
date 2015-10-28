@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    324
+" @Revision:    328
 
 
 " :filedoc:
@@ -617,7 +617,7 @@ function! tlib#agent#Complete(world, selected) abort "{{{3
     let rxprefix = a:world.matcher.FilterRxPrefix()
     let flt = a:world.filter[0][0]
     " TLogVAR flt
-    let fltrx = rxprefix . flt . '\m\w\+'
+    let fltrx = rxprefix . flt . '\m[^[:space:][:cntrl:][:punct:]<>*+?&~{}()\[\]\\/]\+'
     let fltrx0 = '\m^' . fltrx
     " TLogVAR fltrx, fltrx0
     let words = {}
