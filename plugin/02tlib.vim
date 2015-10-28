@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Created:     2007-04-10.
-" @Last Change: 2015-10-27.
+" @Last Change: 2015-10-28.
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    763
+" @Revision:    771
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " GetLatestVimScripts: 1863 1 tlib.vim
 " tlib.vim -- Some utility functions
@@ -18,28 +18,6 @@ let g:loaded_tlib = 116
 
 let s:save_cpo = &cpo
 set cpo&vim
-
-
-" Init~ {{{1
-" call tlib#autocmdgroup#Init()
-
-
-" Commands~ {{{1
-
-" :display: :TRequire NAME [VERSION [FILE]]
-" Make a certain vim file is loaded.
-"
-" Conventions: If FILE isn't defined, plugin/NAME.vim is loaded. The 
-" file must provide a variable loaded_{NAME} that represents the version 
-" number.
-command! -nargs=+ TRequire let s:require = [<f-args>]
-            \ | if !exists('loaded_'. get(s:require, 0))
-                \ | exec 'runtime '. get(s:require, 2, 'plugin/'. get(s:require, 0) .'.vim')
-                \ | if !exists('loaded_'. get(s:require, 0)) || loaded_{get(s:require, 0)} < get(s:require, 1, loaded_{get(s:require, 0)})
-                    \ | echoerr 'Require '.  get(s:require, 0) .' >= '. get(s:require, 1, 'any version will do')
-                    \ | finish
-                    \ | endif
-                \ | endif | unlet s:require
 
 
 " :display: :TLet VAR = VALUE
@@ -98,9 +76,6 @@ command! -nargs=1 -complete=command TBrowseOutput call tlib#cmd#BrowseOutput(<q-
 command! -nargs=0 -complete=command TBrowseScriptnames call
             \ tlib#cmd#BrowseOutputWithCallback("tlib#cmd#ParseScriptname", "scriptnames")
 
-" :display: :TTimeCommand CMD
-" Time the execution time of CMD.
-command! -nargs=1 -complete=command TTimeCommand call tlib#cmd#Time(<q-args>)
 
 
 command! -nargs=+ TLibTrace :
