@@ -73,9 +73,7 @@ command! -nargs=1 -complete=command TBrowseOutput call tlib#cmd#BrowseOutput(<q-
 "
 " EXAMPLES: >
 "   TBrowseScriptnames 
-command! -nargs=0 -complete=command TBrowseScriptnames call
-            \ tlib#cmd#BrowseOutputWithCallback("tlib#cmd#ParseScriptname", "scriptnames")
-
+command! -nargs=0 -complete=command TBrowseScriptnames call tlib#cmd#TBrowseScriptnames()
 
 
 command! -nargs=+ TLibTrace :
