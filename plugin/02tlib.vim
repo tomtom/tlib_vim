@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Created:     2007-04-10.
-" @Last Change: 2015-10-28.
+" @Last Change: 2015-11-03.
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    772
+" @Revision:    793
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " GetLatestVimScripts: 1863 1 tlib.vim
 " tlib.vim -- Some utility functions
@@ -78,10 +78,18 @@ command! -nargs=0 -complete=command TBrowseScriptnames call tlib#cmd#TBrowseScri
 
 
 " :display: :TLibTrace GUARD, VAR1, VAR2...
-" If GUARD is a number that evaluates to true or if it is a string and 
-" g:tlib#debug#trace_GUARD is defined and true, display the values of 
-" VAR1, VAR2 ...
-command! -nargs=+ -bang TLibTrace :
+" Do nothing unless |tlib#trace#Enable()| was called.
+" 
+" When |tlib#trace#Enable()| was called:
+"
+" If GUARD is a number that evaluates to true or if it is a string that 
+" matches a |regexp|, which was added using TLibTrace! (with '!'), 
+" display the values of VAR1, VAR2 ...
+"
+" :TLibTrace! +RX1, -RX2...
+" If |tlib#trace#Enable()| was called: With the optional <bang>, users 
+" can add and remove GUARDs (actually a |regexp|) that should be traced.
+command! -nargs=+ -bang -bar TLibTrace :
 
 
 let &cpo = s:save_cpo
