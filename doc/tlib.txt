@@ -262,6 +262,10 @@ Contents~
         tlib#file#Canonic ...................... |tlib#file#Canonic()|
         tlib#file#With ......................... |tlib#file#With()|
         tlib#file#Edit ......................... |tlib#file#Edit()|
+        tlib#file#Glob ......................... |tlib#file#Glob()|
+        tlib#file#Globpath ..................... |tlib#file#Globpath()|
+        tlib#file#Glob ......................... |tlib#file#Glob()|
+        tlib#file#Globpath ..................... |tlib#file#Globpath()|
         g:tlib#sys#special_protocols ........... |g:tlib#sys#special_protocols|
         g:tlib#sys#special_suffixes ............ |g:tlib#sys#special_suffixes|
         g:tlib#sys#system_rx ................... |g:tlib#sys#system_rx|
@@ -1735,6 +1739,18 @@ tlib#file#With(fcmd, bcmd, files, ?world={})
 tlib#file#Edit(fileid)
     Return 0 if the file isn't readable/doesn't exist.
     Otherwise return 1.
+
+                                                    *tlib#file#Glob()*
+tlib#file#Glob(pattern)
+
+                                                    *tlib#file#Globpath()*
+tlib#file#Globpath(path, pattern)
+
+                                                    *tlib#file#Glob()*
+tlib#file#Glob(pattern)
+
+                                                    *tlib#file#Globpath()*
+tlib#file#Globpath(path, pattern)
 
 
 ========================================================================
