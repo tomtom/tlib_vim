@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    163
+" @Revision:    167
 
 
 if !exists('g:tlib#file#drop')
@@ -250,4 +250,27 @@ function! tlib#file#Edit(fileid) "{{{3
     endif
     return 0
 endf
+
+
+if v:version > 704 || (v:version == 704 && has('patch279'))
+
+    function! tlib#file#Glob(pattern) abort "{{{3
+        return glob(a:pattern, 0, 1)
+    endf
+
+    function! tlib#file#Globpath(path, pattern) abort "{{{3
+        return globpath(a:path, a:pattern, 0, 1)
+    endf
+
+else
+
+    function! tlib#file#Glob(pattern) abort "{{{3
+        return split(glob(a:pattern), '\n')
+    endf
+
+    function! tlib#file#Globpath(path, pattern) abort "{{{3
+        return split(globpath(a:path, a:pattern), '\n')
+    endf
+
+endif
 
