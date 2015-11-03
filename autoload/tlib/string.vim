@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    116
+" @Revision:    119
 
 
 " :def: function! tlib#string#RemoveBackslashes(text, ?chars=' ')
@@ -146,5 +146,12 @@ endf
 
 function! s:CountHelper() "{{{3
     let s:count += 1
+endf
+
+
+function! tlib#string#SplitCommaList(text) abort "{{{3
+    let parts = split(a:text, '\\\@<!\zs,\s*')
+    let parts = map(parts, 'substitute(v:val, ''\\\(.\)'', ''\1'', ''g'')')
+    return parts
 endf
 
