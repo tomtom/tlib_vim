@@ -46,6 +46,14 @@ Contents~
         g:tlib#debug ........................... |g:tlib#debug|
         tlib#notify#Echo ....................... |tlib#notify#Echo()|
         tlib#notify#TrimMessage ................ |tlib#notify#TrimMessage()|
+        g:tlib#trace#backtrace ................. |g:tlib#trace#backtrace|
+        g:tlib#trace#printf .................... |g:tlib#trace#printf|
+        tlib#trace#PrintToFile ................. |tlib#trace#PrintToFile()|
+        tlib#trace#Set ......................... |tlib#trace#Set()|
+        tlib#trace#Print ....................... |tlib#trace#Print()|
+        tlib#trace#Enable ...................... |tlib#trace#Enable()|
+        tlib#trace#Disable ..................... |tlib#trace#Disable()|
+        :TLibTrace ............................. |:TLibTrace|
         tlib#dictionary#Rev .................... |tlib#dictionary#Rev()|
         g:tlib_persistent ...................... |g:tlib_persistent|
         tlib#persistent#Dir .................... |tlib#persistent#Dir()|
@@ -130,6 +138,7 @@ Contents~
         tlib#normal#WithRegister ............... |tlib#normal#WithRegister()|
         tlib#time#MSecs ........................ |tlib#time#MSecs()|
         tlib#time#Now .......................... |tlib#time#Now()|
+        tlib#time#FormatNow .................... |tlib#time#FormatNow()|
         tlib#time#Diff ......................... |tlib#time#Diff()|
         tlib#time#DiffMSecs .................... |tlib#time#DiffMSecs()|
         tlib#var#Let ........................... |tlib#var#Let()|
@@ -216,9 +225,6 @@ Contents~
         tlib#tag#Format ........................ |tlib#tag#Format()|
         tlib#map#PumAccept ..................... |tlib#map#PumAccept()|
         tlib#Filter_cnfd#New ................... |tlib#Filter_cnfd#New()|
-        g:tlib#debug#backtrace ................. |g:tlib#debug#backtrace|
-        tlib#debug#Trace ....................... |tlib#debug#Trace()|
-        tlib#debug#Init ........................ |tlib#debug#Init()|
         g:tlib#input#sortprefs_threshold ....... |g:tlib#input#sortprefs_threshold|
         g:tlib#input#livesearch_threshold ...... |g:tlib#input#livesearch_threshold|
         g:tlib#input#filter_mode ............... |g:tlib#input#filter_mode|
@@ -290,6 +296,7 @@ Contents~
         tlib#date#DiffInDays ................... |tlib#date#DiffInDays()|
         tlib#date#Parse ........................ |tlib#date#Parse()|
         tlib#date#SecondsSince1970 ............. |tlib#date#SecondsSince1970()|
+        tlib#date#Shift ........................ |tlib#date#Shift()|
         tlib#type#IsNumber ..................... |tlib#type#IsNumber()|
         tlib#type#IsString ..................... |tlib#type#IsString()|
         tlib#type#IsFuncref .................... |tlib#type#IsFuncref()|
@@ -389,6 +396,7 @@ Contents~
         tlib#string#TrimRight .................. |tlib#string#TrimRight()|
         tlib#string#Strip ...................... |tlib#string#Strip()|
         tlib#string#Count ...................... |tlib#string#Count()|
+        tlib#string#SplitCommaList ............. |tlib#string#SplitCommaList()|
 
 
 ========================================================================
@@ -454,9 +462,17 @@ plugin/02tlib.vim~
 
                                                     *:TLibTrace*
 :TLibTrace GUARD, VAR1, VAR2...
-    If GUARD is a number that evaluates to true or if it is a string and 
-    g:tlib#debug#trace_GUARD is defined and true, display the values of 
-    VAR1, VAR2 ...
+    Do nothing unless |tlib#trace#Enable()| was called.
+
+    When |tlib#trace#Enable()| was called:
+
+    If GUARD is a number that evaluates to true or if it is a string that 
+    matches a |regexp|, which was added using TLibTrace! (with '!'), 
+    display the values of VAR1, VAR2 ...
+
+    :TLibTrace! +RX1, -RX2...
+    If |tlib#trace#Enable()| was called: With the optional <bang>, users 
+    can add and remove GUARDs (actually a |regexp|) that should be traced.
 
 
 ========================================================================
@@ -510,6 +526,49 @@ tlib#notify#TrimMessage(message)
     The echoed line is too long if it is wider than the width of the 
     window, minus cmdline space taken up by the ruler and showcmd 
     features.
+
+
+========================================================================
+autoload/tlib/trace.vim~
+
+                                                    *g:tlib#trace#backtrace*
+g:tlib#trace#backtrace         (default: 2)
+    The length of the backtrace that should be included in 
+    |tlib#trace#Print()|.
+
+                                                    *g:tlib#trace#printf*
+g:tlib#trace#printf            (default: 'echom %s')
+    The command used for printing traces from |tlib#trace#Print()|.
+
+                                                    *tlib#trace#PrintToFile()*
+tlib#trace#PrintToFile(filename)
+    Set |g:tlib#trace#printf| to make |tlib#trace#Print()| print to 
+    `filename`.
+
+                                                    *tlib#trace#Set()*
+tlib#trace#Set(vars)
+    Set the tracing |regexp|. See |:TLibTrace|.
+    This will also call |tlib#trace#Enable()|.
+
+    Examples:
+      call tlib#trace#Set(["+foo", "-bar"])
+      call tlib#trace#Set("+foo,-bar")
+
+                                                    *tlib#trace#Print()*
+tlib#trace#Print(caller, vars, values)
+    Print the values of vars. The first value is a "guard" (see 
+    |:TLibTrace|).
+
+                                                    *tlib#trace#Enable()*
+tlib#trace#Enable()
+    Enable tracing via |:TLibTrace|.
+
+                                                    *tlib#trace#Disable()*
+tlib#trace#Disable()
+    Disable tracing via |:TLibTrace|.
+
+                                                    *:TLibTrace*
+:TLibTrace
 
 
 ========================================================================
@@ -993,6 +1052,9 @@ tlib#time#MSecs()
                                                     *tlib#time#Now()*
 tlib#time#Now()
 
+                                                    *tlib#time#FormatNow()*
+tlib#time#FormatNow()
+
                                                     *tlib#time#Diff()*
 tlib#time#Diff(a, b, ...)
 
@@ -1383,19 +1445,6 @@ tlib#Filter_cnfd#New(...)
     The same as |tlib#Filter_cnf#New()| but a dot is expanded to '\.\{-}'. 
     As a consequence, patterns cannot match dots.
     The pattern is a '/\V' very no-'/magic' regexp pattern.
-
-
-========================================================================
-autoload/tlib/debug.vim~
-
-                                                    *g:tlib#debug#backtrace*
-g:tlib#debug#backtrace         (default: 2)
-
-                                                    *tlib#debug#Trace()*
-tlib#debug#Trace(caller, vars, values)
-
-                                                    *tlib#debug#Init()*
-tlib#debug#Init()
 
 
 ========================================================================
@@ -1859,6 +1908,9 @@ tlib#date#Parse(date, ?allow_zero=0) "{{{3
                                                     *tlib#date#SecondsSince1970()*
 tlib#date#SecondsSince1970(date, ...)
     tlib#date#SecondsSince1970(date, ?daysshift=0, ?allow_zero=0)
+
+                                                    *tlib#date#Shift()*
+tlib#date#Shift(date, shift)
 
 
 ========================================================================
@@ -2362,6 +2414,9 @@ tlib#string#Strip(string)
 
                                                     *tlib#string#Count()*
 tlib#string#Count(string, rx)
+
+                                                    *tlib#string#SplitCommaList()*
+tlib#string#SplitCommaList(text)
 
 
 
