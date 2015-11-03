@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1419
+" @Revision:    1423
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -611,11 +611,13 @@ endf
 " :nodoc:
 function! s:prototype.IsValidFilter() dict "{{{3
     let last = self.FilterRxPrefix() .'\('. self.filter[0][0] .'\)'
+    TLibTrace 'tlib', last
     " TLogVAR last
     try
         let a = match("", last)
         return 1
     catch
+        TLibTrace 'tlib', v:exception
         return 0
     endtry
 endf
@@ -695,6 +697,7 @@ endf
 " filter is either a string or a list of list of strings.
 function! s:prototype.SetInitialFilter(filter) dict "{{{3
     " let self.initial_filter = [[''], [a:filter]]
+    TLibTrace 'tlib', a:filter
     if type(a:filter) == 3
         let self.initial_filter = deepcopy(a:filter)
     else
@@ -857,6 +860,7 @@ endf
 function! s:prototype.Reset(...) dict "{{{3
     TVarArg ['initial', 0]
     " TLogVAR initial
+    TLibTrace 'tlib', initial, self.initial_filter
     let self.state     = 'display'
     let self.offset    = 1
     let self.filter    = deepcopy(self.initial_filter)
