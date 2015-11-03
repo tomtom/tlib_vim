@@ -214,8 +214,30 @@ endf
 
 ":nodoc:
 function! tlib#arg#CComplete(def, ArgLead) abort "{{{3
-    let cs = {'-h': 1, '--help': 1}
     let values = get(a:def, 'values', {})
+    let opt = matchstr(a:ArgLead, '^--\zs\w\+\ze=')
+    if has_key(values, opt)
+        let words = []
+        let vals = values[opt]
+        let complete_customlist = get(vals, 'complete_customlist', '')
+        if !empty(complete_customlist)
+            let words = eval(complete_customlist)
+        " else
+        "     let complete = get(vals, 'complete', '')
+        "     if !empty(complete)
+        "     endif
+        endif
+        if !empty(words)
+            let lead = substitute(a:ArgLead, '^--\w\+=', '', '')
+            if !empty(lead)
+                let nchar = len(lead)
+                call filter(words, 'strpart(v:val, 0, nchar) ==# lead')
+            endif
+            let words = map(words, '"--". opt ."=". v:val')
+            return sort(words)
+        endif
+    endif
+    let cs = {'-h': 1, '--help': 1}
     for [name, vdef] in items(values)
         let type = s:GetValueType(vdef)
         if type >= 0
