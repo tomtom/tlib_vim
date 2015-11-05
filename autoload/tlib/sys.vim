@@ -1,7 +1,7 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-10-28.
-" @Revision:    48
+" @Last Change: 2015-11-04.
+" @Revision:    50
 
 
 if !exists('g:tlib#sys#special_protocols')
@@ -182,9 +182,11 @@ endf
 " |g:tlib#sys#system_browser|), if |tlib#sys#IsSpecial()| return 1. 
 " Returns 1 if successful or 0 otherwise.
 function! tlib#sys#Open(filename) abort "{{{3
+    TLibTrace 'tlib', a:filename
     if !empty(g:tlib#sys#system_browser) && tlib#sys#IsSpecial(a:filename)
         try
             let cmd = printf(g:tlib#sys#system_browser, escape(a:filename, ' %#!'))
+            TLibTrace 'tlib', cmd
             exec cmd
             return 1
         catch
