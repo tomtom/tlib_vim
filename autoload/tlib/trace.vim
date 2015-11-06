@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-11-03
-" @Revision:    114
+" @Last Change: 2015-11-06
+" @Revision:    116
 
 
 if !exists('g:tlib#trace#backtrace')
@@ -92,8 +92,8 @@ endf
 " Enable tracing via |:TLibTrace|.
 function! tlib#trace#Enable() abort "{{{3
     if !exists('s:trace_rx')
-        " :nodoc:
         let s:trace_rx = '^\%(error\)$'
+        " :nodoc:
         command! -nargs=+ -bang -bar TLibTrace if empty('<bang>') | call tlib#trace#Print(expand('<sfile>'), [<f-args>], [<args>]) | else | call tlib#trace#Set(<q-args>) | endif
     endif
 endf
@@ -101,6 +101,7 @@ endf
 
 " Disable tracing via |:TLibTrace|.
 function! tlib#trace#Disable() abort "{{{3
+    " :nodoc:
     command! -nargs=+ -bang -bar TLibTrace :
     unlet! s:trace_rx
 endf

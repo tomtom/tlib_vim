@@ -53,7 +53,6 @@ Contents~
         tlib#trace#Print ....................... |tlib#trace#Print()|
         tlib#trace#Enable ...................... |tlib#trace#Enable()|
         tlib#trace#Disable ..................... |tlib#trace#Disable()|
-        :TLibTrace ............................. |:TLibTrace|
         tlib#dictionary#Rev .................... |tlib#dictionary#Rev()|
         g:tlib_persistent ...................... |g:tlib_persistent|
         tlib#persistent#Dir .................... |tlib#persistent#Dir()|
@@ -107,6 +106,7 @@ Contents~
         tlib#vcs#FindVCS ....................... |tlib#vcs#FindVCS()|
         tlib#vcs#Ls ............................ |tlib#vcs#Ls()|
         tlib#vcs#Diff .......................... |tlib#vcs#Diff()|
+        tlib#vcs#GitLsPostprocess .............. |tlib#vcs#GitLsPostprocess()|
         tlib#char#Get .......................... |tlib#char#Get()|
         tlib#char#IsAvailable .................. |tlib#char#IsAvailable()|
         tlib#char#GetWithTimeout ............... |tlib#char#GetWithTimeout()|
@@ -571,9 +571,6 @@ tlib#trace#Enable()
 tlib#trace#Disable()
     Disable tracing via |:TLibTrace|.
 
-                                                    *:TLibTrace*
-:TLibTrace
-
 
 ========================================================================
 autoload/tlib/dictionary.vim~
@@ -878,6 +875,9 @@ tlib#vcs#Ls(?filename=bufname('%'), ?vcs=[type, dir])
                                                     *tlib#vcs#Diff()*
 tlib#vcs#Diff(filename, ?vcs=[type, dir])
     Return the diff for "filename"
+
+                                                    *tlib#vcs#GitLsPostprocess()*
+tlib#vcs#GitLsPostprocess(filename)
 
 
 ========================================================================
