@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2015-10-28.
-" @Revision:    6.1.352
+" @Last Change: 2015-11-06.
+" @Revision:    7.1.352
 
 
 " Where to display the line when using |tlib#buffer#ViewLine|.
@@ -201,7 +201,7 @@ endf
 
 
 function! s:UndoHighlightLine() "{{{3
-    3match none
+    2match none
     autocmd! TLib CursorMoved,CursorMovedI <buffer>
     autocmd! TLib CursorHold,CursorHoldI <buffer>
     autocmd! TLib InsertEnter,InsertChange,InsertLeave <buffer>
@@ -211,8 +211,8 @@ endf
 
 function! tlib#buffer#HighlightLine(...) "{{{3
     TVarArg ['line', line('.')]
-    " exec '3match MatchParen /^\%'. a:line .'l.*/'
-    exec '3match Search /^\%'. line .'l.*/'
+    " exec '2match MatchParen /^\%'. a:line .'l.*/'
+    exec '2match Search /^\%'. line .'l.*/'
     call tlib#autocmdgroup#Init()
     exec 'autocmd TLib CursorMoved,CursorMovedI <buffer> if line(".") != '. line .' | call s:UndoHighlightLine() | endif'
     autocmd TLib CursorHold,CursorHoldI <buffer> call s:UndoHighlightLine()
