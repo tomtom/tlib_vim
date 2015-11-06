@@ -1,9 +1,10 @@
-" vcs.vim
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2012-03-08.
-" @Last Change: 2015-10-27.
-" @Revision:    141
+" @Last Change: 2015-11-06.
+" @Revision:    173
+
+scriptencoding utf-8
 
 
 " A dictionarie of supported VCS (currently: git, hg, svn, bzr).
@@ -12,6 +13,7 @@ TLet g:tlib#vcs#def = {
             \ 'git': {
             \     'dir': '.git',
             \     'ls': 'git ls-files --full-name',
+            \     'ls.postprocess': '*tlib#vcs#GitLsPostprocess',
             \     'diff': 'git diff --no-ext-diff -U0 %s'
             \ },
             \ 'hg': {
@@ -92,13 +94,17 @@ function! s:GetCmd(vcstype, cmd)
     let vcsdef = get(g:tlib#vcs#def, a:vcstype, {})
     if has_key(vcsdef, a:cmd)
         let cmd = vcsdef[a:cmd]
-        let bin = get(g:tlib#vcs#executables, a:vcstype, '')
-        if empty(bin)
-            let cmd = ''
-        elseif bin != a:vcstype
-            " let bin = escape(shellescape(bin), '\')
-            let bin = escape(bin, '\')
-            let cmd = substitute(cmd, '^.\{-}\zs'. escape(a:vcstype, '\'), bin, '')
+        if cmd =~ '^\*'
+            let cmd = substitute(cmd, '^\*', '', '')
+        else
+            let bin = get(g:tlib#vcs#executables, a:vcstype, '')
+            if empty(bin)
+                let cmd = ''
+            elseif bin != a:vcstype
+                " let bin = escape(shellescape(bin), '\')
+                let bin = escape(bin, '\')
+                let cmd = substitute(cmd, '^.\{-}\zs'. escape(a:vcstype, '\'), bin, '')
+            endif
         endif
         return cmd
     else
@@ -133,7 +139,12 @@ function! tlib#vcs#Ls(...) "{{{3
                 let filess = tlib#sys#SystemInDir(rootdir, cmd)
                 " TLogVAR filess
                 let files = split(filess, '\n')
+                let postprocess = s:GetCmd(vcstype, 'ls.postprocess')
+                if !empty(postprocess)
+                    call map(files, 'call(postprocess, [v:val])')
+                endif
                 call map(files, 'join([rootdir, v:val], "/")')
+                " TLogVAR files
                 return files
             endif
         endif
@@ -156,5 +167,19 @@ function! tlib#vcs#Diff(filename, ...) "{{{3
         endif
     endif
     return []
+endf
+
+
+function! tlib#vcs#GitLsPostprocess(filename) abort "{{{3
+    if a:filename =~ '^".\{-}"$'
+        " let filename = matchstr(a:filename, '^"\zs.\{-}\ze"$')
+        " let filename = substitute(filename, '\\\@<!\\\(\d\d\d\)', '\=nr2char("0". submatch(1))', 'g')
+        " let filename = iconv(filename, 'latin1', &enc)
+        let filename = eval(a:filename)
+        " TLogVAR a:filename, filename, &enc
+        return filename
+    else
+        return a:filename
+    endif
 endf
 
