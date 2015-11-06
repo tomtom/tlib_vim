@@ -2,7 +2,7 @@
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2012-03-08.
 " @Last Change: 2015-11-06.
-" @Revision:    177
+" @Revision:    180
 
 scriptencoding utf-8
 
@@ -172,10 +172,9 @@ endf
 
 function! tlib#vcs#GitLsPostprocess(filename) abort "{{{3
     if a:filename =~ '^".\{-}"$'
-        " let filename = matchstr(a:filename, '^"\zs.\{-}\ze"$')
-        " let filename = substitute(filename, '\\\@<!\\\(\d\d\d\)', '\=nr2char("0". submatch(1))', 'g')
-        " let filename = iconv(filename, 'latin1', &enc)
-        let filename = eval(a:filename)
+        let filename = matchstr(a:filename, '^"\zs.\{-}\ze"$')
+        let filename = substitute(filename, '\%(\\\@<!\\\(\d\d\d\)\)\+', '\=eval(''"''. submatch(0) .''"'')', 'g')
+        " let filename = eval(a:filename)
         " TLogVAR a:filename, filename, &enc
         return filename
     else
