@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2012-03-08.
-" @Last Change: 2015-11-06.
-" @Revision:    189
+" @Last Change: 2015-11-07.
+" @Revision:    190
 
 scriptencoding utf-8
 
@@ -66,13 +66,13 @@ function! tlib#vcs#FindVCS(filename) "{{{3
     let dirname = fnamemodify(a:filename, isdirectory(a:filename) ? ':p' : ':p:h')
     let path = escape(dirname, ';') .';'
     " TLogVAR a:filename, dirname, path
-    TLibTrace 'tlib', a:filename, path
+    Tlibtrace 'tlib', a:filename, path
     let depth = -1
     for vcs in keys(g:tlib#vcs#def)
         let subdir = g:tlib#vcs#def[vcs].dir
         let vcsdir = finddir(subdir, path)
         " TLogVAR vcs, subdir, vcsdir
-        TLibTrace 'tlib', vcs, subdir, vcsdir
+        Tlibtrace 'tlib', vcs, subdir, vcsdir
         if !empty(vcsdir)
             let vcsdir_depth = len(split(fnamemodify(vcsdir, ':p'), '\/'))
             if vcsdir_depth > depth
@@ -83,7 +83,7 @@ function! tlib#vcs#FindVCS(filename) "{{{3
             endif
         endif
     endfor
-    TLibTrace 'tlib', type, dir
+    Tlibtrace 'tlib', type, dir
     " TLogVAR type, dir
     if empty(type)
         return ['', '']
@@ -124,7 +124,7 @@ function! tlib#vcs#Ls(...) "{{{3
     else
         let vcs = tlib#vcs#FindVCS(a:0 >= 1 ? a:1 : bufname('%'))
     endif
-    TLibTrace 'tlib', vcs, a:000
+    Tlibtrace 'tlib', vcs, a:000
     " TLogVAR vcs
     if !empty(vcs)
         let [vcstype, vcsdir] = vcs
@@ -140,7 +140,7 @@ function! tlib#vcs#Ls(...) "{{{3
                     let cmd = ls
                 endif
                 " TLogVAR cmd, getcwd()
-                TLibTrace 'tlib', getcwd(), vcstype, vcsdir, rootdir, cmd
+                Tlibtrace 'tlib', getcwd(), vcstype, vcsdir, rootdir, cmd
                 let filess = tlib#sys#SystemInDir(rootdir, cmd)
                 " TLogVAR filess
                 let files = split(filess, '\n')

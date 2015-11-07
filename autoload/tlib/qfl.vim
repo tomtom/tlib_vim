@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-11-03
-" @Revision:    52
+" @Last Change: 2015-11-07
+" @Revision:    53
 
 " :nodoc:
 TLet g:tlib#qfl#world = {
@@ -282,7 +282,7 @@ endf
 
 function! tlib#qfl#QflList(list, ...) abort "{{{3
     TVarArg ['world_dict', {}], ['anyway', 0], ['suspended', 0]
-    TLibTrace 'tlib', world_dict, anyway, suspended
+    Tlibtrace 'tlib', world_dict, anyway, suspended
     " TLogVAR a:list, world_dict, anyway, suspended
     if !anyway && empty(a:list)
         return

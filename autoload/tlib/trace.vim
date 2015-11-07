@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-11-06
-" @Revision:    116
+" @Last Change: 2015-11-07
+" @Revision:    133
 
 
 if !exists('g:tlib#trace#backtrace')
@@ -18,6 +18,9 @@ if !exists('g:tlib#trace#printf')
 endif
 
 
+let s:trace_hl = {'error': 'ErrorMsg', 'fatal': 'ErrorMsg', 'warning': 'WarningMsg'}
+
+
 " Set |g:tlib#trace#printf| to make |tlib#trace#Print()| print to 
 " `filename`.
 function! tlib#trace#PrintToFile(filename) abort "{{{3
@@ -25,7 +28,7 @@ function! tlib#trace#PrintToFile(filename) abort "{{{3
 endf
 
 
-" Set the tracing |regexp|. See |:TLibTrace|.
+" Set the tracing |regexp|. See |:Tlibtrace|.
 " This will also call |tlib#trace#Enable()|.
 "
 " Examples:
@@ -34,13 +37,13 @@ endf
 function! tlib#trace#Set(vars) abort "{{{3
     call tlib#trace#Enable()
     if type(a:vars) == 1
-        let vars = tlib#string#SplitCommaList(a:vars)
+        let vars = tlib#string#SplitCommaList(a:vars, '[,[:space:]]\+')
     else
         let vars = a:vars
     endif
     for rx in vars
         let rx1 = substitute(rx, '^[+-]', '', 'g')
-        if rx1 !=# 'error'
+        if rx1 !~# '^\%(error\|fatal\)$' && s:trace_rx !~# '[(|]'. tlib#rx#Escape(rx1) .'\\'
             " TLogVAR rx, rx1
             if rx =~ '^+'
                 let s:trace_rx = substitute(s:trace_rx, '\ze\\)\$', '\\|'. tlib#rx#EscapeReplace(rx1), '')
@@ -58,7 +61,7 @@ endf
 
 
 " Print the values of vars. The first value is a "guard" (see 
-" |:TLibTrace|).
+" |:Tlibtrace|).
 function! tlib#trace#Print(caller, vars, values) abort "{{{3
     let msg = ['TRACE']
     let guard = a:values[0]
@@ -89,20 +92,20 @@ function! tlib#trace#Print(caller, vars, values) abort "{{{3
 endf
 
 
-" Enable tracing via |:TLibTrace|.
+" Enable tracing via |:Tlibtrace|.
 function! tlib#trace#Enable() abort "{{{3
     if !exists('s:trace_rx')
         let s:trace_rx = '^\%(error\)$'
         " :nodoc:
-        command! -nargs=+ -bang -bar TLibTrace if empty('<bang>') | call tlib#trace#Print(expand('<sfile>'), [<f-args>], [<args>]) | else | call tlib#trace#Set(<q-args>) | endif
+        command! -nargs=+ -bar Tlibtrace call tlib#trace#Print(expand('<sfile>'), [<f-args>], [<args>])
     endif
 endf
 
 
-" Disable tracing via |:TLibTrace|.
+" Disable tracing via |:Tlibtrace|.
 function! tlib#trace#Disable() abort "{{{3
     " :nodoc:
-    command! -nargs=+ -bang -bar TLibTrace :
+    command! -nargs=+ -bang -bar Tlibtrace :
     unlet! s:trace_rx
 endf
 
