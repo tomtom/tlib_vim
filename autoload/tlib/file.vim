@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    167
+" @Revision:    168
 
 
 if !exists('g:tlib#file#drop')
@@ -264,10 +264,12 @@ if v:version > 704 || (v:version == 704 && has('patch279'))
 
 else
 
+    " :nodoc:
     function! tlib#file#Glob(pattern) abort "{{{3
         return split(glob(a:pattern), '\n')
     endf
 
+    " :nodoc:
     function! tlib#file#Globpath(path, pattern) abort "{{{3
         return split(globpath(a:path, a:pattern), '\n')
     endf
