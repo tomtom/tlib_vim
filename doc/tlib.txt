@@ -35,7 +35,8 @@ Contents~
         :TVarArg ............................... |:TVarArg|
         :TBrowseOutput ......................... |:TBrowseOutput|
         :TBrowseScriptnames .................... |:TBrowseScriptnames|
-        :TLibTrace ............................. |:TLibTrace|
+        :Tlibtrace ............................. |:Tlibtrace|
+        :Tlibtraceset .......................... |:Tlibtraceset|
         Add .................................... |Add()|
         TestGetArg ............................. |TestGetArg()|
         TestGetArg1 ............................ |TestGetArg1()|
@@ -217,7 +218,6 @@ Contents~
         tlib#rx#Escape ......................... |tlib#rx#Escape()|
         tlib#rx#EscapeReplace .................. |tlib#rx#EscapeReplace()|
         tlib#rx#Suffixes ....................... |tlib#rx#Suffixes()|
-        tlib#rx#Convert ........................ |tlib#rx#Convert()|
         tlib#rx#LooksLikeRegexp ................ |tlib#rx#LooksLikeRegexp()|
         g:tlib_tags_extra ...................... |g:tlib_tags_extra|
         g:tlib_tag_substitute .................. |g:tlib_tag_substitute|
@@ -348,6 +348,7 @@ Contents~
         tlib#qfl#FormatQFLE .................... |tlib#qfl#FormatQFLE()|
         tlib#qfl#QfeFilename ................... |tlib#qfl#QfeFilename()|
         tlib#qfl#InitListBuffer ................ |tlib#qfl#InitListBuffer()|
+        tlib#qfl#SetSyntax ..................... |tlib#qfl#SetSyntax()|
         tlib#qfl#Balloon ....................... |tlib#qfl#Balloon()|
         tlib#qfl#AgentEditQFE .................. |tlib#qfl#AgentEditQFE()|
         tlib#qfl#AgentPreviewQFE ............... |tlib#qfl#AgentPreviewQFE()|
@@ -463,17 +464,19 @@ plugin/02tlib.vim~
       TBrowseScriptnames 
 <
 
-                                                    *:TLibTrace*
-:TLibTrace GUARD, VAR1, VAR2...
+                                                    *:Tlibtrace*
+:Tlibtrace GUARD, VAR1, VAR2...
     Do nothing unless |tlib#trace#Enable()| was called.
 
-    When |tlib#trace#Enable()| was called:
+    When |:Tlibtraceset| or |tlib#trace#Enable()| were called:
 
     If GUARD is a number that evaluates to true or if it is a string that 
-    matches a |regexp|, which was added using TLibTrace! (with '!'), 
+    matches a |regexp|, which was added using Tlibtrace! (with '!'), 
     display the values of VAR1, VAR2 ...
 
-    :TLibTrace! +RX1, -RX2...
+                                                    *:Tlibtraceset*
+:Tlibtraceset
+    :Tlibtraceset +RX1, -RX2...
     If |tlib#trace#Enable()| was called: With the optional <bang>, users 
     can add and remove GUARDs (actually a |regexp|) that should be traced.
 
@@ -550,7 +553,7 @@ tlib#trace#PrintToFile(filename)
 
                                                     *tlib#trace#Set()*
 tlib#trace#Set(vars)
-    Set the tracing |regexp|. See |:TLibTrace|.
+    Set the tracing |regexp|. See |:Tlibtrace|.
     This will also call |tlib#trace#Enable()|.
 
     Examples:
@@ -560,15 +563,15 @@ tlib#trace#Set(vars)
                                                     *tlib#trace#Print()*
 tlib#trace#Print(caller, vars, values)
     Print the values of vars. The first value is a "guard" (see 
-    |:TLibTrace|).
+    |:Tlibtrace|).
 
                                                     *tlib#trace#Enable()*
 tlib#trace#Enable()
-    Enable tracing via |:TLibTrace|.
+    Enable tracing via |:Tlibtrace|.
 
                                                     *tlib#trace#Disable()*
 tlib#trace#Disable()
-    Disable tracing via |:TLibTrace|.
+    Disable tracing via |:Tlibtrace|.
 
 
 ========================================================================
@@ -1373,12 +1376,6 @@ tlib#rx#EscapeReplace(text, ?magic='m')
                                                     *tlib#rx#Suffixes()*
 tlib#rx#Suffixes(...)
 
-                                                    *tlib#rx#Convert()*
-tlib#rx#Convert(rx, to, ?from = 'guess')
-    Convert a subset of |regexp| expressions to another form.
-    Supported types: m, M, v, V
-    Supported expressions: ^, $, ., \(\|), \{}, *, \+, \?, \=, []
-
                                                     *tlib#rx#LooksLikeRegexp()*
 tlib#rx#LooksLikeRegexp(text)
 
@@ -2172,6 +2169,9 @@ tlib#qfl#QfeFilename(qfe)
                                                     *tlib#qfl#InitListBuffer()*
 tlib#qfl#InitListBuffer(world)
 
+                                                    *tlib#qfl#SetSyntax()*
+tlib#qfl#SetSyntax()
+
                                                     *tlib#qfl#Balloon()*
 tlib#qfl#Balloon()
 
@@ -2428,7 +2428,7 @@ tlib#string#Strip(string)
 tlib#string#Count(string, rx)
 
                                                     *tlib#string#SplitCommaList()*
-tlib#string#SplitCommaList(text)
+tlib#string#SplitCommaList(text, ...)
 
 
 
