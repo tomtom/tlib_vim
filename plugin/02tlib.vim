@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Created:     2007-04-10.
-" @Last Change: 2015-11-07.
+" @Last Change: 2015-11-09.
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    800
+" @Revision:    804
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " GetLatestVimScripts: 1863 1 tlib.vim
 " tlib.vim -- Some utility functions

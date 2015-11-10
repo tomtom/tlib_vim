@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @GIT:         http://github.com/tomtom/tlib_vim/
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-10-28.
-" @Revision:    8
+" @Last Change: 2015-11-09.
+" @Revision:    10
 
 if &cp || exists("loaded_tlib_macros")
     finish
@@ -29,9 +29,9 @@ command! -nargs=+ TRequire let s:require = [<f-args>]
                 \ | endif | unlet s:require
 
 
-" :display: :TTimeCommand CMD
+" :display: :Ttimecommand CMD
 " Time the execution time of CMD.
-command! -nargs=1 -complete=command TTimeCommand call tlib#cmd#Time(<q-args>)
+command! -nargs=1 -complete=command Ttimecommand call tlib#cmd#Time(<q-args>)
 
 
 let &cpo = s:save_cpo
