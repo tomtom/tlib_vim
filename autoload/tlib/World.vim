@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1424
+" @Revision:    1426
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -683,13 +683,19 @@ endf
 " :nodoc:
 function! s:prototype.ReduceFilter() dict "{{{3
     " TLogVAR self.filter
-    if self.filter[0] == [''] && len(self.filter) > 1
-        call remove(self.filter, 0)
-    elseif empty(self.filter[0][0]) && len(self.filter[0]) > 1
-        call remove(self.filter[0], 0)
-    else
-        call self.matcher.ReduceFrontFilter(self)
-    endif
+    let reduced = 0
+    while !reduced
+        if self.filter[0] == [''] && len(self.filter) > 1
+            call remove(self.filter, 0)
+        elseif empty(self.filter[0][0]) && len(self.filter[0]) > 1
+            call remove(self.filter[0], 0)
+        else
+            call self.matcher.ReduceFrontFilter(self)
+        endif
+        if self.IsValidFilter()
+            let reduced = 1
+        endif
+    endwh
 endf
 
 
