@@ -1,7 +1,7 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    50
+" @Revision:    56
 
 
 function! tlib#eval#FormatValue(value, ...) "{{{3
@@ -45,15 +45,20 @@ function! tlib#eval#FormatValue(value, ...) "{{{3
 endf
 
 
-function! tlib#eval#Extend(a, b) abort "{{{3
+function! tlib#eval#Extend(a, b, ...) abort "{{{3
+    let mode = a:0 >= 1 ? a:1 : 'force'
     if type(a:a) != type(a:b)
         throw 'tlib#eval#Extend: Incompatible types: a='. string(a:a) .' b='. string(a:b)
     elseif type(a:a) == 3 " list
-        return extend(a:a, a:b)
+        return extend(a:a, a:b, mode)
     elseif type(a:a) == 4 " dict
         for k in keys(a:b)
             if has_key(a:a, k)
-                let a:a[k] = tlib#eval#Extend(copy(a:a[k]), a:b[k])
+                if mode == 'force'
+                    let a:a[k] = tlib#eval#Extend(copy(a:a[k]), a:b[k], mode)
+                elseif mode == 'error'
+                    throw 'tlib#eval#Extend: Key already exists: '. k
+                endif
             else
                 let a:a[k] = a:b[k]
             endif
