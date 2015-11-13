@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1361
+" @Revision:    1366
 
 
 " :filedoc:
@@ -936,6 +936,7 @@ function! s:Init(world, cmd) "{{{3
         for key_mode in keys(a:world.key_map)
             let a:world.key_map[key_mode] = map(a:world.key_map[key_mode], 'type(v:val) == 4 ? v:val : {"agent": v:val}')
         endfor
+        " TLogVAR a:world.key_mode
         if type(a:world.key_handlers) == 3
             call s:ExtendKeyMap(a:world, a:world.key_mode, a:world.key_handlers)
         elseif type(a:world.key_handlers) == 4
@@ -945,6 +946,7 @@ function! s:Init(world, cmd) "{{{3
         else
             throw "tlib#input#ListW: key_handlers must be either a list or a dictionary"
         endif
+        " TLogVAR a:world.type, a:world.key_map
         if !empty(a:cmd)
             let a:world.state .= ' '. a:cmd
         endif
