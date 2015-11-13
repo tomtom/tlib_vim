@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Created:     2007-04-10.
-" @Last Change: 2015-11-09.
+" @Last Change: 2015-11-13.
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    804
+" @Revision:    805
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " GetLatestVimScripts: 1863 1 tlib.vim
 " tlib.vim -- Some utility functions
@@ -14,7 +14,7 @@ if v:version < 700 "{{{2
     echoerr "tlib requires Vim >= 7"
     finish
 endif
-let g:loaded_tlib = 116
+let g:loaded_tlib = 117
 
 let s:save_cpo = &cpo
 set cpo&vim
