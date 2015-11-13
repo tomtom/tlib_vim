@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1353
+" @Revision:    1361
 
 
 " :filedoc:
@@ -366,7 +366,7 @@ function! tlib#input#ListW(world, ...) "{{{3
             " let time01 = str2float(reltimestr(reltime()))  " DBG
             " TLogVAR time01, time01 - time0
             try
-                call s:RunStateHandlers(world)
+                let world = s:RunStateHandlers(world)
 
                 " if exists('b:tlib_world_event')
                 "     let event = b:tlib_world_event
@@ -590,8 +590,9 @@ function! tlib#input#ListW(world, ...) "{{{3
                 if !empty(world.next_agent)
                     let nagent = world.next_agent
                     let world.next_agent = ''
-                    let world = call(nagent, [world, world.GetSelectedItems(world.CurrentItem())])
-                    call s:CheckAgentReturnValue(nagent, world)
+                    " let world = call(nagent, [world, world.GetSelectedItems(world.CurrentItem())])
+                    " call s:CheckAgentReturnValue(nagent, world)
+                    let world = s:CallAgent({'agent': nagent}, world, world.GetSelectedItems(world.CurrentItem()))
                 elseif !empty(world.next_eval)
                     let selected = world.GetSelectedItems(world.CurrentItem())
                     let neval = world.next_eval
@@ -606,9 +607,10 @@ function! tlib#input#ListW(world, ...) "{{{3
                     " TLogVAR c, world.key_map[world.key_mode][c]
                     " TLog "Agent: ". string(world.key_map[world.key_mode][c])
                     let handler = world.key_map[world.key_mode][c]
-                    " TLogVAR handler
-                    let world = call(handler.agent, [world, world.GetSelectedItems(world.CurrentItem())])
-                    call s:CheckAgentReturnValue(c, world)
+                    " " TLogVAR handler
+                    " let world = call(handler.agent, [world, world.GetSelectedItems(world.CurrentItem())])
+                    " call s:CheckAgentReturnValue(c, world)
+                    let world = s:CallAgent(handler, world, world.GetSelectedItems(world.CurrentItem()))
                     silent! let @/ = sr
                     " continue
                 elseif c == 13
@@ -667,8 +669,9 @@ function! tlib#input#ListW(world, ...) "{{{3
                     " TLogVAR world.prefidx, world.state
                 elseif has_key(world.key_map[world.key_mode], 'unknown_key')
                     let agent = world.key_map[world.key_mode].unknown_key.agent
-                    let world = call(agent, [world, c])
-                    call s:CheckAgentReturnValue(agent, world)
+                    " let world = call(agent, [world, c])
+                    " call s:CheckAgentReturnValue(agent, world)
+                    let world = s:CallAgent({'agent': agent}, world, c)
                 elseif c >= 32
                     let world.state = 'display'
                     let numbase = get(world.numeric_chars, c, -99999)
@@ -860,6 +863,18 @@ function! tlib#input#ListW(world, ...) "{{{3
     endtry
 endf
 
+
+function! s:CallAgent(handler, world, list) abort "{{{3
+    let agent = a:handler.agent
+    let args = [a:world, a:list]
+    if has_key(a:handler, 'args')
+        let args += a:handler.args
+    endif
+    let world = call(agent, args)
+    " TLogVAR world.state, world.rv
+    call s:CheckAgentReturnValue(agent, world)
+    return world
+endf
 
 function! s:GetModdedChar(world) "{{{3
     let [char, mode] = tlib#char#Get(a:world.timeout, a:world.timeout_resolution, 1)
@@ -1087,11 +1102,13 @@ function! s:RunStateHandlers(world) "{{{3
                 exec ea
             else
                 let agent = get(handler, 'agent', '')
-                let a:world = call(agent, [a:world, a:world.GetSelectedItems(a:world.CurrentItem())])
-                call s:CheckAgentReturnValue(agent, a:world)
+                " let world = call(agent, [a:world, a:world.GetSelectedItems(a:world.CurrentItem())])
+                " call s:CheckAgentReturnValue(agent, a:world)
+                let world = s:CallAgent({'agent': agent}, world, world.GetSelectedItems(world.CurrentItem()))
             endif
         endif
     endfor
+    return world
 endf
 
 
