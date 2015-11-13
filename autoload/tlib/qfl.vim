@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-11-09
-" @Revision:    55
+" @Last Change: 2015-11-13
+" @Revision:    56
 
 " :nodoc:
 TLet g:tlib#qfl#world = {
@@ -183,12 +183,13 @@ endf
 
 function! tlib#qfl#AgentWithSelected(world, selected, ...) "{{{3
     let cmd = a:0 >= 1 ? a:1 : input('Ex command: ', '', 'command')
+    let world = a:world
     if !empty(cmd)
-        call tlib#qfl#RunCmdOnSelected(a:world, a:selected, cmd)
+        let world tlib#qfl#RunCmdOnSelected(world, a:selected, cmd)
     else
-        let a:world.state = 'redisplay'
+        let world.state = 'redisplay'
     endif
-    return a:world
+    return world
 endf
 
 
