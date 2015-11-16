@@ -684,7 +684,7 @@ autoload/tlib/eval.vim~
 tlib#eval#FormatValue(value, ...)
 
                                                     *tlib#eval#Extend()*
-tlib#eval#Extend(a, b)
+tlib#eval#Extend(a, b, ...)
 
 
 ========================================================================
