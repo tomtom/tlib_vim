@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-11-03.
-" @Revision:    236
+" @Last Change: 2015-11-16.
+" @Revision:    249
 
 
 " :def: function! tlib#arg#Get(n, var, ?default="", ?test='')
@@ -156,6 +156,8 @@ function! s:SetOpt(def, opts, idx, opt) abort "{{{3
                             endif
                         elseif type(default) == 1
                             let opt .= '=STRING'
+                        elseif type(default) == 3
+                            let opt .= '=COMMA-LIST'
                         endif
                         echom printf('  --%20s (default: %s)', opt, string(default))
                     endfor
@@ -180,7 +182,30 @@ function! s:SetOpt(def, opts, idx, opt) abort "{{{3
         if empty(ml)
             throw 'tlib#arg#GetOpts: Cannot parse: '. a:opt
         else
-            let a:opts[ml[1]] = ml[2]
+            let values = get(a:def, 'values', {})
+            if has_key(values, ml[1])
+                let vdef = values[ml[1]]
+                let type = s:GetValueType(vdef)
+                if type == -1
+                    let opt_value = !!str2nr(ml[2])
+                elseif type == 0
+                    let opt_value = str2nr(ml[2])
+                elseif type == 1
+                    let opt_value = ml[2]
+                elseif type == 2
+                    let opt_value = function(ml[2])
+                elseif type == 3
+                    let opt_value = tlib#string#SplitCommaList(ml[2])
+                elseif type == 4
+                    throw 'tlib#arg#GetOpts: Unsupported type conversion for '. ml[1]
+                elseif type == 5
+                    let opt_value = str2float(ml[2])
+                endif
+            else
+                let opt_value = ml[2]
+            endif
+            let a:opts[ml[1]] = opt_value
+            unlet opt_value
         endif
     elseif short && a:opt =~# '^-\w='
         let flagdefs = get(a:def, 'flags', {})
