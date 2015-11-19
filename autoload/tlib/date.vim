@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2010-03-25.
-" @Last Change: 2015-11-02.
-" @Revision:    11.0.34
+" @Last Change: 2015-11-19.
+" @Revision:    13.0.34
 
 
 if !exists('g:tlib#date#ShortDatePrefix') | let g:tlib#date#ShortDatePrefix = '20' | endif "{{{2
@@ -14,6 +14,11 @@ let g:tlib#date#dayshift = 60 * 60 * 24
 " let g:tlib#date#date_rx = '\<\(\d\{4}\)-\(\d\d\)-\(\d\d\)\%(\s\+\(\(\d\d\):\(\d\d\)\)\)\?\>'
 let g:tlib#date#date_rx = '\<\(\d\{4}\)-\(\d\d\)-\(\d\d\)\>'
 let g:tlib#date#date_format = '%Y-%m-%d'
+
+
+function! tlib#date#IsDate(text) abort "{{{3
+    return a:text =~# '^'. g:tlib#date#date_rx .'$'
+endf
 
 
 " :display: tlib#date#DiffInDays(date1, ?date2=localtime(), ?allow_zero=0)
