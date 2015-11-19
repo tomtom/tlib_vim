@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-11-16.
-" @Revision:    249
+" @Last Change: 2015-11-19.
+" @Revision:    251
 
 
 " :def: function! tlib#arg#Get(n, var, ?default="", ?test='')
@@ -173,10 +173,10 @@ function! s:SetOpt(def, opts, idx, opt) abort "{{{3
         let break = 2
     elseif long &&  a:opt =~# '^--no-.\+'
         let key = matchstr(a:opt, '^--no-\zs.\+$')
-        let a:opts[key] = 0
+        let a:opts[key] = s:Validate(a:def, key, 0)
     elseif long &&  a:opt =~# '^--\w\+$'
         let key = matchstr(a:opt, '^--\zs.\+$')
-        let a:opts[key] = 1
+        let a:opts[key] = s:Validate(a:def, key, 1)
     elseif long &&  a:opt =~# '^--\w\+='
         let ml = matchlist(a:opt, '^--\(\w\+\)=\(.*\)$')
         if empty(ml)
@@ -204,7 +204,7 @@ function! s:SetOpt(def, opts, idx, opt) abort "{{{3
             else
                 let opt_value = ml[2]
             endif
-            let a:opts[ml[1]] = opt_value
+            let a:opts[ml[1]] = s:Validate(a:def, ml[1], opt_value)
             unlet opt_value
         endif
     elseif short && a:opt =~# '^-\w='
@@ -232,8 +232,22 @@ function! s:SetFlag(def, opts, idx, flag, rest, flagdefs) abort "{{{3
     if has_key(a:flagdefs, a:flag)
         call s:SetOpt(a:def, a:opts, a:idx, a:flagdefs[a:flag] . a:rest)
     else
-        let a:opts[a:flag] = 1
+        let a:opts[a:flag] = s:Validate(a:def, a:flag, 1)
     endif
+endf
+
+
+function! s:Validate(def, name, value) abort "{{{3
+    let values = get(a:def, 'values', {})
+    if has_key(values, a:name)
+        let vdef = values[a:name]
+        if has_key(vdef, 'validate')
+            if !call(vdef.validate, [a:value])
+                throw printf('tlib#arg: %s has invalid value: %s', string(a:name), string(a:value))
+            endif
+        endif
+    endif
+    return a:value
 endf
 
 
