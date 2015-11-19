@@ -296,6 +296,7 @@ Contents~
         tlib#tab#BufMap ........................ |tlib#tab#BufMap()|
         tlib#tab#TabWinNr ...................... |tlib#tab#TabWinNr()|
         tlib#tab#Set ........................... |tlib#tab#Set()|
+        tlib#date#IsDate ....................... |tlib#date#IsDate()|
         tlib#date#DiffInDays ................... |tlib#date#DiffInDays()|
         tlib#date#Parse ........................ |tlib#date#Parse()|
         tlib#date#SecondsSince1970 ............. |tlib#date#SecondsSince1970()|
@@ -1907,6 +1908,9 @@ tlib#tab#Set(tabnr)
 
 ========================================================================
 autoload/tlib/date.vim~
+
+                                                    *tlib#date#IsDate()*
+tlib#date#IsDate(text)
 
                                                     *tlib#date#DiffInDays()*
 tlib#date#DiffInDays(date1, ?date2=localtime(), ?allow_zero=0)
