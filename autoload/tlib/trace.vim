@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-11-07
-" @Revision:    133
+" @Last Change: 2015-11-23
+" @Revision:    134
 
 
 if !exists('g:tlib#trace#backtrace')
@@ -60,6 +60,14 @@ function! tlib#trace#Set(vars) abort "{{{3
 endf
 
 
+function! tlib#trace#Backtrace(caller) abort "{{{3
+    let caller = split(a:caller, '\.\.')
+    let start  = max([0, len(caller) - g:tlib#trace#backtrace - 1])
+    let caller = caller[start : -1]
+    return join(caller, '..')
+endf
+
+
 " Print the values of vars. The first value is a "guard" (see 
 " |:Tlibtrace|).
 function! tlib#trace#Print(caller, vars, values) abort "{{{3
@@ -75,11 +83,9 @@ function! tlib#trace#Print(caller, vars, values) abort "{{{3
         call add(msg, guard)
         call add(msg, tlib#time#FormatNow() .':')
         if g:tlib#trace#backtrace > 0
-            let caller = split(a:caller, '\.\.')
-            let start  = max([0, len(caller) - g:tlib#trace#backtrace - 1])
-            let caller = caller[start : -1]
-            if !empty(caller)
-                call add(msg, join(caller, '..') .':')
+            let bt = tlib#trace#Backtrace(a:caller)
+            if !empty(bt)
+                call add(msg, bt .':')
             endif
         endif
         for i in range(1, len(a:vars) - 1)
