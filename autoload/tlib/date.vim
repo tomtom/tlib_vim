@@ -139,14 +139,14 @@ function! tlib#date#Shift(date, shift) abort "{{{3
     if a:shift =~ 'd$'
         let secs = tlib#date#SecondsSince1970(a:date) + g:tlib#date#dayshift * n
         " TLogVAR secs
-        let date = strftime(g:tlib#date#date_format, secs)
+        let date = tlib#date#Format(secs)
     elseif a:shift =~ 'w$'
         let secs = tlib#date#SecondsSince1970(a:date) + g:tlib#date#dayshift * n * 7
-        let date = strftime(g:tlib#date#date_format, secs)
+        let date = tlib#date#Format(secs)
     elseif a:shift =~ 'm$'
         let d = str2nr(ml[3])
         let ms = str2nr(ml[2]) + n
-        let m = ms % 12 + 1
+        let m = (ms - 1) % 12 + 1
         let yr = str2nr(ml[1]) + ms / 12
         let date = printf('%04d-%02d-%02d', yr, m, d)
         " TLogVAR d, ms, m, yr, date
