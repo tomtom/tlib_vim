@@ -57,3 +57,17 @@ function! tlib#balloon#Expr() "{{{3
 endf
 
 
+function! tlib#balloon#Expand(expr) abort "{{{3
+    if v:beval_bufnr != bufnr('%')
+        " TLogVAR v:beval_bufnr, bufnr('%')
+        return ''
+    endif
+    let win = winsaveview()
+    try
+        call setpos('.', [v:beval_bufnr, v:beval_lnum, v:beval_col, 0])
+        return expand(a:expr)
+    finally
+        call winrestview(win)
+    endtry
+endf
+
