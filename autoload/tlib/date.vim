@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2010-03-25.
-" @Last Change: 2015-11-19.
-" @Revision:    13.0.34
+" @Last Change: 2015-11-23.
+" @Revision:    21.0.34
 
 
 if !exists('g:tlib#date#ShortDatePrefix') | let g:tlib#date#ShortDatePrefix = '20' | endif "{{{2
@@ -18,6 +18,11 @@ let g:tlib#date#date_format = '%Y-%m-%d'
 
 function! tlib#date#IsDate(text) abort "{{{3
     return a:text =~# '^'. g:tlib#date#date_rx .'$'
+endf
+
+
+function! tlib#date#Format(secs1970) abort "{{{3
+    return strftime(g:tlib#date#date_format, a:secs1970)
 endf
 
 
