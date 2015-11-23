@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Created:     2007-04-10.
-" @Last Change: 2015-11-13.
+" @Last Change: 2015-11-23.
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    805
+" @Revision:    808
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " GetLatestVimScripts: 1863 1 tlib.vim
 " tlib.vim -- Some utility functions
@@ -92,6 +92,10 @@ command! -nargs=+ -bang -bar Tlibtrace :
 " If |tlib#trace#Enable()| was called: With the optional <bang>, users 
 " can add and remove GUARDs (actually a |regexp|) that should be traced.
 command! -nargs=+ -bang -bar Tlibtraceset call tlib#trace#Set(<q-args>)
+
+
+" :display: :Tlibtrace ASSERTION
+command! -nargs=+ -bang -bar Tlibassert :
 
 
 let &cpo = s:save_cpo
