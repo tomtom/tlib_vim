@@ -37,6 +37,7 @@ Contents~
         :TBrowseScriptnames .................... |:TBrowseScriptnames|
         :Tlibtrace ............................. |:Tlibtrace|
         :Tlibtraceset .......................... |:Tlibtraceset|
+        :Tlibassert ............................ |:Tlibassert|
         Add .................................... |Add()|
         TestGetArg ............................. |TestGetArg()|
         TestGetArg1 ............................ |TestGetArg1()|
@@ -51,6 +52,7 @@ Contents~
         g:tlib#trace#printf .................... |g:tlib#trace#printf|
         tlib#trace#PrintToFile ................. |tlib#trace#PrintToFile()|
         tlib#trace#Set ......................... |tlib#trace#Set()|
+        tlib#trace#Backtrace ................... |tlib#trace#Backtrace()|
         tlib#trace#Print ....................... |tlib#trace#Print()|
         tlib#trace#Enable ...................... |tlib#trace#Enable()|
         tlib#trace#Disable ..................... |tlib#trace#Disable()|
@@ -100,6 +102,7 @@ Contents~
         tlib#balloon#Register .................. |tlib#balloon#Register()|
         tlib#balloon#Remove .................... |tlib#balloon#Remove()|
         tlib#balloon#Expr ...................... |tlib#balloon#Expr()|
+        tlib#balloon#Expand .................... |tlib#balloon#Expand()|
         g:tlib#vcs#def ......................... |g:tlib#vcs#def|
         g:tlib#vcs#executables ................. |g:tlib#vcs#executables|
         g:tlib#vcs#check ....................... |g:tlib#vcs#check|
@@ -297,6 +300,7 @@ Contents~
         tlib#tab#TabWinNr ...................... |tlib#tab#TabWinNr()|
         tlib#tab#Set ........................... |tlib#tab#Set()|
         tlib#date#IsDate ....................... |tlib#date#IsDate()|
+        tlib#date#Format ....................... |tlib#date#Format()|
         tlib#date#DiffInDays ................... |tlib#date#DiffInDays()|
         tlib#date#Parse ........................ |tlib#date#Parse()|
         tlib#date#SecondsSince1970 ............. |tlib#date#SecondsSince1970()|
@@ -306,7 +310,16 @@ Contents~
         tlib#type#IsFuncref .................... |tlib#type#IsFuncref()|
         tlib#type#IsList ....................... |tlib#type#IsList()|
         tlib#type#IsDictionary ................. |tlib#type#IsDictionary()|
+        tlib#type#Is ........................... |tlib#type#Is()|
+        tlib#type#Are .......................... |tlib#type#Are()|
+        tlib#type#Has .......................... |tlib#type#Has()|
+        tlib#type#Have ......................... |tlib#type#Have()|
         tlib#Filter_fuzzy#New .................. |tlib#Filter_fuzzy#New()|
+        tlib#assert#Enable ..................... |tlib#assert#Enable()|
+        tlib#assert#Disable .................... |tlib#assert#Disable()|
+        tlib#assert#Assert ..................... |tlib#assert#Assert()|
+        tlib#assert#Map ........................ |tlib#assert#Map()|
+        tlib#assert#All ........................ |tlib#assert#All()|
         tlib#textobjects#StandardParagraph ..... |standard-paragraph|
         tlib#textobjects#Init .................. |tlib#textobjects#Init()|
         v_sp ................................... |v_sp|
@@ -481,6 +494,9 @@ plugin/02tlib.vim~
     If |tlib#trace#Enable()| was called: With the optional <bang>, users 
     can add and remove GUARDs (actually a |regexp|) that should be traced.
 
+                                                    *:Tlibassert*
+:Tlibtrace ASSERTION
+
 
 ========================================================================
 test/tlib.vim~
@@ -560,6 +576,9 @@ tlib#trace#Set(vars)
     Examples:
       call tlib#trace#Set(["+foo", "-bar"])
       call tlib#trace#Set("+foo,-bar")
+
+                                                    *tlib#trace#Backtrace()*
+tlib#trace#Backtrace(caller)
 
                                                     *tlib#trace#Print()*
 tlib#trace#Print(caller, vars, values)
@@ -845,6 +864,9 @@ tlib#balloon#Remove(expr)
 
                                                     *tlib#balloon#Expr()*
 tlib#balloon#Expr()
+
+                                                    *tlib#balloon#Expand()*
+tlib#balloon#Expand(expr)
 
 
 ========================================================================
@@ -1912,6 +1934,9 @@ autoload/tlib/date.vim~
                                                     *tlib#date#IsDate()*
 tlib#date#IsDate(text)
 
+                                                    *tlib#date#Format()*
+tlib#date#Format(secs1970)
+
                                                     *tlib#date#DiffInDays()*
 tlib#date#DiffInDays(date1, ?date2=localtime(), ?allow_zero=0)
 
@@ -1944,6 +1969,18 @@ tlib#type#IsList(expr)
                                                     *tlib#type#IsDictionary()*
 tlib#type#IsDictionary(expr)
 
+                                                    *tlib#type#Is()*
+tlib#type#Is(val, type)
+
+                                                    *tlib#type#Are()*
+tlib#type#Are(vals, type)
+
+                                                    *tlib#type#Has()*
+tlib#type#Has(val, lst)
+
+                                                    *tlib#type#Have()*
+tlib#type#Have(vals, lst)
+
 
 ========================================================================
 autoload/tlib/Filter_fuzzy.vim~
@@ -1954,6 +1991,27 @@ tlib#Filter_fuzzy#New(...)
     Patterns are interpreted as if characters were connected with '.\{-}'.
 
     In "fuzzy" mode, the pretty printing of filenames is disabled.
+
+
+========================================================================
+autoload/tlib/assert.vim~
+
+                                                    *tlib#assert#Enable()*
+tlib#assert#Enable()
+    Enable tracing via |:Tlibassert|.
+
+                                                    *tlib#assert#Disable()*
+tlib#assert#Disable()
+    Disable tracing via |:Tlibassert|.
+
+                                                    *tlib#assert#Assert()*
+tlib#assert#Assert(caller, check, vals)
+
+                                                    *tlib#assert#Map()*
+tlib#assert#Map(vals, expr)
+
+                                                    *tlib#assert#All()*
+tlib#assert#All(vals)
 
 
 ========================================================================
