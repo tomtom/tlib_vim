@@ -3,8 +3,8 @@
 " @GIT:         http://github.com/tomtom/tlib_vim/
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2010-08-30.
-" @Last Change: 2010-09-05.
-" @Revision:    27
+" @Last Change: 2015-11-23.
+" @Revision:    48
 
 
 function! tlib#balloon#Register(expr) "{{{3
@@ -30,8 +30,13 @@ endf
 
 
 function! tlib#balloon#Remove(expr) "{{{3
-    if !exists('b:tlib_balloons')
+    if exists('b:tlib_balloons')
         call filter(b:tlib_balloons, 'v:val != a:expr')
+        if empty(b:tlib_balloons)
+            setlocal ballooneval&
+            setlocal balloonexpr&
+            unlet b:tlib_balloons
+        endif
     endif
 endf
 
