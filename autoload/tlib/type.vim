@@ -2,8 +2,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-30.
-" @Last Change: 2015-11-23.
-" @Revision:    6
+" @Last Change: 2015-11-24.
+" @Revision:    23
 
 
 function! tlib#type#IsNumber(expr)
@@ -59,13 +59,37 @@ function! tlib#type#Are(vals, type) abort "{{{3
 endf
 
 
-function! tlib#type#Has(val, lst) abort "{{{3
-    return tlib#assert#All(map(a:lst, 'has_key(a:val, v:val)'))
+let s:schemas = {}
+
+
+function! tlib#type#DefSchema(name, schema) abort "{{{3
+    let s:schemas[a:name] = copy(a:schema)
 endf
 
 
-function! tlib#type#Have(vals, lst) abort "{{{3
-    return tlib#assert#Map(a:vals, 'tlib#type#Has(v:val,'. string(a:lst) .')')
+function! tlib#type#Has(val, schema) abort "{{{3
+    " TLogVAR type(a:val), type(a:schema)
+    if !tlib#type#IsDictionary(a:val)
+        " TLogVAR 'not a dictionary', a:val
+        return 0
+    endif
+    if tlib#type#IsString(a:schema)
+        " TLogVAR a:schema
+        let schema = copy(s:schemas[a:schema])
+    else
+        let schema = copy(a:schema)
+    endif
+    if tlib#type#IsDictionary(schema)
+        return tlib#assert#All(map(schema, 'has_key(a:val, v:key) && tlib#type#Is(a:val[v:key], v:val)'))
+    else
+        " TLogVAR keys(a:val), schema
+        return tlib#assert#All(map(schema, 'has_key(a:val, v:val)'))
+    endif
+endf
+
+
+function! tlib#type#Have(vals, schema) abort "{{{3
+    return tlib#assert#Map(a:vals, 'tlib#type#Has(v:val,'. string(a:schema) .')')
 endf
 
 
