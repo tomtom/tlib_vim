@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-11-19.
-" @Revision:    251
+" @Last Change: 2015-11-24.
+" @Revision:    258
 
 
 " :def: function! tlib#arg#Get(n, var, ?default="", ?test='')
@@ -267,12 +267,14 @@ function! tlib#arg#CComplete(def, ArgLead) abort "{{{3
         "     endif
         endif
         if !empty(words)
-            let lead = substitute(a:ArgLead, '^--\w\+=', '', '')
+            let prefix = matchstr(a:ArgLead, '^--\w\+=\%([^,]\+,\s*\)*')
+            let lead = substitute(a:ArgLead, '^--\w\+=\%([^,]\+,\s*\)*', '', '')
+            " TLogVAR a:ArgLead, lead
             if !empty(lead)
                 let nchar = len(lead)
                 call filter(words, 'strpart(v:val, 0, nchar) ==# lead')
             endif
-            let words = map(words, '"--". opt ."=". v:val')
+            let words = map(words, 'prefix . v:val')
             return sort(words)
         endif
     endif
