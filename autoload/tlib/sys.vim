@@ -1,7 +1,7 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-11-07.
-" @Revision:    51
+" @Last Change: 2015-11-24.
+" @Revision:    52
 
 
 if !exists('g:tlib#sys#special_protocols')
@@ -205,7 +205,7 @@ function! tlib#sys#SystemInDir(dir, ...) abort "{{{3
     try
         return call(function('system'), a:000)
     finally
-        cd! -
+        silent cd! -
     endtry
 endf
 

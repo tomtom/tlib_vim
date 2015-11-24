@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2015-10-24.
-" @Revision:    31.1.243
+" @Last Change: 2015-11-24.
+" @Revision:    32.1.243
 
 
 " The cache directory. If empty, use |tlib#dir#MyRuntime|.'/cache'.
@@ -307,9 +307,9 @@ function! tlib#cache#Purge() "{{{3
             try
                 let yn = g:tlib#cache#run_script == 2 ? 'y' : tlib#input#Dialog("TLib: About to delete directories by means of a shell script.\nDirectory removal script: ". scriptfile ."\nRun script to delete directories now?", ['yes', 'no', 'edit'], 'no')
                 if yn =~ '^y\%[es]$'
-                    exec 'cd '. fnameescape(dir)
+                    exec 'silent cd '. fnameescape(dir)
                     exec '! ' &shell shellescape(scriptfile, 1)
-                    exec 'cd -'
+                    exec 'silent cd -'
                     call delete(scriptfile)
                 elseif yn =~ '^e\%[dit]$'
                     exec 'edit '. fnameescape(scriptfile)
