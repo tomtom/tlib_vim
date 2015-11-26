@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2010-03-25.
-" @Last Change: 2015-11-23.
-" @Revision:    21.0.34
+" @Last Change: 2015-11-25.
+" @Revision:    24.0.34
 
 
 if !exists('g:tlib#date#ShortDatePrefix') | let g:tlib#date#ShortDatePrefix = '20' | endif "{{{2
@@ -17,7 +17,8 @@ let g:tlib#date#date_format = '%Y-%m-%d'
 
 
 function! tlib#date#IsDate(text) abort "{{{3
-    return a:text =~# '^'. g:tlib#date#date_rx .'$'
+    return a:text =~# '^'. g:tlib#date#date_rx .'$' &&
+                \ !empty(tlib#date#Parse(a:text, 0, 1))
 endf
 
 
@@ -37,9 +38,10 @@ function! tlib#date#DiffInDays(date, ...)
 endf
 
 
-" :display: tlib#date#Parse(date, ?allow_zero=0) "{{{3
+" :display: tlib#date#Parse(date, ?allow_zero=0, ?silent=0) "{{{3
 function! tlib#date#Parse(date, ...) "{{{3
     let min = a:0 >= 1 && a:1 ? 0 : 1
+    let silent = a:0 >= 2 ? a:2 : 0
     " TLogVAR a:date, min
     let m = matchlist(a:date, '^\(\d\{2}\|\d\{4}\)-\(\d\{1,2}\)-\(\d\{1,2}\)$')
     if !empty(m)
@@ -63,7 +65,9 @@ function! tlib#date#Parse(date, ...) "{{{3
     endif
     if empty(m) || year == '' || month == '' || days == '' || 
                 \ month < min || month > 12 || days < min || days > 31
-        echoerr 'TLib: Invalid date: '. a:date
+        if !silent
+            echoerr 'TLib: Invalid date: '. a:date
+        endif
         return []
     endif
     if strlen(year) == 2
