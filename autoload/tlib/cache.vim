@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2015-11-24.
-" @Revision:    32.1.243
+" @Last Change: 2015-11-26.
+" @Revision:    35.1.243
 
 
 " The cache directory. If empty, use |tlib#dir#MyRuntime|.'/cache'.
@@ -172,10 +172,14 @@ endf
 function! tlib#cache#Value(cfile, generator, ftime, ...) "{{{3
     TVarArg ['args', []], ['options', {}]
     let in_memory = get(options, 'in_memory', 0)
-    let not_found = in_memory ? !has_key(s:cache, a:cfile) : !filereadable(a:cfile)
-    " TLogVAR in_memory, not_found
-    let cftime = in_memory ? (not_found ? 0 : s:cache[a:cfile].mtime) : getftime(a:cfile)
-    if not_found || (a:ftime != 0 && cftime < a:ftime)
+    if in_memory
+        let not_found = !has_key(s:cache, a:cfile)
+        let cftime = not_found ? -1 : s:cache[a:cfile].mtime
+    else
+        let cftime = getftime(a:cfile)
+    endif
+    " TLogVAR in_memory, cftime
+    if cftime == -1 || (a:ftime != 0 && cftime < a:ftime)
         " TLogVAR a:generator, args
         let val = call(a:generator, args)
         " TLogVAR val
