@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-11-23
-" @Revision:    134
+" @Last Change: 2015-12-04
+" @Revision:    139
 
 
 if !exists('g:tlib#trace#backtrace')
@@ -90,8 +90,13 @@ function! tlib#trace#Print(caller, vars, values) abort "{{{3
         endif
         for i in range(1, len(a:vars) - 1)
             let v = substitute(a:vars[i], ',$', '', '')
-            let r = string(a:values[i])
-            call add(msg, v .'='. r .';')
+            let r = a:values[i]
+            if v =~# '^\([''"]\).\{-}\1$'
+                call add(msg, r .';')
+            else
+                call add(msg, v .'='. string(r) .';')
+            endif
+            unlet r
         endfor
         exec printf(g:tlib#trace#printf, string(join(msg)))
     endif
