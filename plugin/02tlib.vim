@@ -97,6 +97,10 @@ command! -nargs=+ -bang Tlibtraceset call tlib#trace#Set(<q-args>)
 " :display: :Tlibtrace ASSERTION
 command! -nargs=+ -bang Tlibassert :
 
+" :display: :Tlibtype val, 'type', ...
+command! -nargs=+ Tlibtype :
+
+
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
