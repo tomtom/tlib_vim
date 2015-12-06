@@ -1,21 +1,21 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-11-24
-" @Revision:    40
+" @Last Change: 2015-12-04
+" @Revision:    41
 
 
 " Enable tracing via |:Tlibassert|.
 function! tlib#assert#Enable() abort "{{{3
     " :nodoc:
-    command! -nargs=+ -bar Tlibassert call tlib#assert#Assert(expand('<sfile>'), <q-args>, [<args>])
+    command! -nargs=+ -bang Tlibassert call tlib#assert#Assert(expand('<sfile>'), <q-args>, [<args>])
 endf
 
 
 " Disable tracing via |:Tlibassert|.
 function! tlib#assert#Disable() abort "{{{3
     " :nodoc:
-    command! -nargs=+ -bang -bar Tlibassert :
+    command! -nargs=+ -bang Tlibassert :
 endf
 
 

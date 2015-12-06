@@ -2,7 +2,7 @@
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Last Change: 2015-12-04
-" @Revision:    139
+" @Revision:    140
 
 
 if !exists('g:tlib#trace#backtrace')
@@ -108,7 +108,7 @@ function! tlib#trace#Enable() abort "{{{3
     if !exists('s:trace_rx')
         let s:trace_rx = '^\%(error\)$'
         " :nodoc:
-        command! -nargs=+ -bar Tlibtrace call tlib#trace#Print(expand('<sfile>'), [<f-args>], [<args>])
+        command! -nargs=+ -bang Tlibtrace call tlib#trace#Print(expand('<sfile>'), [<f-args>], [<args>])
     endif
 endf
 
@@ -116,7 +116,7 @@ endf
 " Disable tracing via |:Tlibtrace|.
 function! tlib#trace#Disable() abort "{{{3
     " :nodoc:
-    command! -nargs=+ -bang -bar Tlibtrace :
+    command! -nargs=+ -bang Tlibtrace :
     unlet! s:trace_rx
 endf
 
