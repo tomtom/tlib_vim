@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-11-13
-" @Revision:    59
+" @Last Change: 2015-12-06
+" @Revision:    60
 
 " :nodoc:
 TLet g:tlib#qfl#world = {
@@ -170,14 +170,12 @@ endf
 
 
 function! tlib#qfl#AgentGotoQFE(world, selected) "{{{3
+    let world = a:world
     if !empty(a:selected)
-        if a:world.win_wnr != winnr()
-            let world = tlib#agent#Suspend(a:world, a:selected)
-            exec a:world.win_wnr .'wincmd w'
-        endif
-        call tlib#qfl#AgentEditQFE(a:world, a:selected[0:0])
+        let world = tlib#agent#Suspend(world, a:selected)
+        call tlib#qfl#AgentEditQFE(world, a:selected[0:0])
     endif
-    return a:world
+    return world
 endf
 
 
