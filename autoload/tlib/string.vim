@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    121
+" @Revision:    122
 
 
 " :def: function! tlib#string#RemoveBackslashes(text, ?chars=' ')
@@ -156,3 +156,11 @@ function! tlib#string#SplitCommaList(text, ...) abort "{{{3
     return parts
 endf
 
+
+function! tlib#string#Input(...) abort "{{{3
+    TVarArg ['text', ''], ['completion', '']
+    call inputsave()
+    let rv = call(function('input'), a:000)
+    call inputrestore()
+    return rv
+endf
