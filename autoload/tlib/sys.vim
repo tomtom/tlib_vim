@@ -1,7 +1,7 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-12-04.
-" @Revision:    53
+" @Last Change: 2015-12-12.
+" @Revision:    59
 
 
 if !exists('g:tlib#sys#special_protocols')
@@ -16,14 +16,14 @@ if !exists('g:tlib#sys#special_suffixes')
     " A list of |regexp|s matching suffixes that should be handled by 
     " |g:tlib#sys#system_browser|.
     " CAVEAT: Must be a |\V| |regexp|.
-    let g:tlib#sys#special_suffixes = ['xlsx\?', 'docx\?', 'pptx\?', 'accdb', 'mdb', 'sqlite', 'pdf', 'jpg', 'png', 'gif']    "{{{2
+    let g:tlib#sys#special_suffixes = ['xlsx\?', 'docx\?', 'pptx\?', 'accdb', 'mdb', 'sqlite', 'pdf', 'jpg', 'png', 'gif', 'od\[tspg]']    "{{{2
 endif
 
 
 if !exists('g:tlib#sys#system_rx')
     " Open links matching this |regexp| with |g:tlib#sys#system_browser|.
     " CAVEAT: Must be a |\V| |regexp|.
-    let g:tlib#sys#system_rx = printf('\V\%(\^\%(%s\):\|.\%(%s\)\)', join(g:tlib#sys#special_protocols, '\|'), join(g:tlib#sys#special_suffixes, '\|'))   "{{{2
+    let g:tlib#sys#system_rx = printf('\V\%(\^\%(%s\):\|.\%(%s\)\$\)', join(g:tlib#sys#special_protocols, '\|'), join(g:tlib#sys#special_suffixes, '\|'))   "{{{2
 endif
 
 
