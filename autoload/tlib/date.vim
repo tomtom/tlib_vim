@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2010-03-25.
-" @Last Change: 2015-11-25.
-" @Revision:    24.0.34
+" @Last Change: 2016-01-21.
+" @Revision:    25.0.34
 
 
 if !exists('g:tlib#date#ShortDatePrefix') | let g:tlib#date#ShortDatePrefix = '20' | endif "{{{2
@@ -151,7 +151,7 @@ function! tlib#date#Shift(date, shift) abort "{{{3
         let d = str2nr(ml[3])
         let ms = str2nr(ml[2]) + n
         let m = (ms - 1) % 12 + 1
-        let yr = str2nr(ml[1]) + ms / 12
+        let yr = str2nr(ml[1]) + (ms - 1) / 12
         let date = printf('%04d-%02d-%02d', yr, m, d)
         " TLogVAR d, ms, m, yr, date
     elseif a:shift =~ 'y$'

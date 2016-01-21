@@ -3,8 +3,8 @@
 " @GIT:         http://github.com/tomtom/vimtlib/
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2010-09-17.
-" @Last Change: 2010-09-17.
-" @Revision:    16
+" @Last Change: 2016-01-21.
+" @Revision:    18
 
 SpecBegin 'title': 'tlib#date'
 
@@ -37,4 +37,16 @@ Should throw exception "tlib#date#Parse('2000-14-2')", 'TLib: Invalid date'
 Should throw exception "tlib#date#Parse('2000-011-02')", 'TLib: Invalid date'
 Should throw exception "tlib#date#Parse('2000-10-40')", 'TLib: Invalid date'
 Should throw exception "tlib#date#Parse('2000-10-0')", 'TLib: Invalid date'
+
+Should be equal tlib#date#Shift('2015-10-29', '1m'), '2015-11-29'
+Should be equal tlib#date#Shift('2015-11-29', '1m'), '2015-12-29'
+Should be equal tlib#date#Shift('2015-12-29', '1m'), '2016-01-29'
+Should be equal tlib#date#Shift('2016-01-29', '1m'), '2016-02-29'
+Should be equal tlib#date#Shift('2015-10-29', '2m'), '2015-12-29'
+Should be equal tlib#date#Shift('2015-10-29', '3m'), '2016-01-29'
+Should be equal tlib#date#Shift('2015-10-29', '4m'), '2016-02-29'
+Should be equal tlib#date#Shift('2015-12-30', '1d'), '2015-12-31'
+Should be equal tlib#date#Shift('2015-12-31', '1d'), '2016-01-01'
+Should be equal tlib#date#Shift('2015-12-30', '2d'), '2016-01-01'
+Should be equal tlib#date#Shift('2015-12-30', '3d'), '2016-01-02'
 
