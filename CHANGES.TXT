@@ -734,3 +734,22 @@ version: "1.17"
   MD5 checksum: c3a1fe7d3cd86becbd3f7b0ba7ae9cd8
 version: "1.19"
 
+version: "1.20"
+  - tlib#arg: Completion for comma-separated lists
+  - Use "silent cd"
+  - NEW tlib#type#DefSchema(); FIX tlib#type#Has()
+  - tlib#cache#Value(): minor change
+  - tlib#date#IsDate() also checks whether the date is valid
+  - ! tlib#sys#Open(): escape special chars only once
+  - tlib#trace#Print: Allow for strings
+  - :Tlibtrace, :Tlibtraceset, :Tlibassert remove `-bar`
+  - NEW :Tlibtype (type/schema assertions); tlib#type#Is() also accepts schemas as "types"
+  - tlib#dir#CD(): Use haslocaldir()
+  - tlib#qfl#AgentGotoQFE: Don't use wincmd w
+  - NEW tlib#string#Input()
+  - FIX g:tlib#sys#system_rx; add OpenOffice exensions to g:tlib#sys#special_suffixes
+  - NEW tlib#selection#GetSelection()
+  - tlib#date#Shift(): Fix "Xm", ++specs
+  - tlib#trace#Set: FIX Properly handly "-label"
+  MD5 checksum: c919e0782931a8c628c6996903f989d3
+
