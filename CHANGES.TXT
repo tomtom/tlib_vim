@@ -675,3 +675,23 @@ version: "1.17"
   MD5 checksum: 3c4125a28ff1860accd254846651c251
 version: "1.17"
 
+  - tlib#input#List: #ReduceFilter: make sure the regexp is valid
+  - TTimeCommand -> Ttimecommand
+  - tlib#eval#Extend: mode argument for expand() compatibility
+  - tlib#input#List: Key handlers can have additional arguments
+  - tlib#qfl#AgentWithSelected: Set world
+  - prototype.UseInputListScratch: Run tlib_UseInputListScratch hook earlier
+  - tlib#qfl#AgentWithSelected: typo
+  - tlib#arg#GetOpts: type conversion (comma-separated lists etc.)
+  - tlib#arg: validators
+  - NEW tlib#date#IsDate()
+  - tlib#balloon#Remove: Unset &ballooneval, &balloonexpr
+  - NEW tlib#balloon#Expand()
+  - NEW tlib#date#Format()
+  - FIX tlib#date#Shift(..., "+Xm") for months
+  - NEW tlib#trace#Backtrace()
+  - NEW tlib#type#Is(), tlib#type#Are(), tlib#type#Has(), tlib#type#Have()
+  - NEW :Tlibassert
+  MD5 checksum: 3c4125a28ff1860accd254846651c251
+version: "1.17"
+
