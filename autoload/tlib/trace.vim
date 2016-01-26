@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-12-04
-" @Revision:    140
+" @Last Change: 2016-01-25
+" @Revision:    146
 
 
 if !exists('g:tlib#trace#backtrace')
@@ -41,19 +41,27 @@ function! tlib#trace#Set(vars) abort "{{{3
     else
         let vars = a:vars
     endif
+    " TLogVAR vars
     for rx in vars
         let rx1 = substitute(rx, '^[+-]', '', 'g')
-        if rx1 !~# '^\%(error\|fatal\)$' && s:trace_rx !~# '[(|]'. tlib#rx#Escape(rx1) .'\\'
+        if rx1 !~# '^\%(error\|fatal\)$'
+            let erx1 = tlib#rx#Escape(rx1)
             " TLogVAR rx, rx1
+            " echom "DBG" s:trace_rx
             if rx =~ '^+'
-                let s:trace_rx = substitute(s:trace_rx, '\ze\\)\$', '\\|'. tlib#rx#EscapeReplace(rx1), '')
+                if s:trace_rx !~# '[(|]'. erx1 .'\\'
+                    let s:trace_rx = substitute(s:trace_rx, '\ze\\)\$', '\\|'. erx1, '')
+                endif
             elseif rx =~ '^-'
-                let s:trace_rx = substitute(s:trace_rx, '\\|'. tlib#rx#Escape(rx1), '', '')
+                if s:trace_rx =~# '[(|]'. erx1 .'\\'
+                    let s:trace_rx = substitute(s:trace_rx, '\\|'. erx1, '', '')
+                endif
             else
                 echohl WarningMsg
                 echom 'tlib#trace#Print: Unsupported syntax:' rx
                 echohl NONE
             endif
+            " echom "DBG" s:trace_rx
         endif
     endfor
     echom "SetTrace:" s:trace_rx
