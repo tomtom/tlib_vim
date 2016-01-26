@@ -38,6 +38,7 @@ Contents~
         :Tlibtrace ............................. |:Tlibtrace|
         :Tlibtraceset .......................... |:Tlibtraceset|
         :Tlibassert ............................ |:Tlibassert|
+        :Tlibtype .............................. |:Tlibtype|
         Add .................................... |Add()|
         TestGetArg ............................. |TestGetArg()|
         TestGetArg1 ............................ |TestGetArg1()|
@@ -74,6 +75,7 @@ Contents~
         tlib#progressbar#Init .................. |tlib#progressbar#Init()|
         tlib#progressbar#Display ............... |tlib#progressbar#Display()|
         tlib#progressbar#Restore ............... |tlib#progressbar#Restore()|
+        tlib#selection#GetSelection ............ |tlib#selection#GetSelection()|
         tlib#eval#FormatValue .................. |tlib#eval#FormatValue()|
         tlib#eval#Extend ....................... |tlib#eval#Extend()|
         tlib#list#Inject ....................... |tlib#list#Inject()|
@@ -305,6 +307,8 @@ Contents~
         tlib#date#Parse ........................ |tlib#date#Parse()|
         tlib#date#SecondsSince1970 ............. |tlib#date#SecondsSince1970()|
         tlib#date#Shift ........................ |tlib#date#Shift()|
+        tlib#type#Enable ....................... |tlib#type#Enable()|
+        tlib#type#Disable ...................... |tlib#type#Disable()|
         tlib#type#IsNumber ..................... |tlib#type#IsNumber()|
         tlib#type#IsString ..................... |tlib#type#IsString()|
         tlib#type#IsFuncref .................... |tlib#type#IsFuncref()|
@@ -312,8 +316,10 @@ Contents~
         tlib#type#IsDictionary ................. |tlib#type#IsDictionary()|
         tlib#type#Is ........................... |tlib#type#Is()|
         tlib#type#Are .......................... |tlib#type#Are()|
+        tlib#type#Define ....................... |tlib#type#Define()|
         tlib#type#Has .......................... |tlib#type#Has()|
         tlib#type#Have ......................... |tlib#type#Have()|
+        tlib#type#Check ........................ |tlib#type#Check()|
         tlib#Filter_fuzzy#New .................. |tlib#Filter_fuzzy#New()|
         tlib#assert#Enable ..................... |tlib#assert#Enable()|
         tlib#assert#Disable .................... |tlib#assert#Disable()|
@@ -415,6 +421,7 @@ Contents~
         tlib#string#Strip ...................... |tlib#string#Strip()|
         tlib#string#Count ...................... |tlib#string#Count()|
         tlib#string#SplitCommaList ............. |tlib#string#SplitCommaList()|
+        tlib#string#Input ...................... |tlib#string#Input()|
 
 
 ========================================================================
@@ -496,6 +503,9 @@ plugin/02tlib.vim~
 
                                                     *:Tlibassert*
 :Tlibtrace ASSERTION
+
+                                                    *:Tlibtype*
+:Tlibtype val, 'type', ...
 
 
 ========================================================================
@@ -695,6 +705,14 @@ tlib#progressbar#Display(value, ...)
 
                                                     *tlib#progressbar#Restore()*
 tlib#progressbar#Restore()
+
+
+========================================================================
+autoload/tlib/selection.vim~
+
+                                                    *tlib#selection#GetSelection()*
+tlib#selection#GetSelection(mode, ?mbeg="'<", ?mend="'>", ?opmode='selection')
+    mode can be one of: selection, lines, block
 
 
 ========================================================================
@@ -1779,13 +1797,13 @@ g:tlib#sys#special_protocols   (default: ['https\?', 'nntp', 'mailto'])
     CAVEAT: Must be a |\V| |regexp|.
 
                                                     *g:tlib#sys#special_suffixes*
-g:tlib#sys#special_suffixes    (default: ['xlsx\?', 'docx\?', 'pptx\?', 'accdb', 'mdb', 'sqlite', 'pdf', 'jpg', 'png', 'gif'])
+g:tlib#sys#special_suffixes    (default: ['xlsx\?', 'docx\?', 'pptx\?', 'accdb', 'mdb', 'sqlite', 'pdf', 'jpg', 'png', 'gif', 'od\[tspg]'])
     A list of |regexp|s matching suffixes that should be handled by 
     |g:tlib#sys#system_browser|.
     CAVEAT: Must be a |\V| |regexp|.
 
                                                     *g:tlib#sys#system_rx*
-g:tlib#sys#system_rx           (default: printf('\V\%(\^\%(%s\):\|.\%(%s\)\)', join(g:tlib#sys#special_protocols, '\|'), join(g:tlib#sys#special_suffixes, '\|')))
+g:tlib#sys#system_rx           (default: printf('\V\%(\^\%(%s\):\|.\%(%s\)\$\)', join(g:tlib#sys#special_protocols, '\|'), join(g:tlib#sys#special_suffixes, '\|')))
     Open links matching this |regexp| with |g:tlib#sys#system_browser|.
     CAVEAT: Must be a |\V| |regexp|.
 
@@ -1941,7 +1959,7 @@ tlib#date#Format(secs1970)
 tlib#date#DiffInDays(date1, ?date2=localtime(), ?allow_zero=0)
 
                                                     *tlib#date#Parse()*
-tlib#date#Parse(date, ?allow_zero=0) "{{{3
+tlib#date#Parse(date, ?allow_zero=0, ?silent=0) "{{{3
 
                                                     *tlib#date#SecondsSince1970()*
 tlib#date#SecondsSince1970(date, ...)
@@ -1953,6 +1971,14 @@ tlib#date#Shift(date, shift)
 
 ========================================================================
 autoload/tlib/type.vim~
+
+                                                    *tlib#type#Enable()*
+tlib#type#Enable()
+    Enable type assertiona via |:Tlibtype|.
+
+                                                    *tlib#type#Disable()*
+tlib#type#Disable()
+    Disable type assertiona via |:Tlibtype|.
 
                                                     *tlib#type#IsNumber()*
 tlib#type#IsNumber(expr)
@@ -1975,11 +2001,17 @@ tlib#type#Is(val, type)
                                                     *tlib#type#Are()*
 tlib#type#Are(vals, type)
 
+                                                    *tlib#type#Define()*
+tlib#type#Define(name, schema)
+
                                                     *tlib#type#Has()*
-tlib#type#Has(val, lst)
+tlib#type#Has(val, schema)
 
                                                     *tlib#type#Have()*
-tlib#type#Have(vals, lst)
+tlib#type#Have(vals, schema)
+
+                                                    *tlib#type#Check()*
+tlib#type#Check(caller, names, vals)
 
 
 ========================================================================
@@ -2491,6 +2523,9 @@ tlib#string#Count(string, rx)
 
                                                     *tlib#string#SplitCommaList()*
 tlib#string#SplitCommaList(text, ...)
+
+                                                    *tlib#string#Input()*
+tlib#string#Input(...)
 
 
 
