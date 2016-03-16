@@ -3,8 +3,8 @@
 " @GIT:         http://github.com/tomtom/vimtlib/
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2010-09-17.
-" @Last Change: 2016-01-21.
-" @Revision:    18
+" @Last Change: 2016-03-16.
+" @Revision:    21
 
 SpecBegin 'title': 'tlib#date'
 
@@ -49,4 +49,13 @@ Should be equal tlib#date#Shift('2015-12-30', '1d'), '2015-12-31'
 Should be equal tlib#date#Shift('2015-12-31', '1d'), '2016-01-01'
 Should be equal tlib#date#Shift('2015-12-30', '2d'), '2016-01-01'
 Should be equal tlib#date#Shift('2015-12-30', '3d'), '2016-01-02'
+
+Should be equal tlib#date#Shift('2016-03-16', '1b'), '2016-03-17'
+Should be equal tlib#date#Shift('2016-03-16', '2b'), '2016-03-18'
+Should be equal tlib#date#Shift('2016-03-16', '3b'), '2016-03-21'
+Should be equal tlib#date#Shift('2016-03-16', '4b'), '2016-03-22'
+Should be equal tlib#date#Shift('2016-03-16', '5b'), '2016-03-23'
+Should be equal tlib#date#Shift('2016-03-16', '6b'), '2016-03-24'
+Should be equal tlib#date#Shift('2016-03-16', '7b'), '2016-03-25'
+Should be equal tlib#date#Shift('2016-03-16', '8b'), '2016-03-28'
 
