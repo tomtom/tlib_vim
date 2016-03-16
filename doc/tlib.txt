@@ -307,6 +307,7 @@ Contents~
         tlib#date#Parse ........................ |tlib#date#Parse()|
         tlib#date#SecondsSince1970 ............. |tlib#date#SecondsSince1970()|
         tlib#date#Shift ........................ |tlib#date#Shift()|
+        tlib#date#AddDays ...................... |tlib#date#AddDays()|
         tlib#type#Enable ....................... |tlib#type#Enable()|
         tlib#type#Disable ...................... |tlib#type#Disable()|
         tlib#type#IsNumber ..................... |tlib#type#IsNumber()|
@@ -1967,6 +1968,9 @@ tlib#date#SecondsSince1970(date, ...)
 
                                                     *tlib#date#Shift()*
 tlib#date#Shift(date, shift)
+
+                                                    *tlib#date#AddDays()*
+tlib#date#AddDays(date, n)
 
 
 ========================================================================

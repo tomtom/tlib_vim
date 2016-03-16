@@ -14,7 +14,8 @@ http://vimsomnia.blogspot.com/2010/11/selecting-items-from-list-with-tlibs.html
 
 -----------------------------------------------------------------------
 
-Status:  Works for me (there may be some minor quirks)
+
+License: GPLv3 or later
 Install: See http://github.com/tomtom/vimtlib/blob/master/INSTALL.TXT
 See http://github.com/tomtom for related plugins.
 
