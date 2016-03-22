@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2016-01-25
-" @Revision:    146
+" @Last Change: 2016-03-22
+" @Revision:    161
 
 
 if !exists('g:tlib#trace#backtrace')
@@ -12,19 +12,30 @@ if !exists('g:tlib#trace#backtrace')
 endif
 
 
-if !exists('g:tlib#trace#printf')
-    " The command used for printing traces from |tlib#trace#Print()|.
-    let g:tlib#trace#printf = 'echom %s'   "{{{2
+if !exists('g:tlib#trace#printer')
+    " Possible values:
+    "   - 'echom'
+    "   - ['file', FILENAME]
+    let g:tlib#trace#printer = 'echom'   "{{{2
 endif
 
 
 let s:trace_hl = {'error': 'ErrorMsg', 'fatal': 'ErrorMsg', 'warning': 'WarningMsg'}
 
 
-" Set |g:tlib#trace#printf| to make |tlib#trace#Print()| print to 
-" `filename`.
-function! tlib#trace#PrintToFile(filename) abort "{{{3
-    let g:tlib#trace#printf = 'call writefile([%s], '. string(a:filename) .', "a")'
+" Print traces from |tlib#trace#Print()|.
+function! tlib#trace#Printer_echom(text, args) abort "{{{3
+    echom a:text
+endf
+
+
+function! tlib#trace#Printer_file(text, args) abort "{{{3
+    let filename = get(a:args, 0, '')
+    if !filewritable(filename)
+        throw 'tlib#trace#Printer_file: Cannot write to file: '. filename
+    else
+        call writefile([a:text], filename, 'a')
+    endif
 endf
 
 
@@ -106,7 +117,13 @@ function! tlib#trace#Print(caller, vars, values) abort "{{{3
             endif
             unlet r
         endfor
-        exec printf(g:tlib#trace#printf, string(join(msg)))
+        if type(g:tlib#trace#printer) == 1
+            let printer = g:tlib#trace#printer
+            let args = []
+        else
+            let [printer; args] = g:tlib#trace#printer
+        endif
+        exec tlib#trace#Printer_{printer}(join(msg), args)
     endif
 endf
 
