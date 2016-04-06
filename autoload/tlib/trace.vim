@@ -2,7 +2,7 @@
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Last Change: 2016-03-22
-" @Revision:    161
+" @Revision:    171
 
 
 if !exists('g:tlib#trace#backtrace')
@@ -20,16 +20,28 @@ if !exists('g:tlib#trace#printer')
 endif
 
 
-let s:trace_hl = {'error': 'ErrorMsg', 'fatal': 'ErrorMsg', 'warning': 'WarningMsg'}
+if !exists('g:tlib#trace#hl')
+    let g:tlib#trace#hl = {'error': 'ErrorMsg', 'fatal': 'ErrorMsg', 'warn': 'WarningMsg'}   "{{{2
+endif
 
 
 " Print traces from |tlib#trace#Print()|.
-function! tlib#trace#Printer_echom(text, args) abort "{{{3
-    echom a:text
+function! tlib#trace#Printer_echom(type, text, args) abort "{{{3
+    let hl = get(g:tlib#trace#hl, a:type, '')
+    try
+        if !empty(hl)
+            exec 'echohl' hl
+        endif
+        echom a:text
+    finally
+        if !empty(hl)
+            echohl NONE
+        endif
+    endtry
 endf
 
 
-function! tlib#trace#Printer_file(text, args) abort "{{{3
+function! tlib#trace#Printer_file(type, text, args) abort "{{{3
     let filename = get(a:args, 0, '')
     if !filewritable(filename)
         throw 'tlib#trace#Printer_file: Cannot write to file: '. filename
@@ -55,7 +67,7 @@ function! tlib#trace#Set(vars) abort "{{{3
     " TLogVAR vars
     for rx in vars
         let rx1 = substitute(rx, '^[+-]', '', 'g')
-        if rx1 !~# '^\%(error\|fatal\)$'
+        if rx1 !~# '^\%(error\|warn\|fatal\)$'
             let erx1 = tlib#rx#Escape(rx1)
             " TLogVAR rx, rx1
             " echom "DBG" s:trace_rx
@@ -123,7 +135,7 @@ function! tlib#trace#Print(caller, vars, values) abort "{{{3
         else
             let [printer; args] = g:tlib#trace#printer
         endif
-        exec tlib#trace#Printer_{printer}(join(msg), args)
+        exec tlib#trace#Printer_{printer}(guard, join(msg), args)
     endif
 endf
 
@@ -131,7 +143,7 @@ endf
 " Enable tracing via |:Tlibtrace|.
 function! tlib#trace#Enable() abort "{{{3
     if !exists('s:trace_rx')
-        let s:trace_rx = '^\%(error\)$'
+        let s:trace_rx = '^\%(error\|fatal\|warn\|info\)$'
         " :nodoc:
         command! -nargs=+ -bang Tlibtrace call tlib#trace#Print(expand('<sfile>'), [<f-args>], [<args>])
     endif
