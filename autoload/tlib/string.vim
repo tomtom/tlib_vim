@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    122
+" @Revision:    126
 
 
 " :def: function! tlib#string#RemoveBackslashes(text, ?chars=' ')
@@ -22,6 +22,12 @@ function! tlib#string#Chomp(string, ...) "{{{3
 endf
 
 
+" Format a template string. Placeholders have the format "%{NAME}". A 
+" "%" can be inserted as "%%".
+"
+" Examples:
+"   echo tlib#string#Format("foo %{bar} foo", {'bar': 123})
+"   => foo 123 foo
 function! tlib#string#Format(template, dict) "{{{3
     let parts = split(a:template, '\ze%\({.\{-}}\|.\)')
     let out = []

@@ -50,8 +50,10 @@ Contents~
         tlib#notify#Echo ....................... |tlib#notify#Echo()|
         tlib#notify#TrimMessage ................ |tlib#notify#TrimMessage()|
         g:tlib#trace#backtrace ................. |g:tlib#trace#backtrace|
-        g:tlib#trace#printf .................... |g:tlib#trace#printf|
-        tlib#trace#PrintToFile ................. |tlib#trace#PrintToFile()|
+        g:tlib#trace#printer ................... |g:tlib#trace#printer|
+        g:tlib#trace#hl ........................ |g:tlib#trace#hl|
+        tlib#trace#Printer_echom ............... |tlib#trace#Printer_echom()|
+        tlib#trace#Printer_file ................ |tlib#trace#Printer_file()|
         tlib#trace#Set ......................... |tlib#trace#Set()|
         tlib#trace#Backtrace ................... |tlib#trace#Backtrace()|
         tlib#trace#Print ....................... |tlib#trace#Print()|
@@ -570,14 +572,21 @@ g:tlib#trace#backtrace         (default: 2)
     The length of the backtrace that should be included in 
     |tlib#trace#Print()|.
 
-                                                    *g:tlib#trace#printf*
-g:tlib#trace#printf            (default: 'echom %s')
-    The command used for printing traces from |tlib#trace#Print()|.
+                                                    *g:tlib#trace#printer*
+g:tlib#trace#printer           (default: 'echom')
+    Possible values:
+      - 'echom'
+      - ['file', FILENAME]
 
-                                                    *tlib#trace#PrintToFile()*
-tlib#trace#PrintToFile(filename)
-    Set |g:tlib#trace#printf| to make |tlib#trace#Print()| print to 
-    `filename`.
+                                                    *g:tlib#trace#hl*
+g:tlib#trace#hl                (default: {'error': 'ErrorMsg', 'fatal': 'ErrorMsg', 'warn': 'WarningMsg'})
+
+                                                    *tlib#trace#Printer_echom()*
+tlib#trace#Printer_echom(type, text, args)
+    Print traces from |tlib#trace#Print()|.
+
+                                                    *tlib#trace#Printer_file()*
+tlib#trace#Printer_file(type, text, args)
 
                                                     *tlib#trace#Set()*
 tlib#trace#Set(vars)
@@ -609,7 +618,7 @@ tlib#trace#Disable()
 autoload/tlib/dictionary.vim~
 
                                                     *tlib#dictionary#Rev()*
-tlib#dictionary#Rev(dict)
+tlib#dictionary#Rev(dict, ?opts = {}) abort "{{{3
 
 
 ========================================================================
@@ -2505,6 +2514,12 @@ tlib#string#Chomp(string, ?max=0)
 
                                                     *tlib#string#Format()*
 tlib#string#Format(template, dict)
+    Format a template string. Placeholders have the format "%{NAME}". A 
+    "%" can be inserted as "%%".
+
+    Examples:
+      echo tlib#string#Format("foo %{bar} foo", {'bar': 123})
+      => foo 123 foo
 
                                                     *tlib#string#Printf1()*
 tlib#string#Printf1(format, string)
