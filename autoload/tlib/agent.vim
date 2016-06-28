@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    328
+" @Revision:    329
 
 
 " :filedoc:
@@ -609,7 +609,8 @@ endf
 
 
 function! tlib#agent#CompleteAgentNames(ArgLead, CmdLine, CursorPos)
-    return filter(copy(s:agent_names), 'stridx(v:val, a:ArgLead) != -1')
+    let arglead = tolower(a:Arglead)
+    return filter(copy(s:agent_names), 'stridx(tolower(v:val), arglead) != -1')
 endf
 
 
