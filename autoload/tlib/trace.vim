@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2016-03-22
-" @Revision:    171
+" @Last Change: 2016-06-08
+" @Revision:    177
 
 
 if !exists('g:tlib#trace#backtrace')
@@ -135,7 +135,7 @@ function! tlib#trace#Print(caller, vars, values) abort "{{{3
         else
             let [printer; args] = g:tlib#trace#printer
         endif
-        exec tlib#trace#Printer_{printer}(guard, join(msg), args)
+        call tlib#trace#Printer_{printer}(guard, join(msg), args)
     endif
 endf
 
