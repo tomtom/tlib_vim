@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2015-11-24.
-" @Revision:    258
+" @Last Change: 2016-06-06.
+" @Revision:    267
 
 
 " :def: function! tlib#arg#Get(n, var, ?default="", ?test='')
@@ -171,6 +171,11 @@ function! s:SetOpt(def, opts, idx, opt) abort "{{{3
             endif
         endif
         let break = 2
+    elseif long &&  a:opt =~# '^--\%(no-\)\?debug$'
+        if has_key(a:def, 'trace')
+            let mod = a:opt =~# '--no-' ? '-' : '+'
+            exec 'Tlibtraceset' mod . a:def.trace
+        endif
     elseif long &&  a:opt =~# '^--no-.\+'
         let key = matchstr(a:opt, '^--no-\zs.\+$')
         let a:opts[key] = s:Validate(a:def, key, 0)
@@ -296,6 +301,9 @@ function! tlib#arg#CComplete(def, ArgLead) abort "{{{3
         endif
         let cs['-'. name] = 1
     endfor
+    if has_key(a:def, 'trace')
+        let cs['--debug'] = 1
+    endif
     let nchar = len(a:ArgLead)
     if nchar > 0
         call filter(cs, 'strpart(v:key, 0, nchar) ==# a:ArgLead')
