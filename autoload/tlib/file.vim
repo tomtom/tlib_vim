@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    168
+" @Revision:    169
 
 
 if !exists('g:tlib#file#drop')
@@ -108,6 +108,11 @@ function! tlib#file#Relative(filename, basedir) "{{{3
     endif
     " TLogVAR rv
     return rv
+endf
+
+
+function! tlib#file#IsAbsolute(filename) "{{{3
+    return a:filename =~? '^\%(/\|\w\+:/\)'
 endf
 
 
