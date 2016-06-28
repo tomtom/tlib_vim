@@ -49,6 +49,7 @@ Contents~
         g:tlib#debug ........................... |g:tlib#debug|
         tlib#notify#Echo ....................... |tlib#notify#Echo()|
         tlib#notify#TrimMessage ................ |tlib#notify#TrimMessage()|
+        tlib#notify#PrintError ................. |tlib#notify#PrintError()|
         g:tlib#trace#backtrace ................. |g:tlib#trace#backtrace|
         g:tlib#trace#printer ................... |g:tlib#trace#printer|
         g:tlib#trace#hl ........................ |g:tlib#trace#hl|
@@ -266,6 +267,7 @@ Contents~
         tlib#file#Split ........................ |tlib#file#Split()|
         tlib#file#Join ......................... |tlib#file#Join()|
         tlib#file#Relative ..................... |tlib#file#Relative()|
+        tlib#file#IsAbsolute ................... |tlib#file#IsAbsolute()|
         tlib#file#Absolute ..................... |tlib#file#Absolute()|
         tlib#file#Canonic ...................... |tlib#file#Canonic()|
         tlib#file#With ......................... |tlib#file#With()|
@@ -562,6 +564,9 @@ tlib#notify#TrimMessage(message)
     The echoed line is too long if it is wider than the width of the 
     window, minus cmdline space taken up by the ruler and showcmd 
     features.
+
+                                                    *tlib#notify#PrintError()*
+tlib#notify#PrintError()
 
 
 ========================================================================
@@ -1776,6 +1781,9 @@ tlib#file#Relative(filename, basedir)
       => 'bar/filename.txt'
 <
 
+                                                    *tlib#file#IsAbsolute()*
+tlib#file#IsAbsolute(filename)
+
                                                     *tlib#file#Absolute()*
 tlib#file#Absolute(filename, ...)
 
@@ -1963,7 +1971,7 @@ autoload/tlib/date.vim~
 tlib#date#IsDate(text)
 
                                                     *tlib#date#Format()*
-tlib#date#Format(secs1970)
+tlib#date#Format(...)
 
                                                     *tlib#date#DiffInDays()*
 tlib#date#DiffInDays(date1, ?date2=localtime(), ?allow_zero=0)
