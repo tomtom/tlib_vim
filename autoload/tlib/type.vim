@@ -2,8 +2,11 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-09-30.
-" @Last Change: 2015-12-04.
-" @Revision:    44
+" @Last Change: 2016-07-13.
+" @Revision:    48
+
+
+let g:tlib#type#nil = []
 
 
 " Enable type assertiona via |:Tlibtype|.
@@ -17,6 +20,11 @@ endf
 function! tlib#type#Disable() abort "{{{3
     " :nodoc:
     command! -nargs=+ Tlibtype :
+endf
+
+
+function! tlib#type#IsNil(expr) abort "{{{3
+    return a:expr is g:tlib#type#nil
 endf
 
 
@@ -51,17 +59,17 @@ function! tlib#type#Is(val, type) abort "{{{3
     else
         if type(a:type) == 0
             let type = a:type
-        elseif a:type =~? '^n\%[umber]'
+        elseif a:type =~? '^n\%[umber]$'
             let type = 0
-        elseif a:type =~? '^s\%[tring]'
+        elseif a:type =~? '^s\%[tring]$'
             let type = 1
-        elseif a:type =~? '^fu\%[ncref]'
+        elseif a:type =~? '^fu\%[ncref]$'
             let type = 2
-        elseif a:type =~? '^l\%[ist]'
+        elseif a:type =~? '^l\%[ist]$'
             let type = 3
-        elseif a:type =~? '^d\%[ictionary]'
+        elseif a:type =~? '^d\%[ictionary]$'
             let type = 4
-        elseif a:type =~? '^fl\%[oat]'
+        elseif a:type =~? '^fl\%[oat]$'
             let type = 5
         else
             throw 'tlib#type#Is: Unknown type: ' a:type
