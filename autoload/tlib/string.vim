@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    126
+" @Revision:    142
 
 
 " :def: function! tlib#string#RemoveBackslashes(text, ?chars=' ')
@@ -170,3 +170,25 @@ function! tlib#string#Input(...) abort "{{{3
     call inputrestore()
     return rv
 endf
+
+
+" :display: tlib#string#MatchAll(string, sep_regexp, ?item_regexp='') abort
+function! tlib#string#MatchAll(string, regexp, ...) abort "{{{3
+    let eregexp = a:0 >= 1 ? a:1 : ''
+    Tlibtrace 'tlib', a:string, a:regexp, eregexp
+    let ms = []
+    if a:regexp =~ '\\ze'
+        let regexp1 = substitute(a:regexp, '\\ze.*$', '', '')
+    else
+        let regexp1 = a:regexp
+    endif
+    for m in split(a:string, '\ze'. regexp1)
+        let m1 = matchstr(m, !empty(eregexp) ? eregexp : a:regexp)
+        Tlibtrace 'tlib', m, m1
+        if !empty(m1)
+            call add(ms, m1)
+        endif
+    endfor
+    return ms
+endf
+
