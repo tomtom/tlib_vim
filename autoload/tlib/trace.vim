@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2016-06-08
-" @Revision:    177
+" @Last Change: 2016-07-28
+" @Revision:    178
 
 
 if !exists('g:tlib#trace#backtrace')
@@ -71,18 +71,19 @@ function! tlib#trace#Set(vars) abort "{{{3
             let erx1 = tlib#rx#Escape(rx1)
             " TLogVAR rx, rx1
             " echom "DBG" s:trace_rx
-            if rx =~ '^+'
-                if s:trace_rx !~# '[(|]'. erx1 .'\\'
-                    let s:trace_rx = substitute(s:trace_rx, '\ze\\)\$', '\\|'. erx1, '')
-                endif
-            elseif rx =~ '^-'
+            if rx =~ '^-'
                 if s:trace_rx =~# '[(|]'. erx1 .'\\'
                     let s:trace_rx = substitute(s:trace_rx, '\\|'. erx1, '', '')
                 endif
+                " elseif rx =~ '^+'
             else
-                echohl WarningMsg
-                echom 'tlib#trace#Print: Unsupported syntax:' rx
-                echohl NONE
+                if s:trace_rx !~# '[(|]'. erx1 .'\\'
+                    let s:trace_rx = substitute(s:trace_rx, '\ze\\)\$', '\\|'. erx1, '')
+                endif
+                " else
+                "     echohl WarningMsg
+                "     echom 'tlib#trace#Print: Unsupported syntax:' rx
+                "     echohl NONE
             endif
             " echom "DBG" s:trace_rx
         endif
