@@ -423,7 +423,7 @@ function! tlib#agent#ViewFile(world, selected) "{{{3
         " endif
         " call tlib#file#With(cmd0, cmd1, a:selected, a:world)
         " TLogVAR &filetype
-        exec back
+        silent! exec back
         let a:world.state = 'display'
     endif
     return a:world
