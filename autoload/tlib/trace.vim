@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2016-07-28
-" @Revision:    178
+" @Last Change: 2017-02-13
+" @Revision:    194
 
 
 if !exists('g:tlib#trace#backtrace')
@@ -43,7 +43,7 @@ endf
 
 function! tlib#trace#Printer_file(type, text, args) abort "{{{3
     let filename = get(a:args, 0, '')
-    if !filewritable(filename)
+    if exists(filename) && !filewritable(filename)
         throw 'tlib#trace#Printer_file: Cannot write to file: '. filename
     else
         call writefile([a:text], filename, 'a')
@@ -57,12 +57,29 @@ endf
 " Examples:
 "   call tlib#trace#Set(["+foo", "-bar"])
 "   call tlib#trace#Set("+foo,-bar")
-function! tlib#trace#Set(vars) abort "{{{3
+function! tlib#trace#Set(vars, ...) abort "{{{3
+    let reset = a:0 >= 1 ? a:1 : 0
+    if reset
+        call tlib#trace#Reset()
+    endif
+    if empty(a:vars)
+        return
+    endif
     call tlib#trace#Enable()
-    if type(a:vars) == 1
+    if type(a:vars) == v:t_string
         let vars = tlib#string#SplitCommaList(a:vars, '[,[:space:]]\+')
+        let opts = {}
+    elseif type(a:vars) == v:t_dict
+        let vars = a:vars.__rest__
+        if has_key(a:vars, 'file')
+            let g:tlib#trace#printer = ['file', a:vars.file]
+        endif
+        if has_key(a:vars, 'echo')
+            let g:tlib#trace#printer = 'echom'
+        endif
     else
         let vars = a:vars
+        let opts = {}
     endif
     " TLogVAR vars
     for rx in vars
@@ -103,6 +120,7 @@ endf
 " Print the values of vars. The first value is a "guard" (see 
 " |:Tlibtrace|).
 function! tlib#trace#Print(caller, vars, values) abort "{{{3
+    " echom "DBG tlib#trace#Print" string(a:vars) string(a:values)
     let msg = ['TRACE']
     let guard = a:values[0]
     if type(guard) == 0
@@ -120,17 +138,25 @@ function! tlib#trace#Print(caller, vars, values) abort "{{{3
                 call add(msg, bt .':')
             endif
         endif
-        for i in range(1, len(a:vars) - 1)
-            let v = substitute(a:vars[i], ',$', '', '')
-            let r = a:values[i]
-            if v =~# '^\([''"]\).\{-}\1$'
-                call add(msg, r .';')
-            else
-                call add(msg, v .'='. string(r) .';')
-            endif
-            unlet r
-        endfor
-        if type(g:tlib#trace#printer) == 1
+        if len(a:vars) == len(a:values)
+            for i in range(1, len(a:vars) - 1)
+                let v = substitute(a:vars[i], ',$', '', '')
+                if type(a:values[i]) == v:t_func
+                    let r = string(a:values[i])
+                else
+                    let r = a:values[i]
+                endif
+                if v =~# '^\([''"]\).\{-}\1$'
+                    call add(msg, r .';')
+                else
+                    call add(msg, v .'='. string(r) .';')
+                endif
+                unlet r
+            endfor
+        else
+            call add(msg, join(a:values[1:-1]))
+        endif
+        if type(g:tlib#trace#printer) == v:t_string
             let printer = g:tlib#trace#printer
             let args = []
         else
@@ -141,10 +167,16 @@ function! tlib#trace#Print(caller, vars, values) abort "{{{3
 endf
 
 
+function! tlib#trace#Reset() abort "{{{3
+    let s:trace_rx = '^\%(error\|fatal\|warn\|info\)$'
+    let g:tlib#trace#printer = 'echom'
+endf
+
+
 " Enable tracing via |:Tlibtrace|.
 function! tlib#trace#Enable() abort "{{{3
     if !exists('s:trace_rx')
-        let s:trace_rx = '^\%(error\|fatal\|warn\|info\)$'
+        call tlib#trace#Reset()
         " :nodoc:
         command! -nargs=+ -bang Tlibtrace call tlib#trace#Print(expand('<sfile>'), [<f-args>], [<args>])
     endif

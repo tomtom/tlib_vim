@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Created:     2007-04-10.
-" @Last Change: 2016-07-28.
+" @Last Change: 2017-02-13.
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    817
+" @Revision:    827
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " GetLatestVimScripts: 1863 1 tlib.vim
 " tlib.vim -- Some utility functions
@@ -88,12 +88,14 @@ command! -nargs=0 -complete=command TBrowseScriptnames call tlib#cmd#TBrowseScri
 command! -nargs=+ -bang Tlibtrace :
 
 
-" :Tlibtraceset +RX1, -RX2...
+" :Tlibtraceset[!] [--file=FILE] +RX1 -RX2...
 " If |tlib#trace#Enable()| was called: With the optional <bang>, users 
 " can add and remove GUARDs (actually a |regexp|) that should be traced.
 "
 " If no `+` or `-` is prepended, assume `+`.
-command! -nargs=+ -bang Tlibtraceset call tlib#trace#Set(<q-args>)
+"
+" With the optional bang '!', reset any options.
+command! -nargs=+ -bang Tlibtraceset call tlib#trace#Set(tlib#arg#GetOpts([<f-args>], {'short': 0}), !empty("<bang>"))
 
 
 " :display: :Tlibtrace ASSERTION
