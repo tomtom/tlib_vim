@@ -753,3 +753,26 @@ version: "1.20"
   - tlib#trace#Set: FIX Properly handly "-label"
   MD5 checksum: c919e0782931a8c628c6996903f989d3
 
+  - tlib#date#Shift(): Support for business days 'Nb'
+  - tlib#list#Uniq: Properly handle empty strings
+  - tlib#trace: Use g:tlib#trace#printer and tlib#trace#Printer_{printer}
+  - tlib#dictionary#Rev: Optional argument `opts = {}`; properly handle empty values etc.
+  - NEW g:tlib#trace#hl
+  - NEW spec/dictionary.vim
+  - tlib#agent#CompleteAgentNames: case insensitive
+  - tlib#arg#CComplete: --[no-]debug option
+  - tlib#date#Format: use localtime() if no arg is provided
+  - NEW tlib#file#IsAbsolute
+  - NEW tlib#notify#PrintError()
+  - tlib#trace#Print: FIX s/exec/call/
+  - tlib#type#Is() match full type name
+  - NEW tlib#string#MatchAll()
+  - Tlibtraceset, tlib#trace#Set(): If no `+` or `-` is prepended, assume `+`.
+  - tlib#list#Input: fix highlighting for filenames
+  - tlib#input#ListW: use world.CloseScratch(1)
+  - tlib#agent#ViewFile: Ignore errors in :exec back
+  - NEW tlib#agent#EditFileInWindow()
+  - :Tlibtraceset uses tlib#arg#GetOpts(), i.e. you can set the log file more easily
+  MD5 checksum: 20a48e225f32b9f58808096a5377af04
+version: "1.22"
+
