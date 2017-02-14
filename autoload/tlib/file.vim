@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    169
+" @Revision:    174
 
 
 if !exists('g:tlib#file#drop')
@@ -222,14 +222,16 @@ function! tlib#file#Edit(fileid) "{{{3
     if filename == expand('%:p')
         return 1
     else
-        " TLogVAR a:fileid, bn, filename, g:tlib#file#drop, filereadable(filename)
+        " TLogVAR a:fileid, bn, filename, g:tlib#file#drop, filereadable(filename), bufnr('%')
         if bn != -1 && buflisted(bn)
             if g:tlib#file#drop
                 " echom "DBG" get(g:tlib#file#edit_cmds, 'drop', 'drop') fnameescape(filename)
                 exec get(g:tlib#file#edit_cmds, 'drop', 'drop') fnameescape(filename)
+                " echom "DBG" bufnr('%')
             else
                 " echom "DBG" get(g:tlib#file#edit_cmds, 'buffer', 'buffer') bn
                 exec get(g:tlib#file#edit_cmds, 'buffer', 'buffer') bn
+                " echom "DBG" bufnr('%')
             endif
             return 1
         elseif filereadable(filename)
