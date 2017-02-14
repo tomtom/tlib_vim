@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1366
+" @Revision:    1368
 
 
 " :filedoc:
@@ -783,7 +783,7 @@ function! tlib#input#ListW(world, ...) "{{{3
         elseif !empty(world.return_agent)
             " TLogDBG 'return agent'
             " TLogVAR world.return_agent
-            call world.CloseScratch()
+            call world.CloseScratch(1)
             " TLogDBG "return_agent ". string(tlib#win#List())
             " TAssert IsNotEmpty(world.scratch)
             return call(world.return_agent, [world, world.GetSelectedItems(world.rv)])
@@ -845,7 +845,7 @@ function! tlib#input#ListW(world, ...) "{{{3
             else
                 " TLogDBG "non sticky"
                 " TLogVAR world.state, world.win_wnr, world.bufnr
-                if world.CloseScratch()
+                if world.CloseScratch(1)
                     " TLogVAR world.winview
                     call tlib#win#SetLayout(world.winview)
                 endif
