@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1434
+" @Revision:    1435
 
 " :filedoc:
 " A prototype used by |tlib#input#List|.
@@ -179,7 +179,8 @@ else
                     \ max(map(copy(self.base), 'strwidth(matchstr(v:val, "[^\\/]*$"))'))
                     \ ])
        "  TLogVAR self.width_filename
-         exec 'syntax match TLibDir /\%>'. (1 + self.width_filename) .'c \(|\|\[[^]]*\]\) \zs\(\(\a:\|\.\.\|\.\.\..\{-}\)\?[\/][^&<>*|]\{-}\)\?[^\/]\+$/ contained containedin=TLibMarker contains=TLibFilename'
+         " exec 'syntax match TLibDir /\%>'. (1 + self.width_filename) .'c \(|\|\[[^]]*\]\) \zs\(\(\a:\|\.\.\|\.\.\..\{-}\)\?[\/][^&<>*|]\{-}\)\?[^\/]\+$/ contained containedin=TLibMarker contains=TLibFilename'
+         exec 'syntax match TLibDir /\%>'. (1 + self.width_filename) .'c \(|\|\[[^]]*\]\) \zs[^&<>*|]*$/ contained containedin=TLibMarker contains=TLibFilename'
          exec 'syntax match TLibMarker /\%>'. (1 + self.width_filename) .'c \(|\|\[[^]]*\]\) \S.*$/ contains=TLibDir'
        "  exec 'syntax match TLibDir /\(|\|\[.\{-}\]\) \zs\(\(\a:\|\.\.\|\.\.\..\{-}\)\?[\/][^&<>*|]\{-}\)\?[^\/]\+$/ contained containedin=TLibMarker contains=TLibFilename'
        "  exec 'syntax match TLibMarker /\(|\|\[.\{-}\]\) \S.*$/ contains=TLibDir'
