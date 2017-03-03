@@ -45,6 +45,8 @@ Contents~
         tlib#Filter_glob#New .................... |tlib#Filter_glob#New()|
         tlib#Object#New ......................... |tlib#Object#New()|
         g:tlib_inputlist_pct .................... |g:tlib_inputlist_pct|
+        g:tlib_inputlist_max_lines .............. |g:tlib_inputlist_max_lines|
+        g:tlib_inputlist_max_cols ............... |g:tlib_inputlist_max_cols|
         g:tlib_inputlist_width_filename ......... |g:tlib_inputlist_width_filename|
         g:tlib_inputlist_filename_indicators .... |g:tlib_inputlist_filename_indicators|
         g:tlib_inputlist_shortmessage ........... |g:tlib_inputlist_shortmessage|
@@ -80,6 +82,7 @@ Contents~
         g:tlib#cache#dont_purge ................. |g:tlib#cache#dont_purge|
         g:tlib#cache#max_filename ............... |g:tlib#cache#max_filename|
         tlib#cache#Dir .......................... |tlib#cache#Dir()|
+        tlib#cache#EncodedFilename .............. |tlib#cache#EncodedFilename()|
         tlib#cache#Value ........................ |tlib#cache#Value()|
         tlib#cache#MaybePurge ................... |tlib#cache#MaybePurge()|
         tlib#cache#Purge ........................ |tlib#cache#Purge()|
@@ -162,6 +165,7 @@ Contents~
         tlib#sys#MaybeUseCygpath ................ |tlib#sys#MaybeUseCygpath()|
         tlib#sys#IsSpecial ...................... |tlib#sys#IsSpecial()|
         tlib#sys#Open ........................... |tlib#sys#Open()|
+        tlib#sys#OpenWithSystemViewer ........... |tlib#sys#OpenWithSystemViewer()|
         tlib#tab#BufMap ......................... |tlib#tab#BufMap()|
         tlib#tab#TabWinNr ....................... |tlib#tab#TabWinNr()|
         g:tlib_tags_extra ....................... |g:tlib_tags_extra|
@@ -199,6 +203,7 @@ Contents~
         tlib#vim#RestoreWindow .................. |tlib#vim#RestoreWindow()|
         g:tlib#vim#use_wmctrl ................... |g:tlib#vim#use_wmctrl|
         tlib#win#Set ............................ |tlib#win#Set()|
+        tlib#win#SetById ........................ |tlib#win#SetById()|
 
 
 ------------------------------------------------------------------------
@@ -392,6 +397,14 @@ Inherits from |tlib#Object#New|.
 g:tlib_inputlist_pct           (default: 50)
     Size of the input list window (in percent) from the main size (of &lines).
     See |tlib#input#List()|.
+
+                                                    *g:tlib_inputlist_max_lines*
+g:tlib_inputlist_max_lines     (default: -1)
+    Max height for a horizontal list.
+
+                                                    *g:tlib_inputlist_max_cols*
+g:tlib_inputlist_max_cols      (default: -1)
+    Max width for a vertical list.
 
                                                     *g:tlib_inputlist_width_filename*
 g:tlib_inputlist_width_filename (default: '&co / 3')
@@ -616,6 +629,10 @@ g:tlib#cache#max_filename      (default: 200)
                                                     *tlib#cache#Dir()*
 tlib#cache#Dir(?mode = 'bg')
     The default cache directory.
+
+                                                    *tlib#cache#EncodedFilename()*
+tlib#cache#EncodedFilename(type, file, ?mkdir=0, ?dir='')
+    Encode `file` and call |tlib#cache#Filename()|.
 
                                                     *tlib#cache#Value()*
 tlib#cache#Value(cfile, generator, ftime, ?generator_args=[], ?options={})
@@ -1292,6 +1309,10 @@ tlib#sys#Open(filename)
     |g:tlib#sys#system_browser|), if |tlib#sys#IsSpecial()| return 1. 
     Returns 1 if successful or 0 otherwise.
 
+                                                    *tlib#sys#OpenWithSystemViewer()*
+tlib#sys#OpenWithSystemViewer(filename)
+    Open filename with the default system viewer.
+
 
 ------------------------------------------------------------------------
                                                     *autoload/tlib/tab.vim*
@@ -1553,6 +1574,10 @@ g:tlib#vim#use_wmctrl          (default: executable('wmctrl'))
                                                     *autoload/tlib/win.vim*
                                                     *tlib#win#Set()*
 tlib#win#Set(winnr)
+    Return vim code to jump back to the original window.
+
+                                                    *tlib#win#SetById()*
+tlib#win#SetById(wid)
     Return vim code to jump back to the original window.
 
 
