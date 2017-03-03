@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    174
+" @Revision:    184
 
 
 if !exists('g:tlib#file#drop')
@@ -23,6 +23,12 @@ endif
 if !exists('g:tlib#file#absolute_filename_rx')
     let g:tlib#file#absolute_filename_rx = '^\~\?[\/]'   "{{{2
 endif
+
+
+if !exists('g:tlib#file#reject_rx')
+    let g:tlib#file#reject_rx = '\%(^\|[\/]\)\%(\.\w\+\%($\|[\/]\)\|\%(tags\|Thumbs\.db\)$\)'   "{{{2
+endif
+
 
 """ File related {{{1
 " For the following functions please see ../../test/tlib.vim for examples.
@@ -259,26 +265,46 @@ function! tlib#file#Edit(fileid) "{{{3
 endf
 
 
+function! tlib#file#FilterFiles(files, options) abort "{{{3
+    if !get(a:options, 'all', 0)
+        call filter(a:files, {i, v -> v !~# g:tlib#file#reject_rx})
+    endif
+    let type = get(a:options, 'type', 'fd')
+    if type !~# 'd' || type !~# 'f'
+        call filter(a:files, {i, v -> isdirectory(v) ? type =~# 'd' : type =~# 'f'})
+    endif
+    return a:files
+endf
+
+
 if v:version > 704 || (v:version == 704 && has('patch279'))
 
-    function! tlib#file#Glob(pattern) abort "{{{3
-        return glob(a:pattern, 0, 1)
+    function! tlib#file#Glob(pattern, ...) abort "{{{3
+        let all = a:0 >= 1 ? a:1 : 0
+        let nosuf = a:0 >= 2 ? a:2 : 0
+        return  tlib#file#FilterFiles(glob(a:pattern, nosuf, 1), {'all': all})
     endf
 
-    function! tlib#file#Globpath(path, pattern) abort "{{{3
-        return globpath(a:path, a:pattern, 0, 1)
+    function! tlib#file#Globpath(path, pattern, ...) abort "{{{3
+        let all = a:0 >= 1 ? a:1 : 0
+        let nosuf = a:0 >= 2 ? a:2 : 0
+        return tlib#file#FilterFiles(globpath(a:path, a:pattern, nosuf, 1), {'all': all})
     endf
 
 else
 
     " :nodoc:
-    function! tlib#file#Glob(pattern) abort "{{{3
-        return split(glob(a:pattern), '\n')
+    function! tlib#file#Glob(pattern, ...) abort "{{{3
+        let all = a:0 >= 1 ? a:1 : 0
+        let nosuf = a:0 >= 2 ? a:2 : 0
+        return tlib#file#FilterFiles(split(glob(a:pattern, nosuf), '\n'), {'all': all})
     endf
 
     " :nodoc:
-    function! tlib#file#Globpath(path, pattern) abort "{{{3
-        return split(globpath(a:path, a:pattern), '\n')
+    function! tlib#file#Globpath(path, pattern, ...) abort "{{{3
+        let all = a:0 >= 1 ? a:1 : 0
+        let nosuf = a:0 >= 2 ? a:2 : 0
+        return tlib#file#FilterFiles(split(globpath(a:path, a:pattern), '\n'), {'all': all})
     endf
 
 endif

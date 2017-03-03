@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    332
+" @Revision:    345
 
 
 " :filedoc:
@@ -135,11 +135,11 @@ endf
 
 
 function! tlib#agent#RestrictView(world, selected) "{{{3
-    " TLogVAR a:selected
+    Tlibtrace 'tlib', a:selected
     let filtered_items = map(copy(a:selected), 'index(a:world.base, v:val) + 1')
-    " TLogVAR 1, filtered_items
+    Tlibtrace 'tlib', 1, filtered_items
     let filtered_items = filter(filtered_items, 'v:val > 0')
-    " TLogVAR 2, filtered_items
+    Tlibtrace 'tlib', 2, filtered_items
     if !empty(filtered_items)
         let a:world.filtered_items = filtered_items
     endif
@@ -175,14 +175,14 @@ endf
 " original position in the parent window.
 function! tlib#agent#SuspendToParentWindow(world, selected) "{{{3
     let world = a:world
-    let winnr = world.win_wnr
-    " TLogVAR winnr
-    if winnr != -1
+    let wid = world.win_id
+    Tlibtrace 'tlib', wid
+    if wid != -1
         let world = tlib#agent#Suspend(world, a:selected)
         if world.state =~ '\<suspend\>'
             call world.SwitchWindow('win')
             " let pos = world.cursor
-            " " TLogVAR pos
+            " Tlibtrace 'tlib', pos
             " if !empty(pos)
             "     call setpos('.', pos)
             " endif
@@ -204,13 +204,13 @@ function! tlib#agent#Suspend(world, selected) "{{{3
         " TAssert IsNotEmpty(a:world.scratch)
         " TLogDBG bufnr('%')
         let br = tlib#buffer#Set(a:world.scratch)
-        " TLogVAR br, a:world.bufnr, a:world.scratch
+        Tlibtrace 'tlib', br, a:world.bufnr, a:world.scratch
         if bufnr('%') != a:world.scratch
             echohl WarningMsg
             echom "tlib#agent#Suspend: Internal error: Not a scratch buffer:" bufname('%')
             echohl NONE
         endif
-        " TLogVAR bufnr('%'), bufname('%'), a:world.scratch
+        Tlibtrace 'tlib', bufnr('%'), bufname('%'), a:world.scratch
         call tlib#autocmdgroup#Init()
         exec 'autocmd TLib BufEnter <buffer='. a:world.scratch .'> call tlib#input#Resume("world", 0, '. a:world.scratch .')'
         let b:tlib_world = a:world
@@ -328,10 +328,9 @@ endf
 
 function! tlib#agent#EditItem(world, selected) "{{{3
     let lidx = a:world.prefidx
-    " TLogVAR lidx
-    " TLogVAR a:world.table
+    Tlibtrace 'tlib', lidx
     let bidx = a:world.GetBaseIdx(lidx)
-    " TLogVAR bidx
+    Tlibtrace 'tlib', bidx
     let item = a:world.GetBaseItem(bidx)
     let item = input(lidx .'@'. bidx .': ', item)
     if item != ''
@@ -410,19 +409,11 @@ endf
 function! tlib#agent#ViewFile(world, selected) "{{{3
     if !empty(a:selected)
         let back = a:world.SwitchWindow('win')
-        " TLogVAR back
+        Tlibtrace 'tlib', back
         for filename in a:selected
             call tlib#file#Edit(filename)
         endfor
-        " if !&hidden && &l:modified
-        "     let cmd0 = 'split'
-        "     let cmd1 = 'sbuffer'
-        " else
-        "     let cmd0 = 'edit'
-        "     let cmd1 = 'buffer'
-        " endif
-        " call tlib#file#With(cmd0, cmd1, a:selected, a:world)
-        " TLogVAR &filetype
+        call a:world.SetOrigin(1)
         silent! exec back
         let a:world.state = 'display'
     endif
@@ -438,7 +429,7 @@ endf
 function! tlib#agent#EditFileInWindow(world, selected) "{{{3
     if !empty(a:selected)
         let back = a:world.SwitchWindow('win')
-        " TLogVAR back
+        Tlibtrace 'tlib', back
         for bufname in a:selected
             let cmd = &modified && &nohidden ? 'sbuffer' : 'buffer'
             exec cmd fnameescape(bufname)
@@ -454,6 +445,7 @@ function! tlib#agent#EditFileInSplit(world, selected) "{{{3
     " call tlib#file#With('edit', 'buffer', a:selected[0:0], a:world)
     " call tlib#file#With('split', 'sbuffer', a:selected[1:-1], a:world)
     call tlib#file#With('split', 'sbuffer', a:selected, a:world)
+    call a:world.SetOrigin(1)
     return tlib#agent#Exit(a:world, a:selected)
 endf
 
@@ -467,14 +459,16 @@ function! tlib#agent#EditFileInVSplit(world, selected) "{{{3
     if !empty(winpos)
         exec winpos
     endif
+    call a:world.SetOrigin(1)
     return tlib#agent#Exit(a:world, a:selected)
 endf
 
 
 function! tlib#agent#EditFileInTab(world, selected) "{{{3
-    " TLogVAR a:selected
+    Tlibtrace 'tlib', a:selected
     call a:world.CloseScratch()
     call tlib#file#With('tabedit', 'tab sbuffer', a:selected, a:world)
+    call a:world.SetOrigin(1)
     return tlib#agent#Exit(a:world, a:selected)
 endf
 
@@ -506,10 +500,12 @@ endf
 
 function! tlib#agent#PreviewLine(world, selected) "{{{3
     let l = a:selected[0]
-    let ww = winnr()
-    exec a:world.win_wnr .'wincmd w'
+    " let ww = winnr()
+    let wid = win_getid()
+    call tlib#agent#SuspendToParentWindow(a:world, a:selected)
     call tlib#buffer#ViewLine(l, 1)
-    exec ww .'wincmd w'
+    call win_gotoid(wid)
+    " exec ww .'wincmd w'
     let a:world.state = 'redisplay'
     return a:world
 endf
@@ -519,23 +515,10 @@ endf
 " suspend the input-evaluation loop.
 function! tlib#agent#GotoLine(world, selected) "{{{3
     if !empty(a:selected)
-
-        " let l = a:selected[0]
-        " " TLogVAR l
-        " let back = a:world.SwitchWindow('win')
-        " " TLogVAR back
-        " " if a:world.win_wnr != winnr()
-        " "     let world = tlib#agent#Suspend(a:world, a:selected)
-        " "     exec a:world.win_wnr .'wincmd w'
-        " " endif
-        " call tlib#buffer#ViewLine(l)
-        " exec back
-        " let a:world.state = 'display'
-
         let l = a:selected[0]
-        if a:world.win_wnr != winnr()
+        if a:world.win_id != win_getid()
             let world = tlib#agent#Suspend(a:world, a:selected)
-            exec a:world.win_wnr .'wincmd w'
+            call win_gotoid(a:world.win_id)
         endif
         call tlib#buffer#ViewLine(l, 1)
         
@@ -597,11 +580,11 @@ function! tlib#agent#ExecAgentByName(world, selected) "{{{3
     endfor
     let s:agent_names = sort(keys(agent_names))
     let command = input('Command: ', '', 'customlist,tlib#agent#CompleteAgentNames')
-    " TLogVAR command
+    Tlibtrace 'tlib', command
     if !has_key(agent_names, command)
-        " TLogVAR command
+        Tlibtrace 'tlib', command
         silent! let matches = filter(keys(agent_names), 'v:val =~ command')
-        " TLogVAR matches
+        Tlibtrace 'tlib', matches
         if len(matches) == 1
             let command = matches[0]
         endif
@@ -631,36 +614,36 @@ endf
 function! tlib#agent#Complete(world, selected) abort "{{{3
     let rxprefix = a:world.matcher.FilterRxPrefix()
     let flt = a:world.filter[0][0]
-    " TLogVAR flt
+    Tlibtrace 'tlib', flt
     let fltrx = rxprefix . flt . '\m[^[:space:][:cntrl:][:punct:]<>*+?&~{}()\[\]\\/]\+'
     let fltrx0 = '\m^' . fltrx
-    " TLogVAR fltrx, fltrx0
+    Tlibtrace 'tlib', fltrx, fltrx0
     let words = {}
     for item in a:world.list
         let parts = split(item, '\ze'. fltrx)
-        " TLogVAR item, parts
+        Tlibtrace 'tlib', item, parts
         for part in parts
             let word = matchstr(part, fltrx0)
-            " TLogVAR part, word
+            Tlibtrace 'tlib', part, word
             if !empty(word)
                 let words[word] = 1
             endif
         endfor
     endfor
-    " TLogVAR keys(words)
+    Tlibtrace 'tlib', keys(words)
     let completions = keys(words)
     " let completions = filter(keys(words), 'matchstr(v:val, fltrx0)')
     let completions = sort(completions, 's:SortCompletions')
     let completions = tlib#list#Uniq(completions)
-    " TLogVAR 0, completions
+    Tlibtrace 'tlib', 0, completions
     while len(completions) > 1
         let nchar = strwidth(completions[0]) - 1
         let completions = map(completions, 'strpart(v:val, 0, nchar)')
-        " TLogVAR 'reduce', completions
+        Tlibtrace 'tlib', 'reduce', completions
         let completions = tlib#list#Uniq(completions)
-        " TLogVAR 'unique', len(completions), completions
+        Tlibtrace 'tlib', 'unique', len(completions), completions
     endwh
-    " TLogVAR 9, completions
+    Tlibtrace 'tlib', 9, completions
     if empty(completions)
         let a:world.state = 'redisplay update'
     else

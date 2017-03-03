@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    55
+" @Revision:    56
 
 
 " Return vim code to jump back to the original window.
@@ -17,6 +17,27 @@ function! tlib#win#Set(winnr) "{{{3
             " TLogDBG string(tlib#win#List())
             return rv
         endif
+    endif
+    return ''
+endf
+ 
+
+" Return vim code to jump back to the original window.
+function! tlib#win#SetById(wid) "{{{3
+    if a:wid > 0
+        let wid = win_getid()
+        call win_gotoid(a:wid)
+        return printf('call win_gotoid(%s)', wid)
+        " " TLogVAR a:winnr
+        " " TLogDBG winnr()
+        " " TLogDBG string(tlib#win#List())
+        " if winnr() != a:winnr && winbufnr(a:winnr) != -1
+        "     let rv = winnr().'wincmd w'
+        "     exec a:winnr .'wincmd w'
+        "     " TLogVAR rv
+        "     " TLogDBG string(tlib#win#List())
+        "     return rv
+        " endif
     endif
     return ''
 endf
