@@ -1,8 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1388
-
+" @Revision:    1391
 
 " :filedoc:
 " Input-related, select from a list etc.
@@ -502,7 +501,7 @@ function! tlib#input#ListW(world, ...) "{{{3
                     endif
                 endif
                 " TAssert IsNotEmpty(world.scratch)
-                let world.list_wid = win_getid()
+                let world.list_wid = tlib#win#GetID()
                 let world.list_wnr = winnr()
 
                 Tlibtrace 'tlib', world.state, world.next_state
@@ -1176,7 +1175,7 @@ endf
 function! tlib#input#Edit(name, value, callback, ...) "{{{3
     Tlibtrace 'tlib', a:value
     TVarArg ['args', []]
-    let sargs = {'scratch': '__EDIT__'. a:name .'__', 'winid': win_getid()}
+    let sargs = {'scratch': '__EDIT__'. a:name .'__', 'winid': tlib#win#GetID()}
     let scr = tlib#scratch#UseScratch(sargs)
 
     " :nodoc:

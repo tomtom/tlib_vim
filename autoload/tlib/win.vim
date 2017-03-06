@@ -1,7 +1,12 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    56
+" @Revision:    73
+
+
+if !exists('g:tlib#win#use_winid')
+    let g:tlib#win#use_winid = exists('*win_gotoid') && exists('*win_getid')   "{{{2
+endif
 
 
 " Return vim code to jump back to the original window.
@@ -20,14 +25,41 @@ function! tlib#win#Set(winnr) "{{{3
     endif
     return ''
 endf
- 
+
+
+if g:tlib#win#use_winid
+    let g:tlib#win#null_id = -1
+    function! tlib#win#GetID() abort "{{{3
+        return win_getid()
+    endf
+    function! tlib#win#GotoID(win_id) abort "{{{3
+        call win_gotoid(a:win_id)
+    endf
+else
+    let g:tlib#win#null_id = {}
+    function! tlib#win#GetID() abort "{{{3
+        return {'tabpagenr': tabpagenr(), 'bufnr': bufnr('%'), 'winnr': winnr()}
+    endf
+    function! tlib#win#GotoID(win_id) abort "{{{3
+        if tabpagenr() != a:win_id.tabpagenr
+            exec 'tabnext' a:win_id.tabpagenr
+        endif
+        if winnr() != a:win_id.winnr
+            exec a:win_id.winnr 'wincmd w'
+        endif
+        if bufnr('%') != a:win_id.bufnr
+            exec 'buffer' a:win_id.bufnr
+        endif
+    endf
+endif
+
 
 " Return vim code to jump back to the original window.
-function! tlib#win#SetById(wid) "{{{3
-    if a:wid > 0
-        let wid = win_getid()
-        call win_gotoid(a:wid)
-        return printf('call win_gotoid(%s)', wid)
+function! tlib#win#SetById(win_id) "{{{3
+    if a:win_id != g:tlib#win#null_id
+        let win_id = tlib#win#GetID()
+        call tlib#win#GotoID(a:win_id)
+        return printf('call tlib#win#GotoID(%s)', win_id)
         " " TLogVAR a:winnr
         " " TLogDBG winnr()
         " " TLogDBG string(tlib#win#List())

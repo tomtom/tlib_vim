@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2017-02-23.
-" @Revision:    87.1.243
+" @Last Change: 2017-03-06.
+" @Revision:    89.1.243
 
 
 " The cache directory. If empty, use |tlib#dir#MyRuntime|.'/cache'.
@@ -314,7 +314,7 @@ function! tlib#cache#Purge() "{{{3
         echo join(msg, "\n")
     endif
     if !empty(deldir)
-        let deldir = filter(reverse(sort(deldir)), {i, v -> s:Delete(msg, v, 'd')})
+        let deldir = filter(reverse(sort(deldir)), 's:Delete(msg, v:val, "d")')
         if !empty(deldir)
             if &shell =~ 'sh\(\.exe\)\?$'
                 let scriptfile = 'deldir.sh'

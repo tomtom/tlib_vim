@@ -1,13 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    1461
-
-
-if v:version < 800
-    echoerr 'tlib: VIM >= 8.00 is required'
-    finish
-endif
+" @Revision:    1470
 
 
 " :filedoc:
@@ -105,7 +99,7 @@ let s:prototype = tlib#Object#New({
             \ 'timeout_resolution': 2,
             \ 'tabpagenr': -1,
             \ 'type': '', 
-            \ 'win_id': -1,
+            \ 'win_id': g:tlib#win#null_id,
             \ 'win_height': -1,
             \ 'win_width': -1,
             \ 'win_pct': 25,
@@ -521,7 +515,7 @@ function! s:prototype.SetPrefIdx() dict "{{{3
     let pref_idx = -1
     let pref_weight = -1
     Tlibtrace 'tlib', self.filter_pos, self.filter_neg
-    " let t0 = localtime() " DBG
+    let t0 = localtime()
     for idx in range(1, self.llen)
         let item = self.GetItem(idx)
         let weight = self.matcher.AssessName(self, item)
@@ -1358,19 +1352,19 @@ endf
 " :nodoc:
 function! s:prototype.SetOrigin(...) dict "{{{3
     TVarArg ['winview', 0]
-    Tlibtrace 'tlib', self.win_id, self.bufnr
+    Tlibtrace 'tlib', 'SetOrigin', self.win_id, self.bufnr, bufnr('%'), winnr()
     let win_wnr = winnr()
-    let self.win_id = win_getid()
+    let self.win_id = tlib#win#GetID()
     let self.win_height = winheight(win_wnr)
     let self.win_width = winwidth(win_wnr)
-    Tlibtrace 'tlib', self.win_id, self.win_height, self.win_width
+    Tlibtrace 'tlib', 'SetOrigin', self.win_id, self.win_height, self.win_width, bufnr('%'), winnr()
     let self.bufnr   = bufnr('%')
     let self.tabpagenr = tabpagenr()
     let self.cursor  = getpos('.')
     if winview
         let self.winview = tlib#win#GetLayout()
     endif
-    Tlibtrace 'tlib', self.win_id, self.bufnr, self.winview
+    Tlibtrace 'tlib', 'SetOrigin', self.win_id, self.bufnr, self.winview
     return self
 endf
 
@@ -1382,7 +1376,7 @@ function! s:prototype.RestoreWindow(...) dict "{{{3
         Tlibtrace 'tlib', winview
         call tlib#win#SetLayout(self.winview)
     endif
-    call win_gotoid(self.win_id)
+    call tlib#win#GotoID(self.win_id)
 endf
 
 

@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    184
+" @Revision:    192
 
 
 if !exists('g:tlib#file#drop')
@@ -39,7 +39,7 @@ endif
 "   => ['foo', 'bar', 'filename.txt']
 function! tlib#file#Split(filename) "{{{3
     let prefix = matchstr(a:filename, '^\(\w\+:\)\?/\+')
-    " TLogVAR prefix
+    Tlibtrace 'tlib', prefix
     if !empty(prefix)
         let filename = a:filename[len(prefix) : -1]
     else
@@ -60,7 +60,7 @@ endf
 "   => 'foo/bar/filename.txt'
 function! tlib#file#Join(filename_parts, ...) "{{{3
     TVarArg ['strip_slashes', 1], 'maybe_absolute'
-    " TLogVAR a:filename_parts, strip_slashes
+    Tlibtrace 'tlib', a:filename_parts, strip_slashes
     if maybe_absolute
         let filename_parts = []
         for part in a:filename_parts
@@ -76,7 +76,7 @@ function! tlib#file#Join(filename_parts, ...) "{{{3
         " let rx    = tlib#rx#Escape(g:tlib#dir#sep) .'$'
         let rx    = '[/\\]\+$'
         let parts = map(copy(filename_parts), 'substitute(v:val, rx, "", "")')
-        " TLogVAR parts
+        Tlibtrace 'tlib', parts
         return join(parts, g:tlib#dir#sep)
     else
         return join(filename_parts, g:tlib#dir#sep)
@@ -88,17 +88,17 @@ endf
 "   tlib#file#Relative('foo/bar/filename.txt', 'foo')
 "   => 'bar/filename.txt'
 function! tlib#file#Relative(filename, basedir) "{{{3
-    " TLogVAR a:filename, a:basedir
+    Tlibtrace 'tlib', a:filename, a:basedir
     " TLogDBG getcwd()
     " TLogDBG expand('%:p')
     let b0 = tlib#file#Absolute(a:basedir)
     let b  = tlib#file#Split(b0)
-    " TLogVAR b
+    Tlibtrace 'tlib', b
     let f0 = tlib#file#Absolute(a:filename)
     let fn = fnamemodify(f0, ':t')
     let fd = fnamemodify(f0, ':h')
     let f  = tlib#file#Split(fd)
-    " TLogVAR f0, fn, fd, f
+    Tlibtrace 'tlib', f0, fn, fd, f
     if f[0] != b[0]
         let rv = f0
     else
@@ -109,10 +109,10 @@ function! tlib#file#Relative(filename, basedir) "{{{3
             call remove(f, 0)
             call remove(b, 0)
         endwh
-        " TLogVAR f, b
+        Tlibtrace 'tlib', f, b
         let rv = tlib#file#Join(repeat(['..'], len(b)) + f + [fn])
     endif
-    " TLogVAR rv
+    Tlibtrace 'tlib', rv
     return rv
 endf
 
@@ -166,7 +166,7 @@ endf
 
 " :def: function! tlib#file#With(fcmd, bcmd, files, ?world={})
 function! tlib#file#With(fcmd, bcmd, files, ...) "{{{3
-    " TLogVAR a:fcmd, a:bcmd, a:files
+    Tlibtrace 'tlib', a:fcmd, a:bcmd, a:files
     exec tlib#arg#Let([['world', {}]])
     call tlib#autocmdgroup#Init()
     augroup TLibFileRead
@@ -174,14 +174,15 @@ function! tlib#file#With(fcmd, bcmd, files, ...) "{{{3
     augroup END
     for f in a:files
         let bn = bufnr('^'.f.'$')
-        " TLogVAR f, bn
+        Tlibtrace 'tlib', f, bn
         let bufloaded = bufloaded(bn)
         let ok = 0
         let s:bufread = ""
         if bn != -1 && buflisted(bn)
             if !empty(a:bcmd)
-                " TLogDBG a:bcmd .' '. bn
-                exec a:bcmd .' '. bn
+                let bcmd = bn . a:bcmd
+                Tlibtrace 'tlib', bcmd
+                exec bcmd
                 let ok = 1
                 call s:SetScrollBind(world)
             endif
@@ -191,7 +192,9 @@ function! tlib#file#With(fcmd, bcmd, files, ...) "{{{3
                     " TLogDBG a:fcmd .' '. tlib#arg#Ex(f)
                     exec 'autocmd TLibFileRead BufRead' escape(f, '\ ') 'let s:bufread=expand("<afile>:p")'
                     try 
-                        exec a:fcmd .' '. tlib#arg#Ex(f)
+                        let fcmd = a:fcmd .' '. tlib#arg#Ex(f)
+                        Tlibtrace 'tlib', fcmd
+                        exec fcmd
                     finally
                         exec 'autocmd! TLibFileRead BufRead'
                     endtry
@@ -204,7 +207,7 @@ function! tlib#file#With(fcmd, bcmd, files, ...) "{{{3
                 echohl NONE
             endif
         endif
-        " TLogVAR ok, bufloaded, &filetype
+        Tlibtrace 'tlib', ok, bufloaded, &filetype
         if empty(s:bufread) && ok && !bufloaded && empty(&filetype)
             doautocmd BufRead
         endif
@@ -228,7 +231,7 @@ function! tlib#file#Edit(fileid) "{{{3
     if filename == expand('%:p')
         return 1
     else
-        " TLogVAR a:fileid, bn, filename, g:tlib#file#drop, filereadable(filename), bufnr('%')
+        Tlibtrace 'tlib', a:fileid, bn, filename, g:tlib#file#drop, filereadable(filename), bufnr('%')
         if bn != -1 && buflisted(bn)
             if g:tlib#file#drop
                 " echom "DBG" get(g:tlib#file#edit_cmds, 'drop', 'drop') fnameescape(filename)
@@ -243,7 +246,7 @@ function! tlib#file#Edit(fileid) "{{{3
         elseif filereadable(filename)
             try
                 " let file = tlib#arg#Ex(filename)
-                " " TLogVAR file
+                " Tlibtrace 'tlib', file
                 " echom "DBG" get(g:tlib#file#edit_cmds, 'edit', 'edit') fnameescape(filename)
                 exec get(g:tlib#file#edit_cmds, 'edit', 'edit') fnameescape(filename)
             catch /E325/
@@ -267,11 +270,11 @@ endf
 
 function! tlib#file#FilterFiles(files, options) abort "{{{3
     if !get(a:options, 'all', 0)
-        call filter(a:files, {i, v -> v !~# g:tlib#file#reject_rx})
+        call filter(a:files, 'v:val !~# g:tlib#file#reject_rx')
     endif
     let type = get(a:options, 'type', 'fd')
     if type !~# 'd' || type !~# 'f'
-        call filter(a:files, {i, v -> isdirectory(v) ? type =~# 'd' : type =~# 'f'})
+        call filter(a:files, 'isdirectory(v) ? type =~# "d" : type =~# "f"')
     endif
     return a:files
 endf

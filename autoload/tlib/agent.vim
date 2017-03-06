@@ -1,8 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    345
-
+" @Revision:    350
 
 " :filedoc:
 " Various agents for use as key handlers in tlib#input#List()
@@ -14,6 +13,7 @@ TLet g:tlib_scroll_lines = 10
 " General {{{1
 
 function! tlib#agent#Exit(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     if a:world.key_mode == 'default'
         call a:world.CloseScratch()
         let a:world.state = 'exit empty escape'
@@ -29,6 +29,7 @@ endf
 
 
 function! tlib#agent#CopyItems(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let @* = join(a:selected, "\n")
     let a:world.state = 'redisplay'
     return a:world
@@ -39,6 +40,7 @@ endf
 " InputList related {{{1
 
 function! tlib#agent#PageUp(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let a:world.offset -= (winheight(0) / 2)
     let a:world.state = 'scroll'
     return a:world
@@ -46,6 +48,7 @@ endf
 
 
 function! tlib#agent#PageDown(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let a:world.offset += (winheight(0) / 2)
     let a:world.state = 'scroll'
     return a:world
@@ -53,6 +56,7 @@ endf
 
 
 function! tlib#agent#Home(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let a:world.prefidx = 1
     let a:world.state = 'redisplay'
     return a:world
@@ -60,6 +64,7 @@ endf
 
 
 function! tlib#agent#End(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let a:world.prefidx = len(a:world.list)
     let a:world.state = 'redisplay'
     return a:world
@@ -68,6 +73,7 @@ endf
 
 function! tlib#agent#Up(world, selected, ...) "{{{3
     TVarArg ['lines', 1]
+    Tlibtrace 'tlib', a:selected, lines
     let a:world.idx = ''
     if a:world.prefidx > lines
         let a:world.prefidx -= lines
@@ -81,6 +87,7 @@ endf
 
 function! tlib#agent#Down(world, selected, ...) "{{{3
     TVarArg ['lines', 1]
+    Tlibtrace 'tlib', a:selected, lines
     let a:world.idx = ''
     if a:world.prefidx <= (len(a:world.list) - lines)
         let a:world.prefidx += lines
@@ -93,16 +100,19 @@ endf
 
 
 function! tlib#agent#UpN(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     return tlib#agent#Up(a:world, a:selected, g:tlib_scroll_lines)
 endf
 
 
 function! tlib#agent#DownN(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     return tlib#agent#Down(a:world, a:selected, g:tlib_scroll_lines)
 endf
 
 
 function! tlib#agent#ShiftLeft(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let a:world.offset_horizontal -= (winwidth(0) / 2)
     if a:world.offset_horizontal < 0
         let a:world.offset_horizontal = 0
@@ -113,6 +123,7 @@ endf
 
 
 function! tlib#agent#ShiftRight(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let a:world.offset_horizontal += (winwidth(0) / 2)
     let a:world.state = 'display shift'
     return a:world
@@ -120,12 +131,14 @@ endf
 
 
 function! tlib#agent#Reset(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let a:world.state = 'reset'
     return a:world
 endf
 
 
 function! tlib#agent#ToggleRestrictView(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     if empty(a:world.filtered_items)
         return tlib#agent#RestrictView(a:world, a:selected)
     else
@@ -149,6 +162,7 @@ endf
 
 
 function! tlib#agent#UnrestrictView(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let a:world.filtered_items = []
     let a:world.state = 'display'
     return a:world
@@ -156,6 +170,7 @@ endf
 
 
 function! tlib#agent#Input(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let flt0 = a:world.CleanFilter(a:world.filter[0][0])
     let flt1 = input('Filter: ', flt0)
     echo
@@ -174,6 +189,7 @@ endf
 " Suspend (see |tlib#agent#Suspend|) the input loop and jump back to the 
 " original position in the parent window.
 function! tlib#agent#SuspendToParentWindow(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let world = a:world
     let wid = world.win_id
     Tlibtrace 'tlib', wid
@@ -200,6 +216,7 @@ endf
 " <cr> and <LeftMouse> will immediatly select the item under the cursor.
 " < will select the item but the window will remain opened.
 function! tlib#agent#Suspend(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     if a:world.allow_suspend
         " TAssert IsNotEmpty(a:world.scratch)
         " TLogDBG bufnr('%')
@@ -225,12 +242,14 @@ endf
 
 
 function! tlib#agent#Help(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let a:world.state = 'help'
     return a:world
 endf
 
 
 function! tlib#agent#OR(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     if !empty(a:world.filter[0])
         call insert(a:world.filter[0], '')
     endif
@@ -240,6 +259,7 @@ endf
 
 
 function! tlib#agent#AND(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     if !empty(a:world.filter[0])
         call insert(a:world.filter, [''])
     endif
@@ -249,6 +269,7 @@ endf
 
 
 function! tlib#agent#ReduceFilter(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     call a:world.ReduceFilter()
     let a:world.offset = 1
     let a:world.state = 'display'
@@ -257,6 +278,7 @@ endf
 
 
 function! tlib#agent#PopFilter(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     call a:world.PopFilter()
     let a:world.offset = 1
     let a:world.state = 'display'
@@ -265,6 +287,7 @@ endf
 
 
 function! tlib#agent#Debug(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     " echo string(world.state)
     echo string(a:world.filter)
     echo string(a:world.idx)
@@ -277,6 +300,7 @@ endf
 
 
 function! tlib#agent#Select(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     call a:world.SelectItem('toggle', a:world.prefidx)
     " let a:world.state = 'display keepcursor'
     let a:world.state = 'redisplay'
@@ -285,6 +309,7 @@ endf
 
 
 function! tlib#agent#SelectUp(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     call a:world.SelectItem('toggle', a:world.prefidx)
     if a:world.prefidx > 1
         let a:world.prefidx -= 1
@@ -295,6 +320,7 @@ endf
 
 
 function! tlib#agent#SelectDown(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     call a:world.SelectItem('toggle', a:world.prefidx)
     if a:world.prefidx < len(a:world.list)
         let a:world.prefidx += 1
@@ -305,6 +331,7 @@ endf
 
 
 function! tlib#agent#SelectAll(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let listrange = range(1, len(a:world.list))
     let mode = empty(filter(copy(listrange), 'index(a:world.sel_idx, a:world.GetBaseIdx(v:val)) == -1'))
                 \ ? 'toggle' : 'set'
@@ -317,6 +344,7 @@ endf
 
 
 function! tlib#agent#ToggleStickyList(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let a:world.sticky = !a:world.sticky
     let a:world.state = 'display keepcursor'
     return a:world
@@ -327,6 +355,7 @@ endf
 " EditList related {{{1
 
 function! tlib#agent#EditItem(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let lidx = a:world.prefidx
     Tlibtrace 'tlib', lidx
     let bidx = a:world.GetBaseIdx(lidx)
@@ -343,6 +372,7 @@ endf
 
 " Insert a new item below the current one.
 function! tlib#agent#NewItem(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let basepi = a:world.GetBaseIdx(a:world.prefidx)
     let item = input('New item: ')
     call insert(a:world.base, item, basepi)
@@ -352,6 +382,7 @@ endf
 
 
 function! tlib#agent#DeleteItems(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let remove = copy(a:world.sel_idx)
     let basepi = a:world.GetBaseIdx(a:world.prefidx)
     if index(remove, basepi) == -1
@@ -369,12 +400,14 @@ endf
 
 
 function! tlib#agent#Cut(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let world = tlib#agent#Copy(a:world, a:selected)
     return tlib#agent#DeleteItems(world, a:selected)
 endf
 
 
 function! tlib#agent#Copy(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let a:world.clipboard = []
     let bidxs = copy(a:world.sel_idx)
     call add(bidxs, a:world.GetBaseIdx(a:world.prefidx))
@@ -387,6 +420,7 @@ endf
 
 
 function! tlib#agent#Paste(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     if has_key(a:world, 'clipboard')
         for e in reverse(copy(a:world.clipboard))
             call insert(a:world.base, e, a:world.prefidx)
@@ -399,6 +433,7 @@ endf
 
 
 function! tlib#agent#EditReturnValue(world, rv) "{{{3
+    Tlibtrace 'tlib', a:rv
     return [a:world.state !~ '\<exit\>', a:world.base]
 endf
 
@@ -407,6 +442,7 @@ endf
 " Files related {{{1
 
 function! tlib#agent#ViewFile(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     if !empty(a:selected)
         let back = a:world.SwitchWindow('win')
         Tlibtrace 'tlib', back
@@ -422,11 +458,13 @@ endf
 
 
 function! tlib#agent#EditFile(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     return tlib#agent#Exit(tlib#agent#ViewFile(a:world, a:selected), a:selected)
 endf
 
 
 function! tlib#agent#EditFileInWindow(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     if !empty(a:selected)
         let back = a:world.SwitchWindow('win')
         Tlibtrace 'tlib', back
@@ -441,6 +479,7 @@ endf
 
 
 function! tlib#agent#EditFileInSplit(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     call a:world.CloseScratch()
     " call tlib#file#With('edit', 'buffer', a:selected[0:0], a:world)
     " call tlib#file#With('split', 'sbuffer', a:selected[1:-1], a:world)
@@ -451,6 +490,7 @@ endf
 
 
 function! tlib#agent#EditFileInVSplit(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     call a:world.CloseScratch()
     " call tlib#file#With('edit', 'buffer', a:selected[0:0], a:world)
     " call tlib#file#With('vertical split', 'vertical sbuffer', a:selected[1:-1], a:world)
@@ -474,6 +514,7 @@ endf
 
 
 function! tlib#agent#ToggleScrollbind(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let a:world.scrollbind = get(a:world, 'scrollbind') ? 0 : 1
     let a:world.state = 'redisplay'
     return a:world
@@ -481,6 +522,7 @@ endf
 
 
 function! tlib#agent#ShowInfo(world, selected)
+    Tlibtrace 'tlib', a:selected
     let lines = []
     for f in a:selected
         if filereadable(f)
@@ -499,12 +541,13 @@ endf
 " Buffer related {{{1
 
 function! tlib#agent#PreviewLine(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let l = a:selected[0]
     " let ww = winnr()
-    let wid = win_getid()
+    let wid = tlib#win#GetID()
     call tlib#agent#SuspendToParentWindow(a:world, a:selected)
     call tlib#buffer#ViewLine(l, 1)
-    call win_gotoid(wid)
+    call tlib#win#GotoID(wid)
     " exec ww .'wincmd w'
     let a:world.state = 'redisplay'
     return a:world
@@ -514,11 +557,12 @@ endf
 " If not called from the scratch, we assume/guess that we don't have to 
 " suspend the input-evaluation loop.
 function! tlib#agent#GotoLine(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     if !empty(a:selected)
         let l = a:selected[0]
-        if a:world.win_id != win_getid()
+        if a:world.win_id != tlib#win#GetID()
             let world = tlib#agent#Suspend(a:world, a:selected)
-            call win_gotoid(a:world.win_id)
+            call tlib#win#GotoID(a:world.win_id)
         endif
         call tlib#buffer#ViewLine(l, 1)
         
@@ -528,6 +572,7 @@ endf
 
 
 function! tlib#agent#DoAtLine(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     if !empty(a:selected)
         let cmd = input('Command: ', '', 'command')
         if !empty(cmd)
@@ -549,6 +594,7 @@ endf
 
 
 function! tlib#agent#Wildcard(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     if !empty(a:world.filter[0])
         let rx_type = a:world.matcher.FilterRxPrefix()
         let flt0 = a:world.CleanFilter(a:world.filter[0][0])
@@ -565,12 +611,14 @@ endf
 
 
 function! tlib#agent#Null(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let a:world.state = 'redisplay'
     return a:world
 endf
 
 
 function! tlib#agent#ExecAgentByName(world, selected) "{{{3
+    Tlibtrace 'tlib', a:selected
     let s:agent_names_world = a:world
     let agent_names = {'Help': 'tlib#agent#Help'}
     for def in values(a:world.key_map[a:world.key_mode])
@@ -612,6 +660,7 @@ endf
 
 
 function! tlib#agent#Complete(world, selected) abort "{{{3
+    Tlibtrace 'tlib', a:selected
     let rxprefix = a:world.matcher.FilterRxPrefix()
     let flt = a:world.filter[0][0]
     Tlibtrace 'tlib', flt
