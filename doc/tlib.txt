@@ -1577,7 +1577,7 @@ tlib#win#Set(winnr)
     Return vim code to jump back to the original window.
 
                                                     *tlib#win#SetById()*
-tlib#win#SetById(wid)
+tlib#win#SetById(win_id)
     Return vim code to jump back to the original window.
 
 
