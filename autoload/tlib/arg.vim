@@ -1,8 +1,8 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2017-02-14.
-" @Revision:    271
+" @Last Change: 2017-03-07.
+" @Revision:    272
 
 
 " :def: function! tlib#arg#Get(n, var, ?default="", ?test='')
@@ -92,30 +92,34 @@ endf
 " ['-ab', '--', '--foo', '--bar=BAR']
 " => {'a': 1, 'b': 1, '__rest__': ['--foo', '--bar=BAR']}
 function! tlib#arg#GetOpts(args, ...) abort "{{{3
-    let throw = a:0 == 0
-    TVarArg ['def', {}]
-    " TLogVAR def
-    let opts = {'__exit__': 0}
-    for [key, vdef] in items(get(def, 'values', {}))
-        if has_key(vdef, 'default')
-            let opts[key] = vdef.default
-        endif
-    endfor
-    let idx = 0
-    for o in a:args
-        let [break, idx] = s:SetOpt(def, opts, idx, o)
-        if break == 1
-            break
-        elseif break == 2
-            if throw
-                throw 'tlib#arg#GetOpts: Show help'
-            else
-                let opts.__exit__ = 5
+    if type(a:args) == 4
+        reutrn a:args
+    else
+        let throw = a:0 == 0
+        TVarArg ['def', {}]
+        " TLogVAR def
+        let opts = {'__exit__': 0}
+        for [key, vdef] in items(get(def, 'values', {}))
+            if has_key(vdef, 'default')
+                let opts[key] = vdef.default
             endif
-        endif
-    endfor
-    let opts.__rest__ = a:args[idx : -1]
-    return opts
+        endfor
+        let idx = 0
+        for o in a:args
+            let [break, idx] = s:SetOpt(def, opts, idx, o)
+            if break == 1
+                break
+            elseif break == 2
+                if throw
+                    throw 'tlib#arg#GetOpts: Show help'
+                else
+                    let opts.__exit__ = 5
+                endif
+            endif
+        endfor
+        let opts.__rest__ = a:args[idx : -1]
+        return opts
+    endif
 endf
 
 
