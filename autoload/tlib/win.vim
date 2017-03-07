@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    73
+" @Revision:    82
 
 
 if !exists('g:tlib#win#use_winid')
@@ -36,14 +36,29 @@ if g:tlib#win#use_winid
         call win_gotoid(a:win_id)
     endf
 else
+    let s:win_id = 0
     let g:tlib#win#null_id = {}
     function! tlib#win#GetID() abort "{{{3
-        return {'tabpagenr': tabpagenr(), 'bufnr': bufnr('%'), 'winnr': winnr()}
+        if !exists('w:tlib_win_id')
+            let s:win_id += 1
+            let w:tlib_win_id = s:win_id
+        endif
+        return {'tabpagenr': tabpagenr(), 'bufnr': bufnr('%'), 'winnr': winnr(), 'win_id': w:tlib_win_id}
     endf
     function! tlib#win#GotoID(win_id) abort "{{{3
+        Tlibtrace 'tlib', a:win_id
         if tabpagenr() != a:win_id.tabpagenr
             exec 'tabnext' a:win_id.tabpagenr
         endif
+        for wnr in range(1, winnr('$'))
+            let win_id = getwinvar(wnr, 'tlib_win_id', -1)
+            Tlibtrace 'tlib', wnr, win_id
+            if win_id == a:win_id.win_id
+                Tlibtrace 'tlib', wnr
+                exec wnr 'wincmd w'
+                return
+            endif
+        endfor
         if winnr() != a:win_id.winnr
             exec a:win_id.winnr 'wincmd w'
         endif
