@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    192
+" @Revision:    194
 
 
 if !exists('g:tlib#file#drop')
@@ -180,7 +180,7 @@ function! tlib#file#With(fcmd, bcmd, files, ...) "{{{3
         let s:bufread = ""
         if bn != -1 && buflisted(bn)
             if !empty(a:bcmd)
-                let bcmd = bn . a:bcmd
+                let bcmd = a:bcmd .' '. bn
                 Tlibtrace 'tlib', bcmd
                 exec bcmd
                 let ok = 1
@@ -274,7 +274,7 @@ function! tlib#file#FilterFiles(files, options) abort "{{{3
     endif
     let type = get(a:options, 'type', 'fd')
     if type !~# 'd' || type !~# 'f'
-        call filter(a:files, 'isdirectory(v) ? type =~# "d" : type =~# "f"')
+        call filter(a:files, 'isdirectory(v:val) ? type =~# "d" : type =~# "f"')
     endif
     return a:files
 endf
