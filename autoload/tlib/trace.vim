@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @Website:     https://github.com/tomtom
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Last Change: 2017-02-13
-" @Revision:    194
+" @Last Change: 2017-03-09
+" @Revision:    205
 
 
 if !exists('g:tlib#trace#backtrace')
@@ -89,13 +89,19 @@ function! tlib#trace#Set(vars, ...) abort "{{{3
             " TLogVAR rx, rx1
             " echom "DBG" s:trace_rx
             if rx =~ '^-'
+                let erx1 .= '\[0-\d\]\\?'
                 if s:trace_rx =~# '[(|]'. erx1 .'\\'
                     let s:trace_rx = substitute(s:trace_rx, '\\|'. erx1, '', '')
                 endif
                 " elseif rx =~ '^+'
             else
+                if erx1 =~ '\d$'
+                    let erx1 = substitute(erx1, '\d$', '[0-\0]\\?', '')
+                else
+                    let erx1 .= '[0-9]\?'
+                endif
                 if s:trace_rx !~# '[(|]'. erx1 .'\\'
-                    let s:trace_rx = substitute(s:trace_rx, '\ze\\)\$', '\\|'. erx1, '')
+                    let s:trace_rx = substitute(s:trace_rx, '\ze\\)\$', '\\|'. escape(erx1, '\'), '')
                 endif
                 " else
                 "     echohl WarningMsg
