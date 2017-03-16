@@ -407,7 +407,7 @@ g:tlib_inputlist_max_cols      (default: -1)
     Max width for a vertical list.
 
                                                     *g:tlib_inputlist_width_filename*
-g:tlib_inputlist_width_filename (default: '&co / 3')
+g:tlib_inputlist_width_filename (default: '&columns / 3')
     Size of filename columns when listing filenames.
     See |tlib#input#List()|.
 
