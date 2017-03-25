@@ -26,7 +26,7 @@ endif
 
 
 if !exists('g:tlib#file#reject_rx')
-    let g:tlib#file#reject_rx = '\%(^\|[\/]\)\%(\.\w\+\%($\|[\/]\)\|\%(tags\|Thumbs\.db\)$\)'   "{{{2
+    let g:tlib#file#reject_rx = '\%(^\|[\/]\)\%(tags\|Thumbs\.db\)$'   "{{{2
 endif
 
 
