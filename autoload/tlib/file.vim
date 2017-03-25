@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    194
+" @Revision:    201
 
 
 if !exists('g:tlib#file#drop')
@@ -167,53 +167,63 @@ endf
 " :def: function! tlib#file#With(fcmd, bcmd, files, ?world={})
 function! tlib#file#With(fcmd, bcmd, files, ...) "{{{3
     Tlibtrace 'tlib', a:fcmd, a:bcmd, a:files
+    let world = a:0 >= 1 ? a:1 : {}
+    let unset_switchbuf = a:0 >= 2 ? a:2 : 0
     exec tlib#arg#Let([['world', {}]])
     call tlib#autocmdgroup#Init()
     augroup TLibFileRead
         autocmd!
     augroup END
-    for f in a:files
-        let bn = bufnr('^'.f.'$')
-        Tlibtrace 'tlib', f, bn
-        let bufloaded = bufloaded(bn)
-        let ok = 0
-        let s:bufread = ""
-        if bn != -1 && buflisted(bn)
-            if !empty(a:bcmd)
-                let bcmd = a:bcmd .' '. bn
-                Tlibtrace 'tlib', bcmd
-                exec bcmd
-                let ok = 1
-                call s:SetScrollBind(world)
-            endif
-        else
-            if filereadable(f)
-                if !empty(a:fcmd)
-                    " TLogDBG a:fcmd .' '. tlib#arg#Ex(f)
-                    exec 'autocmd TLibFileRead BufRead' escape(f, '\ ') 'let s:bufread=expand("<afile>:p")'
-                    try 
-                        let fcmd = a:fcmd .' '. tlib#arg#Ex(f)
-                        Tlibtrace 'tlib', fcmd
-                        exec fcmd
-                    finally
-                        exec 'autocmd! TLibFileRead BufRead'
-                    endtry
+    if unset_switchbuf
+        let switchbuf = &switchbuf
+        set switchbuf&
+    endif
+    try
+        for f in a:files
+            let bn = bufnr('^'.f.'$')
+            Tlibtrace 'tlib', f, bn
+            let bufloaded = bufloaded(bn)
+            let ok = 0
+            let s:bufread = ""
+            if bn != -1 && buflisted(bn)
+                if !empty(a:bcmd)
+                    let bcmd = a:bcmd .' '. bn
+                    Tlibtrace 'tlib', bcmd
+                    exec bcmd
                     let ok = 1
                     call s:SetScrollBind(world)
                 endif
             else
-                echohl error
-                echom 'File not readable: '. f
-                echohl NONE
+                if filereadable(f)
+                    if !empty(a:fcmd)
+                        " TLogDBG a:fcmd .' '. tlib#arg#Ex(f)
+                        exec 'autocmd TLibFileRead BufRead' escape(f, '\ ') 'let s:bufread=expand("<afile>:p")'
+                        try 
+                            let fcmd = a:fcmd .' '. tlib#arg#Ex(f)
+                            Tlibtrace 'tlib', fcmd
+                            exec fcmd
+                        finally
+                            exec 'autocmd! TLibFileRead BufRead'
+                        endtry
+                        let ok = 1
+                        call s:SetScrollBind(world)
+                    endif
+                else
+                    echohl error
+                    echom 'File not readable: '. f
+                    echohl NONE
+                endif
             endif
-        endif
-        Tlibtrace 'tlib', ok, bufloaded, &filetype
-        if empty(s:bufread) && ok && !bufloaded && empty(&filetype)
-            doautocmd BufRead
-        endif
-    endfor
-    augroup! TLibFileRead
-    unlet! s:bufread
+            Tlibtrace 'tlib', ok, bufloaded, &filetype
+            if empty(s:bufread) && ok && !bufloaded && empty(&filetype)
+                doautocmd BufRead
+            endif
+        endfor
+    finally
+        augroup! TLibFileRead
+        let &switchbuf = switchbuf
+        unlet! s:bufread
+    endtry
     " TLogDBG "done"
 endf
 
@@ -269,13 +279,17 @@ endf
 
 
 function! tlib#file#FilterFiles(files, options) abort "{{{3
+    Tlibtrace 'tlib', a:files, a:options, g:tlib#file#reject_rx
     if !get(a:options, 'all', 0)
         call filter(a:files, 'v:val !~# g:tlib#file#reject_rx')
     endif
+    Tlibtrace 'tlib', a:files
     let type = get(a:options, 'type', 'fd')
+    Tlibtrace 'tlib', type
     if type !~# 'd' || type !~# 'f'
         call filter(a:files, 'isdirectory(v:val) ? type =~# "d" : type =~# "f"')
     endif
+    Tlibtrace 'tlib', a:files
     return a:files
 endf
 
@@ -285,7 +299,7 @@ if v:version > 704 || (v:version == 704 && has('patch279'))
     function! tlib#file#Glob(pattern, ...) abort "{{{3
         let all = a:0 >= 1 ? a:1 : 0
         let nosuf = a:0 >= 2 ? a:2 : 0
-        return  tlib#file#FilterFiles(glob(a:pattern, nosuf, 1), {'all': all})
+        return tlib#file#FilterFiles(glob(a:pattern, nosuf, 1), {'all': all})
     endf
 
     function! tlib#file#Globpath(path, pattern, ...) abort "{{{3

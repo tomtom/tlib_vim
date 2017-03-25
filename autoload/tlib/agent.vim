@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    350
+" @Revision:    351
 
 " :filedoc:
 " Various agents for use as key handlers in tlib#input#List()
@@ -481,9 +481,7 @@ endf
 function! tlib#agent#EditFileInSplit(world, selected) "{{{3
     Tlibtrace 'tlib', a:selected
     call a:world.CloseScratch()
-    " call tlib#file#With('edit', 'buffer', a:selected[0:0], a:world)
-    " call tlib#file#With('split', 'sbuffer', a:selected[1:-1], a:world)
-    call tlib#file#With('split', 'sbuffer', a:selected, a:world)
+    call tlib#file#With('split', 'sbuffer', a:selected, a:world, 1)
     call a:world.SetOrigin(1)
     return tlib#agent#Exit(a:world, a:selected)
 endf
@@ -492,10 +490,8 @@ endf
 function! tlib#agent#EditFileInVSplit(world, selected) "{{{3
     Tlibtrace 'tlib', a:selected
     call a:world.CloseScratch()
-    " call tlib#file#With('edit', 'buffer', a:selected[0:0], a:world)
-    " call tlib#file#With('vertical split', 'vertical sbuffer', a:selected[1:-1], a:world)
     let winpos = tlib#fixes#Winpos()
-    call tlib#file#With('vertical split', 'vertical sbuffer', a:selected, a:world)
+    call tlib#file#With('vertical split', 'vertical sbuffer', a:selected, a:world, 1)
     if !empty(winpos)
         exec winpos
     endif
@@ -507,7 +503,7 @@ endf
 function! tlib#agent#EditFileInTab(world, selected) "{{{3
     Tlibtrace 'tlib', a:selected
     call a:world.CloseScratch()
-    call tlib#file#With('tabedit', 'tab sbuffer', a:selected, a:world)
+    call tlib#file#With('tabedit', 'tab sbuffer', a:selected, a:world, 1)
     call a:world.SetOrigin(1)
     return tlib#agent#Exit(a:world, a:selected)
 endf
