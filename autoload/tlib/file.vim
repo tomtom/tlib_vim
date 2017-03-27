@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    201
+" @Revision:    202
 
 
 if !exists('g:tlib#file#drop')
@@ -180,44 +180,50 @@ function! tlib#file#With(fcmd, bcmd, files, ...) "{{{3
     endif
     try
         for f in a:files
-            let bn = bufnr('^'.f.'$')
-            Tlibtrace 'tlib', f, bn
-            let bufloaded = bufloaded(bn)
-            let ok = 0
-            let s:bufread = ""
-            if bn != -1 && buflisted(bn)
-                if !empty(a:bcmd)
-                    let bcmd = a:bcmd .' '. bn
-                    Tlibtrace 'tlib', bcmd
-                    exec bcmd
-                    let ok = 1
-                    call s:SetScrollBind(world)
-                endif
-            else
-                if filereadable(f)
-                    if !empty(a:fcmd)
-                        " TLogDBG a:fcmd .' '. tlib#arg#Ex(f)
-                        exec 'autocmd TLibFileRead BufRead' escape(f, '\ ') 'let s:bufread=expand("<afile>:p")'
-                        try 
-                            let fcmd = a:fcmd .' '. tlib#arg#Ex(f)
-                            Tlibtrace 'tlib', fcmd
-                            exec fcmd
-                        finally
-                            exec 'autocmd! TLibFileRead BufRead'
-                        endtry
+            try
+                let bn = bufnr('^'.f.'$')
+                Tlibtrace 'tlib', f, bn
+                let bufloaded = bufloaded(bn)
+                let ok = 0
+                let s:bufread = ""
+                if bn != -1 && buflisted(bn)
+                    if !empty(a:bcmd)
+                        let bcmd = a:bcmd .' '. bn
+                        Tlibtrace 'tlib', bcmd
+                        exec bcmd
                         let ok = 1
                         call s:SetScrollBind(world)
                     endif
                 else
-                    echohl error
-                    echom 'File not readable: '. f
-                    echohl NONE
+                    if filereadable(f)
+                        if !empty(a:fcmd)
+                            " TLogDBG a:fcmd .' '. tlib#arg#Ex(f)
+                            exec 'autocmd TLibFileRead BufRead' escape(f, '\ ') 'let s:bufread=expand("<afile>:p")'
+                            try 
+                                let fcmd = a:fcmd .' '. tlib#arg#Ex(f)
+                                Tlibtrace 'tlib', fcmd
+                                exec fcmd
+                            finally
+                                exec 'autocmd! TLibFileRead BufRead'
+                            endtry
+                            let ok = 1
+                            call s:SetScrollBind(world)
+                        endif
+                    else
+                        echohl error
+                        echom 'File not readable: '. f
+                        echohl NONE
+                    endif
                 endif
-            endif
-            Tlibtrace 'tlib', ok, bufloaded, &filetype
-            if empty(s:bufread) && ok && !bufloaded && empty(&filetype)
-                doautocmd BufRead
-            endif
+                Tlibtrace 'tlib', ok, bufloaded, &filetype
+                if empty(s:bufread) && ok && !bufloaded && empty(&filetype)
+                    doautocmd BufRead
+                endif
+            catch /^Vim\%((\a\+)\)\=:E325/
+                echohl ErrorMsg
+                echom v:exception
+                echohl NONE
+            endtry
         endfor
     finally
         augroup! TLibFileRead
