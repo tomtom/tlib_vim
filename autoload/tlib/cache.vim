@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2017-03-06.
-" @Revision:    89.1.243
+" @Last Change: 2017-03-28.
+" @Revision:    97.1.243
 
 
 " The cache directory. If empty, use |tlib#dir#MyRuntime|.'/cache'.
@@ -162,7 +162,14 @@ function! tlib#cache#Save(cfile, value, ...) "{{{3
         call s:PutValue(a:cfile, a:value)
     elseif !empty(a:cfile)
         " TLogVAR a:value
-        call writefile([string(a:value)], a:cfile, 'b')
+        if exists('*json_encode')
+            let value = json_encode(a:value)
+            let cfile = a:cfile .'.json'
+        else
+            let value = string(a:value)
+            let cfile = a:cfile
+        endif
+        call writefile([value], cfile, 'b')
         call s:SetTimestamp(a:cfile, 'write')
     endif
 endf
@@ -184,15 +191,34 @@ function! tlib#cache#Get(cfile, ...) "{{{3
     else
         call tlib#cache#MaybePurge()
         if !empty(a:cfile)
-            let mt = s:GetCacheTime(a:cfile)
-            let ft = getftime(a:cfile)
+            let jsonfile = a:cfile .'.json'
+            let use_json = filereadable(jsonfile)
+            if use_json
+                let use_json = 1
+                let cfile = jsonfile
+            else
+                let cfile = a:cfile
+            endif
+            let mt = s:GetCacheTime(cfile)
+            let ft = getftime(cfile)
             if mt != -1 && mt >= ft
-                return s:GetValue(a:cfile, default)
+                return s:GetValue(cfile, default)
             elseif ft != -1
-                let val = readfile(a:cfile, 'b')
-                call s:SetTimestamp(a:cfile, 'read')
-                let value = eval(join(val, "\n"))
-                call s:PutValue(a:cfile, value)
+                call s:SetTimestamp(cfile, 'read')
+                let val = join(readfile(cfile, 'b'), '\n')
+                try
+                    let value = use_json ? json_decode(val) : eval(val)
+                catch
+                    echohl ErrorMsg
+                    echom v:exception
+                    echom 'tlib#cache#Get: Invalid value in:' cfile
+                    echom 'Value:' string(val)
+                    echohl NONE
+                    if g:tlib#debug
+                        let @* = string(val)
+                    endif
+                endtry
+                call s:PutValue(cfile, value)
                 return value
             endif
         endif
