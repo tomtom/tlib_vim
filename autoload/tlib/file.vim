@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    202
+" @Revision:    210
 
 
 if !exists('g:tlib#file#drop')
@@ -37,7 +37,7 @@ endif
 " EXAMPLES: >
 "   tlib#file#Split('foo/bar/filename.txt')
 "   => ['foo', 'bar', 'filename.txt']
-function! tlib#file#Split(filename) "{{{3
+function! tlib#file#Split(filename) abort "{{{3
     let prefix = matchstr(a:filename, '^\(\w\+:\)\?/\+')
     Tlibtrace 'tlib', prefix
     if !empty(prefix)
@@ -58,7 +58,7 @@ endf
 " EXAMPLES: >
 "   tlib#file#Join(['foo', 'bar', 'filename.txt'])
 "   => 'foo/bar/filename.txt'
-function! tlib#file#Join(filename_parts, ...) "{{{3
+function! tlib#file#Join(filename_parts, ...) abort "{{{3
     TVarArg ['strip_slashes', 1], 'maybe_absolute'
     Tlibtrace 'tlib', a:filename_parts, strip_slashes
     if maybe_absolute
@@ -87,7 +87,7 @@ endf
 " EXAMPLES: >
 "   tlib#file#Relative('foo/bar/filename.txt', 'foo')
 "   => 'bar/filename.txt'
-function! tlib#file#Relative(filename, basedir) "{{{3
+function! tlib#file#Relative(filename, basedir) abort "{{{3
     Tlibtrace 'tlib', a:filename, a:basedir
     " TLogDBG getcwd()
     " TLogDBG expand('%:p')
@@ -117,15 +117,15 @@ function! tlib#file#Relative(filename, basedir) "{{{3
 endf
 
 
-function! tlib#file#IsAbsolute(filename) "{{{3
+function! tlib#file#IsAbsolute(filename) abort "{{{3
     return a:filename =~? '^\%(/\|\w\+:/\)'
 endf
 
 
-function! tlib#file#Absolute(filename, ...) "{{{3
+function! tlib#file#Absolute(filename, ...) abort "{{{3
     if filereadable(a:filename)
         let filename = fnamemodify(a:filename, ':p')
-    elseif a:filename =~ '^\(/\|[^\/]\+:\)'
+    elseif a:filename =~# '^\(/\|[^\/]\+:\)'
         let filename = a:filename
     else
         let cwd = a:0 >= 1 ? a:1 : getcwd()
@@ -137,17 +137,17 @@ function! tlib#file#Absolute(filename, ...) "{{{3
 endf
 
 
-function! tlib#file#Canonic(filename, ...) "{{{3
+function! tlib#file#Canonic(filename, ...) abort "{{{3
     TVarArg ['mode', '']
-    if a:filename =~ '^\\\\'
+    if a:filename =~# '^\\\\'
         let mode = 'windows'
-    elseif a:filename =~ '^\(file\|ftp\|http\)s\?:'
+    elseif a:filename =~# '^\(file\|ftp\|http\)s\?:'
         let mode = 'url'
     elseif (empty(mode) && g:tlib#sys#windows)
         let mode = 'windows'
     endif
     let filename = a:filename
-    if mode == 'windows'
+    if mode ==# 'windows'
         let filename = substitute(filename, '/', '\\', 'g')
     else
         let filename = substitute(filename, '\\', '/', 'g')
@@ -156,7 +156,7 @@ function! tlib#file#Canonic(filename, ...) "{{{3
 endf
 
 
-function! s:SetScrollBind(world) "{{{3
+function! s:SetScrollBind(world) abort "{{{3
     let sb = get(a:world, 'scrollbind', &scrollbind)
     if sb != &scrollbind
         let &scrollbind = sb
@@ -164,8 +164,8 @@ function! s:SetScrollBind(world) "{{{3
 endf
 
 
-" :def: function! tlib#file#With(fcmd, bcmd, files, ?world={})
-function! tlib#file#With(fcmd, bcmd, files, ...) "{{{3
+" :def: function! tlib#file#With(fcmd, bcmd, files, ?world={}) abort
+function! tlib#file#With(fcmd, bcmd, files, ...) abort "{{{3
     Tlibtrace 'tlib', a:fcmd, a:bcmd, a:files
     let world = a:0 >= 1 ? a:1 : {}
     let unset_switchbuf = a:0 >= 2 ? a:2 : 0
@@ -236,7 +236,7 @@ endf
 
 " Return 0 if the file isn't readable/doesn't exist.
 " Otherwise return 1.
-function! tlib#file#Edit(fileid) "{{{3
+function! tlib#file#Edit(fileid) abort "{{{3
     if type(a:fileid) == 0
         let bn = a:fileid
         let filename = fnamemodify(bufname(bn), ':p')
@@ -331,4 +331,19 @@ else
     endf
 
 endif
+
+
+let s:filereadable = {}
+
+augroup TLib
+	autocmd BufWritePost,FileWritePost,FocusLost * let s:filereadable = {}
+augroup end
+
+
+function! tlib#file#Filereadable(filename) abort "{{{3
+    if !has_key(s:filereadable, a:filename)
+        let s:filereadable[a:filename] = filereadable(a:filename)
+    endif
+    return s:filereadable[a:filename]
+endf
 
