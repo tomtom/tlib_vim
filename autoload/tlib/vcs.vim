@@ -1,8 +1,8 @@
 " @Author:      Tom Link (mailto:micathom AT gmail com?subject=[vim])
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2012-03-08.
-" @Last Change: 2015-11-07.
-" @Revision:    190
+" @Last Change: 2017-04-10.
+" @Revision:    224
 
 scriptencoding utf-8
 
@@ -36,7 +36,7 @@ TLet g:tlib#vcs#def = {
 " empty, support for that VCS will be removed. If no key is present, it 
 " is assumed that the VCS "type" is the name of the executable.
 " :display: g:tlib#vcs#executables         {...}
-TLet g:tlib#vcs#executables = {} 
+TLet g:tlib#vcs#executables = {}
 
 
 " If non-empty, use it as a format string to check whether a VCS is 
@@ -142,7 +142,7 @@ function! tlib#vcs#Ls(...) "{{{3
             if !empty(ls)
                 let rootdir = fnamemodify(vcsdir, ':p:h:h')
                 " TLogVAR vcsdir, rootdir
-                if ls =~ '%s'
+                if ls =~# '%s'
                     let cmd = printf(ls, shellescape(rootdir))
                 else
                     let cmd = ls
@@ -184,7 +184,7 @@ endf
 
 
 function! tlib#vcs#GitLsPostprocess(filename) abort "{{{3
-    if a:filename =~ '^".\{-}"$'
+    if a:filename =~# '^".\{-}"$'
         let filename = matchstr(a:filename, '^"\zs.\{-}\ze"$')
         let filename = substitute(filename, '\%(\\\@<!\\\(\d\d\d\)\)\+', '\=eval(''"''. submatch(0) .''"'')', 'g')
         " let filename = eval(a:filename)
