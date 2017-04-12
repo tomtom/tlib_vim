@@ -195,3 +195,20 @@ function! tlib#vcs#GitLsPostprocess(filename) abort "{{{3
     endif
 endf
 
+
+
+function! tlib#vcs#IsDirty(...) abort "{{{3
+    let filename = a:0 >= 1 ? a:1 : '%'
+    let vcs = a:0 >= 2 ? a:2 : tlib#vcs#FindVCS(filename)
+    let status = tlib#vcs#Status(filename, vcs)
+    return empty(status) ? '' : vcs[0] .'!'
+endf
+
+
+" function! tlib#vcs#EnableTStatus() abort "{{{3
+"     if has('vim_starting')
+"         autocmd VimEnter * TStatusregister1 --event=FocusGained,BufRead,BufWritePost %s tlib#vcs#IsDirty()
+"     else
+"         TStatusregister1 --event=FocusGained,BufRead,BufWritePost %s tlib#vcs#IsDirty()
+"     endif
+" endf
