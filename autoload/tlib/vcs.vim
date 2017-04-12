@@ -60,36 +60,44 @@ function! tlib#vcs#Executable(type) "{{{3
 endf
 
 
+let s:vcs_cache = {}
+autocmd TLib FocusGained * let s:vcs_cache = {}
+
+
 function! tlib#vcs#FindVCS(filename) "{{{3
     let type = ''
     let dir  = ''
-    let dirname = fnamemodify(a:filename, isdirectory(a:filename) ? ':p' : ':p:h')
-    let path = escape(dirname, ';') .';'
-    " TLogVAR a:filename, dirname, path
-    Tlibtrace 'tlib', a:filename, path
-    let depth = -1
-    for vcs in keys(g:tlib#vcs#def)
-        let subdir = g:tlib#vcs#def[vcs].dir
-        let vcsdir = finddir(subdir, path)
-        " TLogVAR vcs, subdir, vcsdir
-        Tlibtrace 'tlib', vcs, subdir, vcsdir
-        if !empty(vcsdir)
-            let vcsdir_depth = len(split(fnamemodify(vcsdir, ':p'), '\/'))
-            if vcsdir_depth > depth
-                let depth = vcsdir_depth
-                let type = vcs
-                let dir = vcsdir
-                " TLogVAR type, depth
+    let filename = fnamemodify(a:filename, ':p')
+    let dirname = isdirectory(filename) ? filename : fnamemodify(filename, ':h')
+    if !has_key(s:vcs_cache, dirname)
+        let path = escape(dirname, ';') .';'
+        " TLogVAR filename, dirname, path
+        Tlibtrace 'tlib', filename, path
+        let depth = -1
+        for vcs in keys(g:tlib#vcs#def)
+            let subdir = g:tlib#vcs#def[vcs].dir
+            let vcsdir = finddir(subdir, path)
+            " TLogVAR vcs, subdir, vcsdir
+            Tlibtrace 'tlib', vcs, subdir, vcsdir
+            if !empty(vcsdir)
+                let vcsdir_depth = len(split(fnamemodify(vcsdir, ':p'), '\/'))
+                if vcsdir_depth > depth
+                    let depth = vcsdir_depth
+                    let type = vcs
+                    let dir = vcsdir
+                    " TLogVAR type, depth
+                endif
             endif
+        endfor
+        Tlibtrace 'tlib', type, dir
+        " TLogVAR type, dir
+        if empty(type)
+            let s:vcs_cache[dirname] = ['', '']
+        else
+            let s:vcs_cache[dirname] = [type, dir]
         endif
-    endfor
-    Tlibtrace 'tlib', type, dir
-    " TLogVAR type, dir
-    if empty(type)
-        return ['', '']
-    else
-        return [type, dir]
     endif
+    return s:vcs_cache[dirname]
 endf
 
 
@@ -97,7 +105,7 @@ function! s:GetCmd(vcstype, cmd)
     let vcsdef = get(g:tlib#vcs#def, a:vcstype, {})
     if has_key(vcsdef, a:cmd)
         let cmd = vcsdef[a:cmd]
-        if cmd =~ '^\*'
+        if cmd =~# '^\*'
             let cmd = substitute(cmd, '^\*', '', '')
         else
             let bin = get(g:tlib#vcs#executables, a:vcstype, '')
