@@ -1,7 +1,7 @@
 " @Author:      Tom Link (micathom AT gmail com?subject=[vim])
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
-" @Revision:    351
+" @Revision:    352
 
 " :filedoc:
 " Various agents for use as key handlers in tlib#input#List()
@@ -14,7 +14,7 @@ TLet g:tlib_scroll_lines = 10
 
 function! tlib#agent#Exit(world, selected) "{{{3
     Tlibtrace 'tlib', a:selected
-    if a:world.key_mode == 'default'
+    if a:world.key_mode ==# 'default'
         call a:world.CloseScratch()
         let a:world.state = 'exit empty escape'
         let a:world.list = []
@@ -195,7 +195,7 @@ function! tlib#agent#SuspendToParentWindow(world, selected) "{{{3
     Tlibtrace 'tlib', wid
     if wid != -1
         let world = tlib#agent#Suspend(world, a:selected)
-        if world.state =~ '\<suspend\>'
+        if world.state =~# '\<suspend\>'
             call world.SwitchWindow('win')
             " let pos = world.cursor
             " Tlibtrace 'tlib', pos
