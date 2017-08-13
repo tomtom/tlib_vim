@@ -3,8 +3,8 @@
 " @Website:     http://www.vim.org/account/profile.php?user_id=4037
 " @License:     GPL (see http://www.gnu.org/licenses/gpl.txt)
 " @Created:     2007-06-30.
-" @Last Change: 2017-03-30.
-" @Revision:    116.1.243
+" @Last Change: 2017-08-13.
+" @Revision:    119.1.243
 
 
 " The cache directory. If empty, use |tlib#dir#MyRuntime|.'/cache'.
@@ -53,13 +53,16 @@ TLet g:tlib#cache#use_encoding = ''
 let s:cache = {}
 
 
-" :display: tlib#cache#Dir(?mode = 'bg')
+" :display: tlib#cache#Dir(?mode = 'bg', ?ensure_dir = true)
 " The default cache directory.
 function! tlib#cache#Dir(...) "{{{3
-    TVarArg ['mode', 'bg']
+    TVarArg ['mode', 'bg'], ['ensure_dir', 1]
     let dir = tlib#var#Get('tlib_cache', mode)
     if empty(dir)
         let dir = tlib#file#Join([tlib#dir#MyRuntime(), 'cache'])
+    endif
+    if ensure_dir
+        call tlib#dir#Ensure(dir)
     endif
     return dir
 endf
