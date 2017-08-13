@@ -628,7 +628,7 @@ g:tlib#cache#max_filename      (default: 200)
     |pathshorten()|.
 
                                                     *tlib#cache#Dir()*
-tlib#cache#Dir(?mode = 'bg')
+tlib#cache#Dir(?mode = 'bg', ?ensure_dir = true)
     The default cache directory.
 
                                                     *tlib#cache#EncodedFilename()*
