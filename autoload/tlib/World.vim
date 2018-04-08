@@ -1168,7 +1168,7 @@ function! s:prototype.DisplayList(...) dict abort "{{{3
             let lines = map(lines, 'substitute(v:val, ''[[:cntrl:][:space:]]'', " ", "g")')
             let w = winwidth(0) - &fdc
             " let w = winwidth(0) - &fdc - 1
-            let lines = map(lines, 'printf("%-'. w .'.'. w .'s", v:val)')
+            let lines = map(lines, 'printf("%-'. w .'.'. w .'S", v:val)')
             Tlibtrace 'tlib', lines
             call append(0, lines)
             call tlib#normal#WithRegister('G"tddgg', 't')
