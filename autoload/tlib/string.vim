@@ -192,3 +192,13 @@ function! tlib#string#MatchAll(string, regexp, ...) abort "{{{3
     return ms
 endf
 
+if exists('*strcharpart')
+    function! tlib#string#Strcharpart(...) abort "{{{3
+        return call(function('strcharpart'), a:000)
+    endf
+else
+    function! tlib#string#Strcharpart(...) abort "{{{3
+        return call(function('strpart'), a:000)
+    endf
+endif
+
