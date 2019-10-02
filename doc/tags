@@ -104,6 +104,7 @@ g:tlib_scroll_lines	tlib.txt	/*g:tlib_scroll_lines*
 g:tlib_tag_substitute	tlib.txt	/*g:tlib_tag_substitute*
 g:tlib_tags_extra	tlib.txt	/*g:tlib_tags_extra*
 g:tlib_viewline_position	tlib.txt	/*g:tlib_viewline_position*
+help-tags	tags	1
 plugin/02tlib.vim	tlib.txt	/*plugin\/02tlib.vim*
 standard-paragraph	tlib.txt	/*standard-paragraph*
 tlib#Filter_cnf#New()	tlib.txt	/*tlib#Filter_cnf#New()*
